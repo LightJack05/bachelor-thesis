@@ -37,7 +37,7 @@ all: count $(PROJNAME).pdf
 # missing file reference and interactively asking you for an alternative.
 
 $(PROJNAME).pdf: $(PROJNAME).tex
-	latexmk -pdf -pdflatex="pdflatex -interactive=nonstopmode" -use-make $<
+	SOURCE_DATE_EPOCH=$(shell date +%s) latexmk -pdf -pdflatex="pdflatex -interactive=nonstopmode" -use-make $<
 
 cleanall:
 	latexmk -C
