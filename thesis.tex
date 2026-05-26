@@ -1,0 +1,399 @@
+\documentclass[
+	12pt, %Schriftgröße
+	a4paper,
+	liststotoc, %Inhaltsverzeichniseinträge für Listen (z.B. Abbildungen)
+	bibtotoc, %Inhaltsverzeichniseinträge f+r Quellen
+	pointlessnumbers, %Entfernt Punkt hinter Gliederungsnummern
+	%ngerman, %Sprachpaket
+	headsepline, %Headertrennlinie
+	footsepline, %Footertrennlinie
+	oneside %einseitiges Druckformat %%% Unterdrücken der leeren Seite nach Titelblatt
+	]{scrbook} %Dokumentenklasse (Koma-Script)
+\usepackage[T1]{fontenc}
+\usepackage{verbatim}
+\usepackage{microtype}
+\usepackage{scrhack}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{pifont}
+\usepackage{caption}
+\usepackage[utf8]{inputenc}
+%\usepackage[ngerman]{babel}
+%\usepackage{bibgerm}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage[left=3cm,right=2cm,top=2cm,bottom=2cm,includeheadfoot]{geometry}
+\usepackage[right]{eurosym} %Euro-Zeichen
+\usepackage{rotating}
+\usepackage{amssymb}
+\usepackage{forest}
+\usepackage{csquotes}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{lmodern}
+\usepackage{fnpct}
+\usepackage[all]{nowidow}
+\usepackage{newclude}
+\usepackage[style=alphabetic,sortcites=true,sorting=nyt,backend=biber,urldate=iso8601]{biblatex}
+\usepackage[style=iso]{datetime2}
+\addbibresource{literature.bib}
+
+\usepackage{setspace} % Zeilenabstand
+\usepackage[
+   colorlinks,        % Links ohne Umrandungen in zu wählender Farbe
+   linkcolor=black,   % Farbe interner Verweise
+   filecolor=black,   % Farbe externer Verweise
+   citecolor=black,   % Farbe von Zitaten
+   urlcolor=blue	  % Farbe von Links
+   ]{hyperref} %Verlinkungen
+\usepackage[figure]{hypcap}
+%\usepackage[ngerman]{translator}
+\usepackage[nonumberlist]{glossaries}
+
+\usepackage{listings,xcolor} %Codeanzeige
+%TC:envir lstlisting [] xall
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+\counterwithout{footnote}{chapter}
+
+%\setlist[itemize]{parsep=0cm}
+\definecolor{dkgreen}{rgb}{0,.6,0}
+\definecolor{dkblue}{rgb}{0,0,.6}
+\definecolor{dkyellow}{cmyk}{0,0,.8,.3}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    alsoletter={-},
+    alsodigit={:,.},
+    morekeywords={FROM, COPY, RUN, WORKDIR, CMD, ARG, AS,}
+    }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Sonderformatierung
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Seitenabstände definieren
+\geometry{verbose,tmargin=3cm,bmargin=2cm,lmargin=3cm,rmargin=3cm}
+\AdaptNote\footcite{oo+m}[footnote]{%
+\setfnpct{dont-mess-around}%
+\IfNoValueTF{#1}
+{#NOTE{#3}}
+{\IfNoValueTF{#2}{#NOTE[#1]{#3}}{#NOTE[#1][#2]{#3}}}%
+}
+
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+\newcommand{\footfigref}[1]{\footnote{Img. \ref{#1} on page \pageref{#1}}}
+
+%% Bei Referenzen im Text wird jetzt bei allen Ebenen "Kapitel" vorgestellt, z.b. Kapitel 2, Kapitel 2.2, Kapitel 6.3.2
+%\addto\extrasngerman{%
+%    \def\sectionautorefname{Kapitel}%
+%    \def\subsectionautorefname{Kapitel}%
+%    \def\subsubsectionautorefname{Kapitel}%
+%    }
+
+% Vertikaler Abstand zwischen Ende Textblock - Ende Fußzeile --> Abstand der Seitenzahl von Rand erhöhen
+\setlength{\footskip}{10mm}
+
+% Abstand vor/nach Überschriften verändern
+
+\RedeclareSectionCommand[%
+    beforeskip=0.5\baselineskip,
+    afterskip=0.5\baselineskip
+]{chapter}
+
+\RedeclareSectionCommand[%
+    beforeskip=0.5\baselineskip,
+    afterskip=0.5\baselineskip
+]{section}
+
+\RedeclareSectionCommand[%
+    beforeskip=0.1\baselineskip,
+    afterskip=0.1\baselineskip
+]{subsection}
+
+\RedeclareSectionCommand[%
+    beforeskip=0.01\baselineskip,
+    %%afterskip=0.2\baselineskip
+]{paragraph}
+
+\setlength{\abovecaptionskip}{4pt}  % 1pc=12pt
+\setlength{\belowcaptionskip}{0pt}
+%\setlength{\textfloatsep}{4pt}
+\setlength{\intextsep}{1pc}
+
+%% Verkleinerung der Textgröße unter Abbildungen
+\addtokomafont{caption}{\small}
+
+% falsche Default-Silbentrennung überschreiben
+%\include{hyphenation}
+
+% Den Punkt am Ende der Glossareinträge deaktivieren
+\renewcommand*{\glspostdescription}{}
+
+\newcommand{\source}[1]{\caption*{Source: {#1}} }
+%Glossar-Befehle anschalten
+\input{acronyms.tex}
+\input{glossary.tex}
+
+\makenoidxglossaries
+% sorgt dafür, dass bei Leerzeile die Einrückung verhindert und stattdessen eine Leerzeile eingefügt wird % erspart bigskips und erhöht die Lesbarkeit im LaTeX-Text
+\KOMAoptions{parskip=full*}
+
+% ändert Titelschriftart in Serifen-Normalschriftart
+\addtokomafont{disposition}{\rmfamily}
+
+%\makenoidxglossaries
+
+%%%%%%%%%%%%%%%%%%GLOSSAR%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newglossaryentry{OOP}
+%{
+  %  name=OOP,
+  %  description={Is a markup language specially suited
+ %   for scientific documents}
+%}
+
+%%%%%%%%%%%%%%%%%%GLOSSAR%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\loadglsentries{glossar.tex}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Textbausteine
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% Studentenname
+\newcommand{\studentName}{Elias Paitz}
+%%%%%%%%%%%% Typ der Arbeit
+\newcommand{\type}{Bachelor Thesis}
+%%%%%%%%%%%% Thema
+\newcommand{\topic}{Extending the Kubernetes API to manage legacy workloads via Ansible}
+%%%%%%%%%%%% Untertitel
+\newcommand{\subtopic}{}
+%%%%%%%%%%%% Studienbereich
+\newcommand{\studienbereich}{Technology}
+%%%%%%%%%%%% Fachrichtung
+\newcommand{\fachrichtung}{Technology}
+%%%%%%%%%%%% Studiengang
+\newcommand{\studiengang}{IT}
+%%%%%%%%%%%% Betrieb
+\newcommand{\company}{Mercoline GmbH}
+%%%%%%%%%%%% Betreuer HWR
+\newcommand{\betreuerHS}{Prof. Dr. Gerrit Kalkbrenner}
+%%%%%%%%%%%% Betreuer Unternehmen
+\newcommand{\betreuerUnt}{Florian Schaeffer}
+%%%%%%%%%%%% Jahrgang
+\newcommand{\jahrgang}{2023}
+%%%%%%%%%%% Signatur
+\newcommand{\doublesignature}[3][(Date/Signature)]{%
+  \parbox{\textwidth}{
+    \vspace*{2cm}
+
+    \parbox{7cm}{
+      \centering
+      \rule{6cm}{1pt}\\
+       \small{#1}
+    }
+    \hfill
+    \parbox{7cm}{
+      \centering
+      \rule{6cm}{1pt}\\
+      \small{#2}
+    }
+  }
+}
+
+\newcommand{\wordcount}{\input{wordcount.txt}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%>>>>>>>
+
+\begin{document}
+
+\newpage
+
+\thispagestyle{empty}
+
+%%-----------------------------------
+%% Sperrvermerk
+%%-----------------------------------
+%\section*{Sperrvermerk}
+%Der vorliegende Praxistransferbericht enthält vertrauliche Informationen der Firma Mercoline GmbH. Daher ist er nur zur Vorlage beim zuständigen Betreuer der Hochschule bestimmt. Für die Öffentlichkeit und dritte Personen darf er nicht zugänglich gemacht werden.
+%
+%\vspace{5cm}
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular*}{\textwidth}{c @{\extracolsep{\fill}} ccccc}
+%		\\
+%        \\
+%		\rule[0.5ex]{12em}{0.55pt} & \rule[0.5ex]{12em}{0.55pt} \\
+%		(Ort, Datum) & (Unterschrift des Ausbildungsleiters)
+%		\\
+%	\end{tabular*} \\
+%\end{table}
+%
+%\newpage
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%>>>>>>>
+%%%%%%%%%%% Titelblatt
+
+%% Anordnung und Aussehen von Titel und Untertitel
+
+\subject{\type}
+
+\title{
+    \vspace{-1cm}
+
+    \normalfont\endgraf\rule{\textwidth}{.25pt}
+
+
+    \begingroup
+        \centering
+        \linespread{1}
+        \large\topic
+    \endgroup
+
+    \linespread{1}
+    
+    \endgraf\rule{\textwidth}{.25pt}
+    \vspace{-6cm}
+    \date{\today}
+    %\date{Submitted on 20.08.2024}
+    \vspace{2.5cm}
+}
+
+\publishers{
+    \begin{tabular}{l l}
+        \textbf{\normalsize{Name:}}                 & \normalsize{\studentName}  \tabularnewline
+        \textbf{\normalsize{Matriculation Number:}}       & \normalsize{77207755709}  \tabularnewline
+        \textbf{\normalsize{Company:}}   & \normalsize{\company}  \tabularnewline
+        \textbf{\normalsize{Specialization:}}         & \normalsize{\fachrichtung} \tabularnewline
+        \textbf{\normalsize{Study Program:}}          & \normalsize{\studiengang} \tabularnewline
+        %\textbf{\normalsize{Modul:}}                & \normalsize{IT4301} \tabularnewline
+        \textbf{\normalsize{Academic Year:}}      & \normalsize{\jahrgang} \tabularnewline
+        \textbf{\normalsize{Company Supervisor:}} & \normalsize{\betreuerUnt} \tabularnewline
+        %\textbf{\normalsize{Betreuer Hochschule:}}  & \normalsize{\betreuerHS}
+        %\tabularnewline
+        \textbf{\normalsize{Words:}}               & \normalsize{\wordcount}
+    \end{tabular}
+    \doublesignature[(Date/Signature Training Manager)]{(Date/Signature Student)}
+}
+
+
+\titlehead{\begin{center}
+        \includegraphics[scale=0.7]{bilder/header.png}
+    \end{center}
+}
+
+\maketitle
+
+\onehalfspacing % anderthalbfacher Zeilenabstand
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Dokumenteninhalt START
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Abstract
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\include*[]{chapters/abstract}
+
+\pagenumbering{Roman} % römische Seitenzahlen
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Inhaltsverzeichnis, Tabellen, Abbildungen, etc.
+\newpage
+%\addcontentsline{toc}{chapter}{Table of Contents}
+\tableofcontents{}
+
+
+
+\listoffigures
+%\addcontentsline{toc}{chapter}{List of figures}
+%\listoftables
+%\addcontentsline{toc}{chapter}{List of tables}
+\lstlistoflistings
+\printnoidxglossaries
+\addcontentsline{toc}{chapter}{Glossary}
+\clearpage
+
+%% arabische Seitenzahlen
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% Einführung
+
+\chapter{Introduction}
+\label{chapter:intro}
+\input{chapters/intro.tex}
+
+% TODO: Include stuff here!
+
+\chapter{Conclusion}
+\label{chapter:outro}
+\input{chapters/conclusion}
+
+%\chapter{Ausblick}
+%\label{chapter:future}
+%\include*[]{chapters/future}
+
+\printbibliography
+
+% No header or footer
+\thispagestyle{empty}
+% But still include in the table of contents (uncomment if needed)
+%\addcontentsline{toc}{section}{Statutory Declaration}
+
+% Official text of the statutory declaration
+%TC:ignore
+\chapter*{Ehrenwörtliche Erklärungen}
+\addcontentsline{toc}{chapter}{Ehrenwörtliche Erklärung}
+
+% D. Monett D\'{\i}az (last updated: 21.05.2026): Dieser Text stammt aus der BT-Richtlinie zur Bachelorarbeit für den Studienjahrgang 2023
+
+Hiermit versichere ich, dass ich die vorliegende Arbeit in allen Teilen selbstständig angefertigt und keine anderen als die in der Arbeit angegebenen Quellen und Hilfsmittel benutzt habe. Sämtliche wörtlichen oder sinngemäßen Übernahmen und Zitate, sowie alle Abschnitte, die mithilfe von  \acrshort{KI}-basierten Tools entworfen, verfasst und/oder bearbeitet wurden, sind kenntlich gemacht und nachgewiesen. Im Anhang meiner Arbeit habe ich sämtliche  \acrshort{KI}-basierte Hilfsmittel angegeben. Diese sind mit Produktnamen und formulierten Eingaben (Prompts) in einem  \acrshort{KI}-Verzeichnis ausgewiesen.
+
+Ich bin mir bewusst, dass die Verwendung von Texten oder anderen Inhalten und Produkten, die durch \acrshort{KI}-basierte Tools generiert wurden, keine Garantie für deren Qualität darstellt. Ich verantworte die Übernahme jeglicher von mir verwendeter maschinell generierter Passagen vollumfänglich selbst und trage die Verantwortung für eventuell durch die \acrshort{KI} generierte fehlerhafte oder verzerrte Inhalte, fehlerhafte Referenzen, Verstöße gegen das Datenschutz- und Urheberrecht oder Plagiate.
+
+
+\begin{tabular}{lp{2em}l} 
+ \hspace{4cm}   && \hspace{5cm} \\\cline{1-1}\cline{3-3} 
+ Ort, Datum     && \text{Vorname Name} \\
+ \\
+ \\
+\end{tabular}
+
+%TC:endignore
+
+\appendix
+\chapter{Appendix}
+\input{chapters/appendix/appendix}
+
+\end{document}

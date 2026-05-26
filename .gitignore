@@ -1,0 +1,88 @@
+# LaTeX generated files to ignore
+
+
+
+# Auxiliary files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+*.lb
+*.bbl
+*.blg
+*.brf
+*.idx
+*.ilg
+*.ind
+*.loa
+*.glo
+*.gls
+*.ist
+*.acn
+*.acr
+*.alg
+*.glg
+*.glsdefs
+*.dvi
+*.thm
+*.run.xml
+
+
+
+# Partially compiled files
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.synctex.gz(busy)
+
+
+
+# Compiled document
+*.pdf
+*.ps
+*.dvi
+
+
+
+# Backup files created by editors
+*~
+*.bak
+*.swp
+*.tmp
+
+
+
+# Other files to ignore
+*.auxlock
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.tui
+*.tuo
+*.pyg
+*.bcf
+
+
+
+# Directories to ignore
+*/_minted-*/
+
+
+
+# Ignore TeX auxiliary files in subdirectories
+**/*.aux
+**/*.log
+**/*.toc
+**/*.fls
+**/*.fdb_latexmk
+**/*.synctex.gz
+arbeit.lol
+wordcount.txt
