@@ -1,0 +1,12 @@
+removeTrailingWhitespace:
+  beforeProcessing: 1
+  afterProcessing: 1
+modifyLineBreaks:
+  oneSentencePerLine:
+    manipulateSentences: 1
+    # removeSentenceLineBreaks: 1
+  textWrapOptions:
+    columns: 240
+    blocks: 1
+    multipleSpacesToSingle: 1
+  preserveMultipleEmptyLines: 1

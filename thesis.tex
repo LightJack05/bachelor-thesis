@@ -258,8 +258,6 @@
 %
 %\newpage
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%>>>>>>>
 %%%%%%%%%%% Titelblatt
 
@@ -268,47 +266,45 @@
 \subject{\type}
 
 \title{
-    \vspace{-1cm}
+	\vspace{-1cm}
 
-    \normalfont\endgraf\rule{\textwidth}{.25pt}
+	\normalfont\endgraf\rule{\textwidth}{.25pt}
 
+	\begingroup
+	\centering
+	\linespread{1}
+	\large\topic
+	\endgroup
 
-    \begingroup
-        \centering
-        \linespread{1}
-        \large\topic
-    \endgroup
+	\linespread{1}
 
-    \linespread{1}
-    
-    \endgraf\rule{\textwidth}{.25pt}
-    \vspace{-6cm}
-    \date{\today}
-    %\date{Submitted on 20.08.2024}
-    \vspace{2.5cm}
+	\endgraf\rule{\textwidth}{.25pt}
+	\vspace{-6cm}
+	\date{\today}
+	%\date{Submitted on 20.08.2024}
+	\vspace{2.5cm}
 }
 
 \publishers{
-    \begin{tabular}{l l}
-        \textbf{\normalsize{Name:}}                 & \normalsize{\studentName}  \tabularnewline
-        \textbf{\normalsize{Matriculation Number:}}       & \normalsize{77207755709}  \tabularnewline
-        \textbf{\normalsize{Company:}}   & \normalsize{\company}  \tabularnewline
-        \textbf{\normalsize{Specialization:}}         & \normalsize{\fachrichtung} \tabularnewline
-        \textbf{\normalsize{Study Program:}}          & \normalsize{\studiengang} \tabularnewline
-        %\textbf{\normalsize{Modul:}}                & \normalsize{IT4301} \tabularnewline
-        \textbf{\normalsize{Academic Year:}}      & \normalsize{\jahrgang} \tabularnewline
-        \textbf{\normalsize{Company Supervisor:}} & \normalsize{\betreuerUnt} \tabularnewline
-        %\textbf{\normalsize{Betreuer Hochschule:}}  & \normalsize{\betreuerHS}
-        %\tabularnewline
-        \textbf{\normalsize{Words:}}               & \normalsize{\wordcount}
-    \end{tabular}
-    \doublesignature[(Date/Signature Training Manager)]{(Date/Signature Student)}
+	\begin{tabular}{l l}
+		\textbf{\normalsize{Name:}}                 & \normalsize{\studentName}  \tabularnewline
+		\textbf{\normalsize{Matriculation Number:}} & \normalsize{77207755709}  \tabularnewline
+		\textbf{\normalsize{Company:}}              & \normalsize{\company}  \tabularnewline
+		\textbf{\normalsize{Specialization:}}       & \normalsize{\fachrichtung} \tabularnewline
+		\textbf{\normalsize{Study Program:}}        & \normalsize{\studiengang} \tabularnewline
+		%\textbf{\normalsize{Modul:}}                & \normalsize{IT4301} \tabularnewline
+		\textbf{\normalsize{Academic Year:}}        & \normalsize{\jahrgang} \tabularnewline
+		\textbf{\normalsize{Company Supervisor:}}   & \normalsize{\betreuerUnt} \tabularnewline
+		%\textbf{\normalsize{Betreuer Hochschule:}}  & \normalsize{\betreuerHS}
+		%\tabularnewline
+		\textbf{\normalsize{Words:}}                & \normalsize{\wordcount}
+	\end{tabular}
+	\doublesignature[(Date/Signature Training Manager)]{(Date/Signature Student)}
 }
 
-
 \titlehead{\begin{center}
-        \includegraphics[scale=0.7]{bilder/header.png}
-    \end{center}
+		\includegraphics[scale=0.7]{bilder/header.png}
+	\end{center}
 }
 
 \maketitle
@@ -332,8 +328,6 @@
 \newpage
 %\addcontentsline{toc}{chapter}{Table of Contents}
 \tableofcontents{}
-
-
 
 \listoffigures
 %\addcontentsline{toc}{chapter}{List of figures}
@@ -378,16 +372,19 @@
 
 % D. Monett D\'{\i}az (last updated: 21.05.2026): Dieser Text stammt aus der BT-Richtlinie zur Bachelorarbeit für den Studienjahrgang 2023
 
-Hiermit versichere ich, dass ich die vorliegende Arbeit in allen Teilen selbstständig angefertigt und keine anderen als die in der Arbeit angegebenen Quellen und Hilfsmittel benutzt habe. Sämtliche wörtlichen oder sinngemäßen Übernahmen und Zitate, sowie alle Abschnitte, die mithilfe von  \acrshort{KI}-basierten Tools entworfen, verfasst und/oder bearbeitet wurden, sind kenntlich gemacht und nachgewiesen. Im Anhang meiner Arbeit habe ich sämtliche  \acrshort{KI}-basierte Hilfsmittel angegeben. Diese sind mit Produktnamen und formulierten Eingaben (Prompts) in einem  \acrshort{KI}-Verzeichnis ausgewiesen.
+Hiermit versichere ich, dass ich die vorliegende Arbeit in allen Teilen selbstständig angefertigt und keine anderen als die in der Arbeit angegebenen Quellen und Hilfsmittel benutzt habe.
+Sämtliche wörtlichen oder sinngemäßen Übernahmen und Zitate, sowie alle Abschnitte, die mithilfe von \acrshort{KI}-basierten Tools entworfen, verfasst und/oder bearbeitet wurden, sind kenntlich gemacht und nachgewiesen.
+Im Anhang meiner Arbeit habe ich sämtliche \acrshort{KI}-basierte Hilfsmittel angegeben.
+Diese sind mit Produktnamen und formulierten Eingaben (Prompts) in einem \acrshort{KI}-Verzeichnis ausgewiesen.
 
-Ich bin mir bewusst, dass die Verwendung von Texten oder anderen Inhalten und Produkten, die durch \acrshort{KI}-basierte Tools generiert wurden, keine Garantie für deren Qualität darstellt. Ich verantworte die Übernahme jeglicher von mir verwendeter maschinell generierter Passagen vollumfänglich selbst und trage die Verantwortung für eventuell durch die \acrshort{KI} generierte fehlerhafte oder verzerrte Inhalte, fehlerhafte Referenzen, Verstöße gegen das Datenschutz- und Urheberrecht oder Plagiate.
+Ich bin mir bewusst, dass die Verwendung von Texten oder anderen Inhalten und Produkten, die durch \acrshort{KI}-basierte Tools generiert wurden, keine Garantie für deren Qualität darstellt.
+Ich verantworte die Übernahme jeglicher von mir verwendeter maschinell generierter Passagen vollumfänglich selbst und trage die Verantwortung für eventuell durch die \acrshort{KI} generierte fehlerhafte oder verzerrte Inhalte, fehlerhafte Referenzen, Verstöße gegen das Datenschutz- und Urheberrecht oder Plagiate.
 
-
-\begin{tabular}{lp{2em}l} 
- \hspace{4cm}   && \hspace{5cm} \\\cline{1-1}\cline{3-3} 
- Ort, Datum     && \text{Vorname Name} \\
- \\
- \\
+\begin{tabular}{lp{2em}l}
+	\hspace{4cm} &  & \hspace{5cm}        \\\cline{1-1}\cline{3-3}
+	Ort, Datum   &  & \text{Vorname Name} \\
+	\\
+	\\
 \end{tabular}
 
 %TC:endignore

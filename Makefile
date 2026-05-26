@@ -45,6 +45,10 @@ cleanall:
 clean:
 	latexmk -c
 
+format:
+	find . -name "*.tex" -exec latexindent -w -s -m -l=localSettings.yaml {} +
+	find . -name "*.bak*" -delete
+
 open:
 	@xdg-open $(PROJNAME).pdf &>/dev/null&
 rebuild: cleanall all
