@@ -1,88 +1,60 @@
-# LaTeX generated files to ignore
-
-
-
-# Auxiliary files
+# LaTeX intermediate files
+*.lol
 *.aux
-*.lof
-*.log
-*.lot
-*.fls
-*.out
-*.toc
-*.fmt
-*.fot
-*.cb
-*.cb2
-*.lb
+*.bcf
 *.bbl
 *.blg
 *.brf
 *.idx
 *.ilg
 *.ind
-*.loa
-*.glo
-*.gls
-*.ist
+*.lof
+*.log
+*.lot
+*.out
+*.toc
 *.acn
 *.acr
 *.alg
-*.glg
-*.glsdefs
 *.dvi
-*.thm
-*.run.xml
-
-
-
-# Partially compiled files
 *.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.ist
+*.loa
+*.loc
+*.mlf
+*.mtc
+*.mtc0
+*.nav
+*.nlo
+*.nls
+*.snm
 *.synctex.gz
-*.synctex(busy)
-*.synctex.gz(busy)
+*.tdo
+*.thm
+*.toc
+*.vrb
+*.xdy
 
-
-
-# Compiled document
+# LaTeX document files
 *.pdf
 *.ps
 *.dvi
 
-
-
-# Backup files created by editors
-*~
+# LaTeX editor files
 *.bak
+*.backup
 *.swp
+*.synctex.gz
 *.tmp
+*.run.xml
 
-
-
-# Other files to ignore
-*.auxlock
-*.nav
-*.snm
-*.vrb
-*.xdv
-*.tui
-*.tuo
-*.pyg
-*.bcf
-
-
-
-# Directories to ignore
-*/_minted-*/
-
-
-
-# Ignore TeX auxiliary files in subdirectories
-**/*.aux
-**/*.log
-**/*.toc
-**/*.fls
-**/*.fdb_latexmk
-**/*.synctex.gz
-arbeit.lol
+.DS_Store
+*SAVE-ERROR
 wordcount.txt
+
+.vscode/
+*.pdf_tex
