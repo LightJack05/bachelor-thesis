@@ -61,6 +61,8 @@
 \counterwithout{table}{chapter}
 \counterwithout{footnote}{chapter}
 
+% make sure words wrap properly
+\setlength{\emergencystretch}{3em}
 %\setlist[itemize]{parsep=0cm}
 \definecolor{dkgreen}{rgb}{0,.6,0}
 \definecolor{dkblue}{rgb}{0,0,.6}
@@ -314,6 +316,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%% Dokumenteninhalt START
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hinweise
+\clearpage
+
+\chapter*{Conventions}
+
+\section*{Gender neutral language}
+For the sake of readability and inclusivity, this paper uses gender-neutral language throughout. The singular \enquote{they/them} is used to refer to individuals whose gender is unspecified or not relevant to the discussion.
+
+\section*{Differentiating object types from regular nouns}
+Due to the naming conventions of objects in Kubernetes and similar systems, it may be difficult to determine whether \enquote{service} refers to a Kubernetes \enquote{Service} object, or a \enquote{service} offered by a third party or server etc. To remove ambiguity, the following convention is used in this paper:
+
+\begin{itemize}
+    \item Object types as defined by Kubernetes, Ansible or other systems will be written in \texttt{PascalCase} with monospace fonts, such as \texttt{Service}, \texttt{Role} and \texttt{CustomResourceDefinition}.
+    \item General nouns will be written in ordinary lowercase, such as a service offered by a platform or a host being a server.
+\end{itemize}
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%% Abstract
