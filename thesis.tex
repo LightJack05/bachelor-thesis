@@ -349,18 +349,87 @@
 \input{chapters/intro.tex}
 
 % TODO: Include stuff here!
+\chapter{Theoretical foundations}
+\input{chapters/010-theory/000-intro.tex}
 
-\chapter{Temp}
-\label{chapter:temp}
-\input{chapters/theory/temp.tex}
+\section{Promise Theory}
+\input{chapters/010-theory/010-promise-theory.tex}
+
+\section{Asynchonous reconciliation as an operator concept}
+\input{chapters/010-theory/020-reconciliation.tex}
+
+\section{Defining a capability plane for a platform using promises}
+\input{chapters/010-theory/030-capability-plane.tex}
+
+\chapter{Technical foundations}
+\input{chapters/020-technical-foundations/000-intro.tex}
+
+\section{Kubernetes as a collection of operators}
+\input{chapters/020-technical-foundations/010-kubernetes.tex}
+
+\section{Foundations of using Ansible}
+\input{chapters/020-technical-foundations/020-ansible.tex}
+
+\section{Fundamentals of the SSH protocol}
+\input{chapters/020-technical-foundations/020-ansible.tex}
+
+\chapter{Analysis of existing integration between Kubernetes and Ansible}
+\input{chapters/030-analysis/000-intro.tex}
+
+% TODO: Check if we need to do a chapter on semaphore
+\section{AWX Operator and AWX Resource Operator}
+\input{chapters/030-analysis/020-awx-operator.tex}
+
+\chapter{Architectural design of the Operator}
+\input{chapters/040-architecture/000-intro.tex}
+
+\section{Requirements for the Operator}
+\input{chapters/040-architecture/005-requriements.tex}
+
+\section{Scoping the implementation}
+\input{chapters/040-architecture/010-scope.tex}
+
+\section{CRDs mapping to Ansible Objects}
+\input{chapters/040-architecture/020-crds.tex}
+
+\section{Additional resources required for lifecycle-management}
+\input{chapters/040-architecture/030-additional-crds.tex}
+
+\section{Object relations}
+\input{chapters/040-architecture/040-relations.tex}
+
+\section{Object relations to out-of-cluster resources}
+\input{chapters/040-architecture/050-data.tex}
+
+\section{Pulling in requirements and role dependencies for playbooks}
+\input{chapters/040-architecture/060-dependencies.tex}
+
+\section{Executing ansible reconcile jobs}
+\input{chapters/040-architecture/070-execution.tex}
+
+\chapter{Implementation of the operator}
+\input{chapters/050-implementation/000-intro.tex}
+
+\section{CRDs and API definitions for the Operator}
+\input{chapters/050-implementation/010-crds.tex}
+
+\section{Reconcile logic for Objects}
+\input{chapters/050-implementation/020-reconcile.tex}
+
+\section{Execution logic of Ansible Reconcile Containers}
+\input{chapters/050-implementation/030-jobs.tex}
+
+\section{State reporting to the job resource}
+\input{chapters/050-implementation/040-report-status.tex}
+
 
 \chapter{Conclusion}
 \label{chapter:outro}
 \input{chapters/conclusion}
 
-%\chapter{Ausblick}
-%\label{chapter:future}
-%\include*[]{chapters/future}
+\chapter{Outlook}
+\label{chapter:future}
+\include*[]{chapters/future}
 
 \printbibliography
 
