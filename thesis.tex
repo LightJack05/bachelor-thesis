@@ -322,14 +322,14 @@
 \chapter*{Conventions}
 
 \section*{Gender neutral language}
-For the sake of readability and inclusivity, this paper uses gender-neutral language throughout. The singular \enquote{they/them} is used to refer to individuals whose gender is unspecified or not relevant to the discussion.
+For the sake of readability and inclusivity, this thesis uses gender-neutral language throughout. The singular \enquote{they/them} is used to refer to individuals whose gender is unspecified or not relevant to the discussion.
 
 \section*{Differentiating object types from regular nouns}
-Due to the naming conventions of objects in Kubernetes and similar systems, it may be difficult to determine whether \enquote{service} refers to a Kubernetes \enquote{Service} object, or a \enquote{service} offered by a third party or server etc. To remove ambiguity, the following convention is used in this paper:
+Due to the naming conventions of objects in Kubernetes and similar systems, it may be difficult to determine whether \enquote{service} refers to a Kubernetes \enquote{Service} object, or a \enquote{service} offered by a third party or server etc. To remove ambiguity, the following convention is used in this thesis:
 
 \begin{itemize}
-    \item Object types as defined by Kubernetes, Ansible or other systems will be written in \texttt{PascalCase} with monospace fonts, such as \texttt{Service}, \texttt{Role} and \texttt{CustomResourceDefinition}.
-    \item General nouns will be written in ordinary lowercase, such as a service offered by a platform or a host being a server.
+	\item Object types as defined by Kubernetes, Ansible or other systems will be written in \texttt{PascalCase} with monospace fonts, such as \texttt{Service}, \texttt{Role} and \texttt{CustomResourceDefinition}.
+	\item General nouns will be written in ordinary lowercase, such as a service offered by a platform or a host being a server.
 \end{itemize}
 \clearpage
 
@@ -366,30 +366,45 @@ Due to the naming conventions of objects in Kubernetes and similar systems, it m
 \label{chapter:intro}
 \input{chapters/intro.tex}
 
-% TODO: Include stuff here!
+
+\chapter{Defining the goals of this thesis}
+\input{chapters/005-problem/000-intro.tex}
+
+\section{Defining the problem to solve}
+\input{chapters/005-problem/010-defining-the-problem.tex}
+
+\section{Engineering the requirements for the resulting software}
+\input{chapters/005-problem/020-requriements.tex}
+
+\section{Drafting a first solution for the problem}
+\input{chapters/005-problem/030-initial-solution-plan.tex}
+
+
 \chapter{Theoretical foundations}
 \input{chapters/010-theory/000-intro.tex}
 
 \section{Promise Theory}
 \input{chapters/010-theory/010-promise-theory.tex}
 
-\section{Asynchonous reconciliation as an operator concept}
+\section{Asynchronous reconciliation as an agent concept}
 \input{chapters/010-theory/020-reconciliation.tex}
 
-\section{Defining a capability plane for a platform using promises}
+\section{Defining a capability plane for arbitrary platforms using promises}
 \input{chapters/010-theory/030-capability-plane.tex}
+
 
 \chapter{Technical foundations}
 \input{chapters/020-technical-foundations/000-intro.tex}
 
-\section{Kubernetes as a collection of operators}
+\section{Kubernetes as a collection of agents}
 \input{chapters/020-technical-foundations/010-kubernetes.tex}
 
 \section{Foundations of using Ansible}
 \input{chapters/020-technical-foundations/020-ansible.tex}
 
-\section{Fundamentals of the SSH protocol}
+\section{Fundamentals of the Secure Shell protocol}
 \input{chapters/020-technical-foundations/020-ansible.tex}
+
 
 \chapter{Analysis of existing integration between Kubernetes and Ansible}
 \input{chapters/030-analysis/000-intro.tex}
@@ -398,46 +413,45 @@ Due to the naming conventions of objects in Kubernetes and similar systems, it m
 \section{AWX Operator and AWX Resource Operator}
 \input{chapters/030-analysis/020-awx-operator.tex}
 
+
 \chapter{Architectural design of the Operator}
 \input{chapters/040-architecture/000-intro.tex}
-
-\section{Requirements for the Operator}
-\input{chapters/040-architecture/005-requriements.tex}
 
 \section{Scoping the implementation}
 \input{chapters/040-architecture/010-scope.tex}
 
-\section{CRDs mapping to Ansible Objects}
+\section{Mapping Ansible Object Types to Kubernetes Object Types}
 \input{chapters/040-architecture/020-crds.tex}
 
-\section{Additional resources required for lifecycle-management}
+\section{Declaring Kubernetes Object Types for lifecycle-management}
 \input{chapters/040-architecture/030-additional-crds.tex}
 
-\section{Object relations}
+\section{Defining relations between objects}
 \input{chapters/040-architecture/040-relations.tex}
 
-\section{Object relations to out-of-cluster resources}
+\section{Defining relations to out-of-cluster resources}
 \input{chapters/040-architecture/050-data.tex}
 
-\section{Pulling in requirements and role dependencies for playbooks}
+\section{Handling dependencies for playbooks}
 \input{chapters/040-architecture/060-dependencies.tex}
 
-\section{Executing ansible reconcile jobs}
+\section{Modeling the Ansible execution environment}
 \input{chapters/040-architecture/070-execution.tex}
+
 
 \chapter{Implementation of the operator}
 \input{chapters/050-implementation/000-intro.tex}
 
-\section{CRDs and API definitions for the Operator}
+\section{Defining the operators API}
 \input{chapters/050-implementation/010-crds.tex}
 
-\section{Reconcile logic for Objects}
+\section{Implementing reconcile logic for object controllers}
 \input{chapters/050-implementation/020-reconcile.tex}
 
-\section{Execution logic of Ansible Reconcile Containers}
+\section{Constructing the Ansible execution environment}
 \input{chapters/050-implementation/030-jobs.tex}
 
-\section{State reporting to the job resource}
+\section{Reporting status back to resources}
 \input{chapters/050-implementation/040-report-status.tex}
 
 
