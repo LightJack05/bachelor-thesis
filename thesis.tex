@@ -9,7 +9,6 @@
 	footsepline, %Footertrennlinie
 	oneside %einseitiges Druckformat %%% Unterdrücken der leeren Seite nach Titelblatt
 	]{scrbook} %Dokumentenklasse (Koma-Script)
-\usepackage[T1]{fontenc}
 \usepackage{verbatim}
 \usepackage{microtype}
 \usepackage{scrhack}
@@ -27,12 +26,14 @@
 \usepackage[right]{eurosym} %Euro-Zeichen
 \usepackage{rotating}
 \usepackage{amssymb}
+\usepackage{amsmath}
 \usepackage{forest}
 \usepackage{csquotes}
 \usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage{lmodern}
 \usepackage{fnpct}
+\usepackage{textcomp}
 \usepackage[all]{nowidow}
 \usepackage{newclude}
 \usepackage[sorting=nyt,backend=biber,style=apa]{biblatex}
@@ -111,6 +112,8 @@
 \displaywidowpenalty=10000
 
 \newcommand{\footfigref}[1]{\footnote{Img. \ref{#1} on page \pageref{#1}}}
+% Imposition arrow
+\newcommand{\ximpose}[1]{\overset{#1}{\relbar\joinrel\blacksquare}}
 
 %% Bei Referenzen im Text wird jetzt bei allen Ebenen "Kapitel" vorgestellt, z.b. Kapitel 2, Kapitel 2.2, Kapitel 6.3.2
 %\addto\extrasngerman{%
