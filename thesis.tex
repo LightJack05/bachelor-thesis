@@ -11,6 +11,7 @@
 	]{scrbook} %Dokumentenklasse (Koma-Script)
 \usepackage{verbatim}
 \usepackage{microtype}
+\usepackage{multido}
 \usepackage{scrhack}
 \usepackage{float}
 \usepackage{booktabs}
@@ -113,7 +114,9 @@
 
 \newcommand{\footfigref}[1]{\footnote{Img. \ref{#1} on page \pageref{#1}}}
 % Imposition arrow
-\newcommand{\ximpose}[1]{\overset{#1}{\relbar\joinrel\blacksquare}}
+\newcommand{\impose}[2]{
+    \mathrel{\overset{\displaystyle #1}{\raisebox{0.22ex}{\multido{\i=0+1}{#2}{$-\!\!\!$}$-\!$}\blacksquare}}
+}
 
 %% Bei Referenzen im Text wird jetzt bei allen Ebenen "Kapitel" vorgestellt, z.b. Kapitel 2, Kapitel 2.2, Kapitel 6.3.2
 %\addto\extrasngerman{%
