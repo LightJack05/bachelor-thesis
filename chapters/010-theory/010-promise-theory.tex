@@ -22,30 +22,32 @@ An agent in this context is any active entity in Promise Theory, which can inclu
 This means that promises set expectations for how things and people may behave. \parencite{promise-theory}
 
 For noting promises we shall use the formal notation from \cite{promise-theory}.
-The following notation denotes a promise of the first kind, namely a direct promise from $A$ to $B$ with body $b$:
+The following notation denotes a promise of the first kind, namely a direct promise from $A$ to $B$ with body $b$ \parencite{promise-theory}:
 
 \[
-    A \xrightarrow{b} B
+	A \xrightarrow{b} B
 \]
 
 
-The body $b$ may contain a label $\Lambda (b)$ uniquely identifying the promise, a type $\tau (b)$ explaining the promise and a constraint $\chi (b)$ on the state of the agent. 
-Additionally, the body $b$ may be signed to indicate whether the promise is a promise to give or a promise to accept:
+The body $b$ may contain a label $\Lambda (b)$ uniquely identifying the promise, a type $\tau (b)$ explaining the promise and a constraint $\chi (b)$ on the state of the agent.
+Additionally, the body $b$ may be signed to indicate whether the promise is a promise to give or a promise to accept \parencite{promise-theory}:
 
 \[
-    A \xrightarrow{-b} B
+	A \xrightarrow{-b} B
 \]
 
 
 Therefore, the promise above is the promise $\Lambda (b)$ from $A$ to $B$ to accept $\tau (b)$ subject to $\chi (b)$.
-We will also be looking at promises of the second kind, which are noted as below:
+We will also be looking at promises of the second kind, which are noted as below \parencite{promise-theory}:
 
 \[
-    A[B] \xrightarrow{b} C
+	A[B] \xrightarrow{b} C
 \]
 
-The formula below denotes a promise that is made by $A$ to $C$ ob behalf of $B$, meaning that $A$ promises behavior of $B$. It should be noted that this is not a guaruantee for $B$ to actually behave in that way, since $B$ has made no promise itself. Such a constellation is equivalent to an \enquote{imposition}, which can be denoted like this:
+The formula below denotes a promise that is made by $A$ to $C$ ob behalf of $B$, meaning that $A$ promises behavior of $B$. It should be noted that this is not a guarantee for $B$ to actually behave in that way, since $B$ has made no promise itself. Such a constellation is equivalent to an imposition, which can be denoted like this \parencite{promise-theory}:
 
 \[
-    A \impose{B \xrightarrow{b} C}{10} B
+	A \impose{B \xrightarrow{b} C}{10} B
 \]
+
+Meaning $A$ imposes on $B$ that $B$ make a promise to $C$ about $b$.
