@@ -8,18 +8,24 @@ This problem is commonly addressed with either expanding on the personnel availa
 Usually one of the most automatable and least desirable areas of managing infrastructure are repetitive, regular tasks.
 In the \gls{sre} context, such tasks are referred to as \enquote{toil}.
 Toil specifically represents very automatable tasks that repeat on a regular interval and usually do not require much metal capacity of the person performing the actions.
-The goal of modern infrastructure management solutions is to eliminate toil as much as possible. \parencite{google-sre}
+The goal of modern infrastructure management solutions is to eliminate toil as much as possible.
+\parencite{google-sre}
 
-Because of the nature of \gls{IT} systems makes them inherently automatable, since they are themselves systems intended for automation, there are several ways of eliminating toil in modern environments. Two such ways are the tools Kubernetes and Ansible.
+Because of the nature of \gls{IT} systems makes them inherently automatable, since they are themselves systems intended for automation, there are several ways of eliminating toil in modern environments.
+Two such ways are the tools Kubernetes and Ansible.
 Both are tools that are intended to allow managing of Infrastructure and keep the required management of the systems as low as possible.
-We will shed light on the specific architecture of both systems in a later chapter. %TODO: Link to Ansible/K8s Chapter
+We will shed light on the specific architecture of both systems in a later chapter.
+%TODO: Link to Ansible/K8s Chapter
 
 \subsection{A common access plane}
 When managing infrastructure at scale, it is often essential to allow personnel to have an easy way to see the status of the infrastructure and interact with it.
 It is even more important to have a unified way of describing or changing the infrastructure.
 
 With traditional infrastructure management, one might create a virtual machine by hand, install an operating system, log in and install a specific software, so the machine fulfills a specific purpose.
-In this model, every machine is unique, has a unique underlying operating system, and needs to be handled independently. Even worse, the machine does not inherently have any documentation of what it is, what it does and why it exists. In growing environments this will lead to Problems, since there may not be one person managing infrastructure, but there may be several hundreds or even thousands. In such environments, documentation is essential to being able to operate infrastructure reliably.
+In this model, every machine is unique, has a unique underlying operating system, and needs to be handled independently.
+Even worse, the machine does not inherently have any documentation of what it is, what it does and why it exists.
+In growing environments this will lead to Problems, since there may not be one person managing infrastructure, but there may be several hundreds or even thousands.
+In such environments, documentation is essential to being able to operate infrastructure reliably.
 
 %TODO: citation
 Both Kubernetes and Ansible attempt to solve these problems.
@@ -29,18 +35,29 @@ It also allows quickly recreating machines in the event of a failure of the mach
 This is invaluable in the event of drifting configurations, hardware failures or other issues where the machine itself may be faulty and need to be recreated.
 
 However, when applying such systems, it is important to state that when using multiple systems built for different purposes, it may result in the same problem that has existed with traditional infrastructure.
-When there are several, fundamentally different systems in an organization, it may again lead to \gls{tribalknowledge}, resulting in the same problem, just at a different level. \parencite{platformengineering-architects}
+When there are several, fundamentally different systems in an organization, it may again lead to \gls{tribalknowledge}, resulting in the same problem, just at a different level.
+\parencite{platformengineering-architects}
 
 Therefore, it is important to establish a common mode of access and operation between the tools used to manage the infrastructure, and provide an abstraction, which is commonly referred to as a \enquote{platform}.
 The core goal is to provide a single interface and a common mental model of how resources are managed on the platform, with the platform handling the actual management of the resources.
-In platform engineering, we refer to the list of things we can manage via the platform as our \enquote{capability plane}. \parencite{platformengineering-architects}
+In platform engineering, we refer to the list of things we can manage via the platform as our \enquote{capability plane}.
+\parencite{platformengineering-architects}
 Wrapping tools like Kubernetes Workloads and Ansible Workloads underneath a common platform allows us to make sure that using the objects feels the same, regardless of the underlying technology.
 
 \subsection{Incompatible modes of operation between Kubernetes and Ansible}
-When looking at Ansible and Kubernetes, one thing becomes clear: the two systems are very different in their nature. We will elaborate on the specifics more in later chapters, however the following should serve as a first introduction to how the two systems handle state.
+When looking at Ansible and Kubernetes, one thing becomes clear: the two systems are very different in their nature.
+We will elaborate on the specifics more in later chapters, however the following should serve as a first introduction to how the two systems handle state.
 
-Kubernetes works by continuously comparing the observed state of infrastructure to the desired state as defined by configurations stored in the Kubernetes cluster. In this way, when the cluster state deviates from the desired state, Kubernetes will try to move the observed state closer to the desired state by using a \gls{reconcile} pattern. That means once the state deviates, or as long as it does, Kubernetes will run a reconcile on deviating objects, which may or may not affect other objects. This means that in Kubernetes, there are always two different states: the desired state and the observed state. If we apply the concept of promise theory to this model, which we will learn more about later, we can infer that Kubernetes is a promise based system.
+Kubernetes works by continuously comparing the observed state of infrastructure to the desired state as defined by configurations stored in the Kubernetes cluster.
+In this way, when the cluster state deviates from the desired state, Kubernetes will try to move the observed state closer to the desired state by using a \gls{reconcile} pattern.
+That means once the state deviates, or as long as it does, Kubernetes will run a reconcile on deviating objects, which may or may not affect other objects.
+This means that in Kubernetes, there are always two different states: the desired state and the observed state.
+If we apply the concept of promise theory to this model, which we will learn more about later, we can infer that Kubernetes is a promise based system.
 
-Ansible does not follow this concept, it is closer to a script programming language than a reconciling system. In Ansible, the user can define a script called a playbook which will contain a number of actions to execute, similar to how bash would allow a user to do. Ansible does use the concept of \gls{idempotency}, which is similar on the first look, but works differently in practice. Ansible does also allow the user to use inherently not idempotent operations, such as directly running shell scripts. If we apply the concept of promise theory to Ansible, we will notice that Ansible is mainly an imposition based system.
+Ansible does not follow this concept, it is closer to a script programming language than a reconciling system.
+In Ansible, the user can define a script called a playbook which will contain a number of actions to execute, similar to how bash would allow a user to do.
+Ansible does use the concept of \gls{idempotency}, which is similar on the first look, but works differently in practice.
+Ansible does also allow the user to use inherently not idempotent operations, such as directly running shell scripts.
+If we apply the concept of promise theory to Ansible, we will notice that Ansible is mainly an imposition based system.
 
 Because the two systems are using different models when interacting with subjects for management, combining them under a common interface will most likely prove difficult.
