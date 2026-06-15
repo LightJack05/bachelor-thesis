@@ -1,0 +1,29 @@
+Kubernetes is the foundation for providing the unified interface and will provide the standardized \gls{api} for the software implemented.
+Therefor the following section will provide an introduction to the core concepts of Kubernetes, using promise theory as a way to explain functionalities.
+First there will be an introduction to Kubernetes itself, and how it operates, followed by the concept of controllers. Following that will be an introduction to operators and their concepts, including how they utilize Kubernetes objects.
+
+
+\subsection{Core Kubernetes concepts}
+
+Kubernetes clusters consist of \texttt{Nodes} which represent servers that are running a Kubelet instance.
+\texttt{Nodes} provide resources such as memory, \gls{cpu} and similar to the cluster to allow scheduling of \texttt{Pods}.
+There are several core components to Kubernetes that should be explained so it becomes clear how the cluster manages resources. \parencite{poulton2025kubernetes}
+
+\subsubsection{The control plane}
+The Kubernetes control plane serves as the part of the cluster orchestrating workloads and managing the cluster lifecycle.
+It consists of one or more \texttt{Nodes}, where multiple nodes are generally preferred for high availability and failover purposes. 
+In addition to the control plane, there may be several worker nodes, with the Google Kubernetes Engine reaching 65.000 nodes per cluster. \parencite{google-gke-resource-limits, poulton2025kubernetes}
+
+The control plane hosts several core components that are necessary for cluster operation.
+The first such component is etcd, which is a highly consistent key-value store that is used to store the cluster configuration.
+It used to store any objects that are passed to the control plane via commands such as \enquote{kubectl create}.
+
+The second service that runs on the control plane is the Kubernetes API server. It is the central component responsible for communication between clients such as kubectl and the Kubernetes cluster. The Kubernetes \gls{api} server offers a \gls{rest} \gls{api} which allows modification of the cluster. It also handles authentication and autorization of clients and enforces \gls{rbac} policies.
+
+
+\subsection{Controllers in Kubernetes}
+\subsection{Operator concepts}
+\subsubsection{Operator pattern}
+\subsubsection{Asynchronous reconciliation}
+\subsubsection{Kubernetes object conditions}
+\subsubsection{Garbage collection}
