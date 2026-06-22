@@ -34,7 +34,7 @@ In addition to the control plane, there may be several worker \texttt{Nodes}, wi
 
 The control plane hosts several core components that are necessary for cluster operation.
 The first such component is etcd, which is a highly consistent key-value store that is used to store the cluster configuration.
-It used to store any objects that are passed to the control plane via commands such as \enquote{kubectl create}.
+It is used to store any objects that are passed to the control plane via commands such as \enquote{kubectl create}.
 \parencite{poulton2025kubernetes, k8sclustercomponents}
 
 The second service that runs on the control plane is the Kubernetes API server.
@@ -59,12 +59,11 @@ This is where we need to talk about the concept of controllers.
 Controllers in Kubernets are software that are responsible for at least one resource type in Kubernetes.
 Kubernetes supplies several built-in controllers via the kube-controller-manager.
 These supply the common objects one may know from using Kuberentes already, like \texttt{Jobs}, \texttt{Deployments} or \texttt{Services}.
-Additionally, basically all node components are themselves controllers, like the kubelet, kube-scheduler or kube-proxy.
+Additionally, most node components are themselves controllers, like the kubelet, kube-scheduler or kube-proxy.
 \parencite{k8scontrollers, k8sclustercomponents}
 
 A controller uses a reconcile loop in order to move the actual or observed state of the cluster closer to the desired state as defined by an object's manifest.
-Assuming a \texttt{Deployment} object specifies that 3 instances of a pod with an nginx container should be running.
-Several controllers now touch the object, until 3 containers are actually running.
+Assuming a \texttt{Deployment} object specifies that 3 instances of a pod with an nginx container should be running, several controllers now touch the object, until 3 containers are actually running.
 First, the kube-apiserver accepts the object manifest via a request and writes it into etcd.
 The \texttt{Deployment} controller notices the new \texttt{Deployment}, and performs the actions that are required to fulfil the promise it made, namely in this case to create a \texttt{ReplicaSet}.
 Once the \texttt{ReplicaSet} is created, the \texttt{ReplicaSet} controller reconciles the object to move the observed state closer to the desired state.
@@ -83,14 +82,14 @@ These objects may also allow the management of resources other than container wo
 
 \subsubsection{Operator pattern}
 In Kubernetes, the concept of writing Controllers that manage other software or aggregate capabilities to orchestrate complex tasks is referred to as the operator pattern.
-An \enquote{Operator} here is a piece of software that is able to manage a complex tasks in the same way a human operator would.
+An \enquote{Operator} here is a piece of software that is able to manage a complex task in the same way a human operator would.
 This could be tasks such as setting up databases, handling data recovery or creating credentials for external services.
 The goal here is to eliminate the standard tasks always required for setting up and managing specific software, and transforming the human knowledge required for it into code that can automate the process.
 \parencite{k8soperators}
 
 There are numerous frameworks to make the implementation of operators easier, so writing repetitive code is reduced to the minimum.
-Common examples of Operator frameworks are kubebuilder, Java Operator SDK and Kopf.
-These offer ways to build the complex \texttt{CustomResourceDefinitions} for the developer, automatically watch resources for changes and trigger a reconcile, so the developer only need to focus on the actual business logic of the operator.
+Common examples of operator frameworks are kubebuilder, Java Operator SDK and Kopf.
+These offer ways to build the complex \texttt{CustomResourceDefinitions} for the developer, automatically watch resources for changes and trigger a reconcile, so the developer only needs to focus on the actual business logic of the operator.
 \parencite{k8soperators}
 
 \subsubsection{Asynchronous reconciliation}
@@ -106,11 +105,11 @@ In Kubernetes, this concept is referred to as \enquote{eventually consistent}, t
 
 \subsubsection{Kubernetes object conditions}
 
-To allow an assessment of whether a controller was able to keep the promise it made with the \texttt{CustomResourceDefinition}, Kubernetes allows object's to carry conditions in their status block.
+To allow an assessment of whether a controller was able to keep the promise it made with the \texttt{CustomResourceDefinition}, Kubernetes allows objects to carry conditions in their status block.
 Conditions can be thought of as a status report from the controller to the client that created the resource.
 A condition, when following the convention, should have static conditions in positive naming.
 Typically, this amounts to a condition called \enquote{Ready}, and additional conditions on more complex objects.
-Every condition the has additional properties, the primary one indicating whether the condition is active, with additional ones indicating a reason as to why the resource is in the specific condition, a human-readable message from the controller as well as the transition time.
+Every condition can then have additional properties, the primary one indicating whether the condition is active, with additional ones indicating a reason as to why the resource is in the specific condition, a human-readable message from the controller as well as the transition time.
 \parencite{kubebuilder-book}
 
 \subsubsection{Garbage collection}
