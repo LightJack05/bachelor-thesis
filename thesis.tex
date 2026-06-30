@@ -113,10 +113,8 @@
 \displaywidowpenalty=10000
 
 \newcommand{\footfigref}[1]{\footnote{Img. \ref{#1} on page \pageref{#1}}}
-% Imposition arrow
-\newcommand{\impose}[2]{
-    \mathrel{\overset{\displaystyle #1}{\raisebox{0.22ex}{\multido{\i=0+1}{#2}{$-\!\!\!$}$-\!$}\blacksquare}}
-}
+
+\input{commands.tex}
 
 %% Bei Referenzen im Text wird jetzt bei allen Ebenen "Kapitel" vorgestellt, z.b. Kapitel 2, Kapitel 2.2, Kapitel 6.3.2
 %\addto\extrasngerman{%
@@ -419,13 +417,10 @@ Due to the naming conventions of objects in Kubernetes and similar systems, it m
 \section{Scoping the implementation}
 \input{chapters/040-architecture/010-scope.tex}
 
-\section{Mapping Ansible Object Types to Kubernetes Object Types}
-\input{chapters/040-architecture/020-crds.tex}
+\section{Defining the required objects}
+\input{chapters/040-architecture/030-crds.tex}
 
-\section{Declaring Kubernetes Object Types for lifecycle-management}
-\input{chapters/040-architecture/030-additional-crds.tex}
-
-\section{Defining relations between objects}
+\section{Mapping relations between objects}
 \input{chapters/040-architecture/040-relations.tex}
 
 \section{Defining relations to out-of-cluster resources}

@@ -75,7 +75,7 @@ It now instructs the \gls{cri} to run the containers required to meet the \textt
 
 \subsection{Extending Kubernetes with custom controllers}
 
-The strength of Kubernetes here is the ability to define so-called \texttt{CustomResourceDefinitions}.
+The strength of Kubernetes here is the ability to define so-called \gls{crd}.
 These are themselves Kubernetes objects, which allow users of Kubernetes to specify custom resources in the Kubernetes \gls{api}.
 These objects may also allow the management of resources other than container workloads, since the controllers attached to them simply need to read the desired state from Kubernetes and can then perform arbitrary actions, such as reaching out to external \gls{api}s or creating other Kubernetes resources.
 \parencite{k8scustomresources, k8scontrollers}
@@ -89,12 +89,12 @@ The goal here is to eliminate the standard tasks always required for setting up 
 
 There are numerous frameworks to make the implementation of operators easier, so writing repetitive code is reduced to the minimum.
 Common examples of operator frameworks are kubebuilder, Java Operator SDK and Kopf.
-These offer ways to build the complex \texttt{CustomResourceDefinitions} for the developer, automatically watch resources for changes and trigger a reconcile, so the developer only needs to focus on the actual business logic of the operator.
+These offer ways to build the complex \gls{crd} for the developer, automatically watch resources for changes and trigger a reconcile, so the developer only needs to focus on the actual business logic of the operator.
 \parencite{k8soperators}
 
 \subsubsection{Asynchronous reconciliation}
 Kubernetes controllers, including operators, make use of a concept called asynchronous reconciliation.
-It means that the kube-apiserver only verifies the syntactical correctness of the \texttt{CustomResource} created based on a \texttt{CustomResourceDefinition}, but usually doesn't validate the actual logical consistency.
+It means that the kube-apiserver only verifies the syntactical correctness of the \texttt{CustomResource} created based on a \gls{crd}, but usually doesn't validate the actual logical consistency.
 It is possible to implement such checks using admission webhooks, but validating logical consistency via admission webhooks is generally discouraged.
 Validation of the actual logical consistency and the ability to move the observed state to the desired state should be determined at reconcile time.
 This in turn means that while an object may be accepted by the kube-apiserver, it does not mean automatically that the desired state will be able to match the observed state of the cluster.
