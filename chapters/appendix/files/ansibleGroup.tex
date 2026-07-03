@@ -1,0 +1,30 @@
+\begin{lstlisting}[language=go]
+package v1alpha1
+
+// AnsibleGroupSpec defines the desired state of AnsibleGroup
+type AnsibleGroupSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+	// The following markers will use OpenAPI v3 schema to validate the value
+	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+
+	// AnsibleName is the name of the object within the Ansible inventory
+	// +required
+	// +kubebuilder:validation:Pattern=`^[a-zA-Z0-9_.-]+$`
+	// +kubebuilder:validation:MaxLength=253
+	AnsibleName string `json:"ansibleName"`
+
+	// Hosts is a list of references to AnsibleHost objects that are members of this group.
+	// +required
+	Hosts []corev1.LocalObjectReference `json:"hosts"`
+
+	// Groups is a list of references to other AnsibleGroup objects that are subgroups of this group.
+	// +required
+	Groups []corev1.LocalObjectReference `json:"groups"`
+
+	// TODO: Be wary of injection on this one, just like with hostVars.
+	// groupVars is an arbitrary string inserted verbatim into the Ansible group_vars file for this group.
+	// +optional
+	GroupVars string `json:"groupVars,omitempty"`
+}
+\end{lstlisting}

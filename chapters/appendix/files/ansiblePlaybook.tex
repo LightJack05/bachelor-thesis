@@ -1,0 +1,45 @@
+\begin{lstlisting}[language=go]
+// AnsiblePlaybookSpec defines the desired state of AnsiblePlaybook
+// +kubebuilder:validation:XValidation:rule="has(self.inline) != has(self.git)",message="Inline and Git are mutually exclusive"
+type AnsiblePlaybookSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+	// The following markers will use OpenAPI v3 schema to validate the value
+	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+
+	// +optional
+	Inline *AnsiblePlaybookInline `json:"inline,omitempty"`
+	// +optional
+	Git *AnsiblePlaybookGit `json:"git,omitempty"`
+}
+
+// AnsiblePlaybookGit specifies the Git repository containing the Ansible playbook and requirements file. Mutually exclusive with the Inline field.
+type AnsiblePlaybookGit struct {
+	Repo AnsiblePlaybookRepo `json:"repo"`
+	// PlaybookPath is the path to the Ansible playbook file within the Git repository
+	PlaybookPath string `json:"playbookPath"`
+	// RequirementsPath is the path to the Ansible requirements.yml file within the Git repository
+	// +optional
+	RequirementsPath string `json:"requirementsPath"`
+}
+
+// AnsiblePlaybookInline specifies the Ansible playbook and requirements file as inline strings. Mutually exclusive with the Git field.
+// +optional
+type AnsiblePlaybookInline struct {
+	// Requirements is the content of the Ansible requirements.yml file as a string
+	// +optional
+	Requirements string `json:"requirements"`
+	// Playbook is the content of the Ansible playbook file as a string
+	Playbook string `json:"playbook"`
+}
+
+// AnsiblePlaybookRepo specifies the Git repository URL and reference (branch, tag, or commit).
+type AnsiblePlaybookRepo struct {
+	// URL is the Git repository URL
+	// +required
+	URL string `json:"url"`
+	// Ref is the Git reference (branch, tag, or commit) to use, default 'main'
+	// +kubebuilder:default:=main
+	Ref string `json:"ref,omitempty"`
+}
+\end{lstlisting}

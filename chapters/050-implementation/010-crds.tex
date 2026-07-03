@@ -13,8 +13,17 @@ In this case, the \enquote{ansible-operator.lightjack.de/v1alpha1} \gls{api} ver
 Here, the \enquote{v1alpha1} indicates the first version of the operator \enquote{v1} with an alpha state resource \enquote{alpha} in the first version \enquote{1}.
 Should there be breaking changes to the \gls{api} once the operator is in a stable condition, this version should be changed and the resources moved to a different \gls{api} version.
 
+\subsection{Access controls, security and multi-tenancy}
+In Kubernetes, resources can be either \enquote{namespaced} or \enquote{global}.
+Namespaced resources are bound to a namespace and generally only access resources within their namespace, such as mounting \texttt{ConfigMaps} or \texttt{Secrets}.
+The decision to make all resources of the operator namespaced was made to allow for multi-tenancy and isolate resources from each other. It also helps with scalability, since an inventory can easily be split into multiple namespaces and therefore the generation of resources such as the inventory \texttt{ConfigMap} and similar resources can be split into multiple tenants, improving reconcile performance.
+
+Authorization and authentication against the operator itself is done via \gls{rbac} on the Kubernetes API Server itself. Kubernetes allows for assigning users very granular permissions on resources, including \glspl{crd}.
+That means that there needs to be no authentication of users within the operator itself.
+All \gls{ssh} hosts use key-based authentication and, unless disabled, check the host keys of the target machine against the keys obtained via \gls{tofu} when executing the playbook.
+
 \subsection{The \anhost resource}
-The complete \anhost type declaration can be found in the appendix under section \ref{app:anhostdeclare}.
+The complete \anhost spec type declaration can be found in the appendix under section \ref{app:anhostdeclare}.
 
 A \anhost may be defined as follows:
 
@@ -40,5 +49,124 @@ spec:
 \end{lstlisting}
 %TC:endignore
 
-One notable variable is the \enquote{AnsibleName} which is used to specify the name of the resource within ansible.
+One notable variable is the \enquote{AnsibleName} which is used to specify the name of the resource within the Ansible inventory.
+The \enquote{ignoreHostKey} option is used to disable getting and enforcing the \gls{ssh} host key.
 
+
+\subsection{The \angroup resource}
+The complete \angroup spec type declaration can be foudn in the appendix under section \ref{app:angroupdeclare}.
+
+An \angroup may be defined as follows:
+
+%TC:ignore
+\begin{lstlisting}[language=yaml,caption= Example \angroup definition]
+apiVersion: ansible-operator.lightjack.de/v1alpha1
+kind: AnsibleGroup
+metadata:
+  name: group-web-tier
+spec:
+  ansibleName: web_tier
+  hosts:
+    - name: ssh-node-1
+    - name: ssh-node-2
+  groups: []
+  groupVars: |
+    http_port: 80
+    max_clients: 200
+\end{lstlisting}
+%TC:endignore
+
+This manifest would create an \angroup resource which has no groups as a subgroups, and contains \enquote{ssh-node-1} and \enquote{ssh-node-2} as hosts.
+It also injects the variables \enquote{http\_port} and \enquote{max\_clients} as group variables.
+
+\subsection{The \anplaybook resource}
+The complete \anplaybook spec type declaration can be found in the appendix under section \ref{app:anplaybookdeclare}.
+The \anplaybook struct contains two mutually exclusive values, \enquote{AnsiblePlaybookInline} and \enquote{AnsiblePlaybookGit}, which are therefore declared as pointers.
+Mutual exclusivity is enforced via a \gls{cel} statement wrapped in a Kubebuilder annotation, which can be found below:
+
+%TC:ignore
+\begin{lstlisting}[caption=Kubebuilder CEL annotation for enforcing mutual exclusivity between inline and git playbook sources]
+// +kubebuilder:validation:XValidation:rule="has(self.inline) != has(self.git)",message="Inline and Git are mutually exclusive"
+\end{lstlisting}
+%TC:endignore
+
+Due to the mutual exclusivity betwen the \enquote{git} and \enquote{inline} fields, there are two fundamentally different ways in which an \anplaybook can be defined.
+The first one is to declare the playbook inline in the \anplaybook spec, embedding it directly into the manifest:
+
+%TC:ignore
+\begin{lstlisting}[language=yaml, caption=Example \anplaybook definition with inline source]
+apiVersion: ansible-operator.lightjack.de/v1alpha1
+kind: AnsiblePlaybook
+metadata:
+  name: inline-playbook
+spec:
+  inline:
+    requirements: |
+      roles:
+        - name: geerlingguy.ntp
+      collections:
+        - name: ansible.posix
+    playbook: |
+      - name: Test install flow
+        hosts: web_tier
+        become: true
+
+        roles:
+          - geerlingguy.ntp
+
+        tasks:
+          - name: Set a sysctl value (ansible.posix)
+            ansible.posix.sysctl:
+              name: vm.swappiness
+              value: '10'
+              state: present
+
+          - name: Tweak login banner perms (ansible.posix)
+            ansible.posix.mount:
+              path: /mnt/testtmp
+              src: tmpfs
+              fstype: tmpfs
+              opts: size=16m
+              state: mounted
+\end{lstlisting}
+%TC:endignore
+
+This declares an example playbook which has a dependency on one collection and role. If this playbook is referenced by an \anrecjob, it would be executed verbatim as written in the spec.
+
+The other way to define an \anplaybook is to use an \gls{http} or \gls{https} git source for the playbook. That way, the git repository is cloned into the \texttt{Jobs} \texttt{Pod} and then the paths given are used to resolve dependencies and execute the playbook:
+
+%TC:ignore
+\begin{lstlisting}[language=yaml, caption=Example \anplaybook definition with git source]
+apiVersion: ansible-operator.lightjack.de/v1alpha1
+kind: AnsiblePlaybook
+metadata:
+  name: http-git-playbook
+spec:
+  git:
+    repo:
+      url: http://git-server.default.svc.cluster.local/git/playbook-repo.git
+    playbookPath: playbook.yml
+    requirementsPath: dir/requirements.yml
+\end{lstlisting}
+%TC:endignore
+
+\subsection{The \anrecjob resource}
+The complete \anrecjob spec type declaration can be found in the appendix under section \ref{app:anrecjobdeclare}.
+While the controller for this resource holds the most of the logic for the operator, the resource itself only holds two fields:
+
+%TC:ignore
+\begin{lstlisting}[langauge=yaml,caption=Example \anrecjob definition]
+apiVersion: ansible-operator.lightjack.de/v1alpha1
+kind: AnsibleReconcileJob
+metadata:
+  name: inline-reconcile-job
+spec:
+  schedule: "0 0 * * *"
+  playbookRef:
+    # ref to a playbook in the same namespace
+    # host selection is handled via the inventory, and the group referenced in the playbook
+    name: inline-playbook
+\end{lstlisting}
+%TC:endignore
+
+In this case, this declares an \anrecjob that will execute every day at 0:00 and will execute the \enquote{inline-playbook} \anplaybook.

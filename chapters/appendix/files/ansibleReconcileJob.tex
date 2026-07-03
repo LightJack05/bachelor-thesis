@@ -1,0 +1,17 @@
+\begin{lstlisting}[language=go]
+// AnsibleReconcileJobSpec defines the desired state of AnsibleReconcileJob
+type AnsibleReconcileJobSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+	// The following markers will use OpenAPI v3 schema to validate the value
+	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+
+	// TODO: This field needs better validation in the future! K8s does synchronous validation by parsing the schedule using a library, we may want to replicate that using a webhook...
+	// +kubebuilder:validation:Required
+	// Schedule is a cron expression that defines when the AnsibleReconcileJob should run.
+	Schedule string `json:"schedule,omitempty"`
+	// PlaybookRef is a reference to the AnsiblePlaybook resource that should be executed by this AnsibleReconcileJob.
+	// +kubebuilder:validation:Required
+	PlaybookRef corev1.LocalObjectReference `json:"playbookRef,omitempty"`
+}
+\end{lstlisting}
