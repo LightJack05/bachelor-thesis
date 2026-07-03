@@ -1,0 +1,43 @@
+\subsection{Scheduling playbook executions}
+Kubernetes provides a built-in tool for scheduling jobs to run on a regular interval, which is called the \texttt{CronJob}.
+A \texttt{CronJob} can be scheduled and will create a \texttt{Job} resource based on its \enquote{.spec.jobTemplate} field.
+It also provides a history of a specified number of past executions and logs for these.
+The \texttt{Job} itself then provides logs for the execution, dynamic resource scheduling and information on whether the \texttt{Job} was executed successfully.
+Even though a \texttt{Job} is able to provide retry semantics, we shall disable them for now and set the back-off limit to one on the \texttt{Job} created.
+It is also important that the \enquote{.spec.concurrencyPolicy} field on the \texttt{CronJob} be set to \enquote{Forbid}, in order to avoid race conditions or collisions between playbook executions.
+
+\subsection{Data injection}
+In order to allow the execution of the playbook, it needs to be injected into the \texttt{Job}, alongside several other files and environment variables. The following data segments need to be injected:
+
+\begin{itemize}
+	\item{The inventory hosts file \enquote{hosts.yaml}}
+	\item{The known hosts file \enquote{known\_hosts}}
+	\item{Every SSH private key for every host}
+	\item{The group variable files for every group in the inventory}
+	\item{The host variable files for every host in the inventory}
+\end{itemize}
+
+For inline playbooks, the files are mounted directly into the \texttt{Job} \texttt{Pods}, including:
+
+\begin{itemize}
+	\item{The inline playbook \enquote{playbook.yml} file if applicable}
+	\item{The inline requirements \enquote{requirements.yml} file if applicable}
+\end{itemize}
+
+For git sourced playbooks, the following environment variables shall be used to locate the playbook, mirroring the spec of the \anplaybook.
+
+\begin{itemize}
+	\item{\enquote{OPERATOR\_GIT\_REPO\_URL} specifies the \gls{url} of the repository where the playbook is located}
+	\item{\enquote{OPERATOR\_GIT\_REF} specifies the git branch or tag to checkout on clone of the repository}
+	\item{\enquote{OPERATOR\_GIT\_PLAYBOOK\_PATH} specifies the path of the playbook within the repository}
+	\item{\enquote{OPERATOR\_GIT\_REQUIREMENTS\_PATH} specifies the path of the \enquote{requirements.yml} file within the repository}
+\end{itemize}
+
+\subsection{Runtime initialization}
+Before the \texttt{Job} is able to execute the playbook directly, it needs to be initialized. This includes cloning the repository with the playbook and requirements file if applicable, as well als installing any dependencies specified in the requirements file.
+We shall use an init-container in order to achieve these steps before executing the playbook.
+An init-container runs before application-containers inside the \texttt{Pod} and may pass data to these containers, commonly via \enquote{EmptyDir} volumes.
+
+\subsection{Executing playbooks}
+Once runtime initialization is complete, the application container can start and run the \enquote{ansible-playbook} command against the playbook file, executing its contents.
+The container needs to be set up in a way that it points at the correct files, including the \enquote{known\_hosts}, inventory and SSH keys.
