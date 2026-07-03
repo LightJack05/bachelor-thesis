@@ -1,0 +1,43 @@
+This chapter shows the exact specifications for the \glspl{crd} implemented, how they are validated and how their fields affect the resources.
+We shall go over every \gls{crd} individually, show the specification and detail the important fields.
+The fields shown here will be limited to the spec part of the resource.
+Fields in the status block shall, if necessary, be explained in the following chapter.
+In the light of promise theory, every resource here can be thought of as a promise to the user, specifying behavior of the operator.
+Kubernetes in this case acts as the platform, forwarding the promise of the operator made with its \gls{crd} to the user of the cluster.
+
+\subsection{API Version in Kubernetes}
+
+In order to implement an \gls{api} in Kubernetes, there needs to be separation between resources, versioning and naming of the resources.
+Kubernetes groups objects into \enquote{API versions}, which consist of an identifier for the \gls{api} as well as a version itself.
+In this case, the \enquote{ansible-operator.lightjack.de/v1alpha1} \gls{api} version was created.
+Here, the \enquote{v1alpha1} indicates the first version of the operator \enquote{v1} with an alpha state resource \enquote{alpha} in the first version \enquote{1}.
+Should there be breaking changes to the \gls{api} once the operator is in a stable condition, this version should be changed and the resources moved to a different \gls{api} version.
+
+\subsection{The \anhost resource}
+The complete \anhost type declaration can be found in the appendix under section \ref{app:anhostdeclare}.
+A \anhost may be declared as follows:
+
+%TC:ignore
+\begin{lstlisting}[language=yaml]
+apiVersion: ansible-operator.lightjack.de/v1alpha1
+kind: AnsibleHost
+metadata:
+  name: ssh-node-1
+spec:
+  ansibleName: ssh-node-1
+  connection:
+    host: ssh-node-1.default.svc.cluster.local
+    user: ansible
+  ssh:
+    sshKeySecretRef:
+      name: ansible-operator-hosts-private-key
+    sshHostKeySecretRef:
+      name: ssh-node-1-host-key
+    ignoreHostKey: false
+  privilege:
+    become: true
+\end{lstlisting}
+%TC:endignore
+
+One notable variable is the \enquote{AnsibleName} which is used to specify the name of the resource within ansible.
+

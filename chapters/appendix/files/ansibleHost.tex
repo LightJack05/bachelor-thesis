@@ -1,0 +1,80 @@
+\begin{lstlisting}[language=go]
+package v1alpha1
+
+// AnsibleHostSpec defines the desired state of AnsibleHost
+type AnsibleHostSpec struct {
+	// ansibleName is the name used in the Ansible inventory.
+	// +required
+	// +kubebuilder:validation:Pattern=`^[a-zA-Z0-9_.-]+$`
+	// +kubebuilder:validation:MaxLength=253
+	AnsibleName string `json:"ansibleName"`
+
+	// connection defines SSH connection parameters for this host.
+	// +required
+	Connection AnsibleHostConnection `json:"connection"`
+
+	// ssh defines SSH authentication configuration for this host.
+	// +required
+	SSH AnsibleHostSSH `json:"ssh"`
+
+	// privilege defines privilege escalation settings.
+	// +optional
+	Privilege *AnsibleHostPrivilege `json:"privilege,omitempty"`
+
+	// hostVars is an arbitrary string inserted verbatim into the Ansible host_vars block.
+	// +optional
+	HostVars string `json:"hostVars,omitempty"`
+}
+
+// AnsibleHostConnection defines SSH connection parameters.
+type AnsibleHostConnection struct {
+	// host is the hostname or IP address to connect to.
+	// +required
+	// +kubebuilder:validation:Pattern=`^[a-zA-Z0-9][a-zA-Z0-9._-]*$`
+	// +kubebuilder:validation:MaxLength=253
+	Host string `json:"host"`
+
+	// port is the SSH port number.
+	// +optional
+	// +kubebuilder:default=22
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	Port uint16 `json:"port,omitempty"`
+
+	// user is the SSH login user.
+	// +optional
+	// +kubebuilder:default="root"
+	// +kubebuilder:validation:Pattern=`^[a-z_][a-z0-9_-]*$`
+	// +kubebuilder:validation:MaxLength=32
+	User string `json:"user,omitempty"`
+}
+
+// AnsibleHostSSH defines SSH authentication configuration.
+type AnsibleHostSSH struct {
+	// ignoreHostKey disables SSH host key verification when true.
+	// When false, the operator trusts the host key on first connection and stores it
+	// in a secret. The auto-created secret is named after the AnsibleHost resource
+	// unless sshHostKeySecretRef is provided.
+	// +optional
+	// +kubebuilder:default=false
+	IgnoreHostKey bool `json:"ignoreHostKey,omitempty"`
+
+	// sshKeySecretRef references a Secret containing the SSH private key.
+	// The secret must have the key `ssh_key`.
+	// +required
+	SSHKeySecretRef corev1.LocalObjectReference `json:"sshKeySecretRef"`
+
+	// sshHostKeySecretRef references a Secret used to store (or provide) the trusted SSH host key.
+	// When ignoreHostKey is false, the operator uses the referenced secret as the known-hosts store.
+	// +required
+	SSHHostKeySecretRef corev1.LocalObjectReference `json:"sshHostKeySecretRef"`
+}
+
+// AnsibleHostPrivilege defines privilege escalation settings.
+type AnsibleHostPrivilege struct {
+	// become enables privilege escalation via sudo.
+	// +optional
+	// +kubebuilder:default=false
+	Become bool `json:"become,omitempty"`
+}
+\end{lstlisting}
