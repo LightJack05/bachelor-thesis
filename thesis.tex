@@ -74,6 +74,21 @@
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
+\lstdefinelanguage{yaml}{
+  keywords={true,false,null,yes,no,on,off},
+  keywordstyle=\color{teal}\bfseries,
+  basicstyle=\ttfamily\small,
+  sensitive=false,
+  comment=[l]{\#},
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{purple},
+  morestring=[b]',
+  morestring=[b]",
+  moredelim=[l][\color{orange}]{\&},
+  moredelim=[l][\color{magenta}]{*},
+  moredelim=**[il][\color{blue}\bfseries:]{:},
+}
+
 \lstset{
     backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
@@ -293,16 +308,16 @@
 
 \publishers{
 	\begin{tabular}{l l}
-		\textbf{\normalsize{Name:}}                 & \normalsize{\studentName}  \tabularnewline
-		\textbf{\normalsize{Matriculation Number:}} & \normalsize{77207755709}  \tabularnewline
-		\textbf{\normalsize{Company:}}              & \normalsize{\company}  \tabularnewline
-		\textbf{\normalsize{Specialization:}}       & \normalsize{\fachrichtung} \tabularnewline
-		\textbf{\normalsize{Study Program:}}        & \normalsize{\studiengang} \tabularnewline
+		\textbf{\normalsize{Name:}}                  & \normalsize{\studentName}  \tabularnewline
+		\textbf{\normalsize{Matriculation Number:}}  & \normalsize{77207755709}  \tabularnewline
+		\textbf{\normalsize{Company:}}               & \normalsize{\company}  \tabularnewline
+		\textbf{\normalsize{Specialization:}}        & \normalsize{\fachrichtung} \tabularnewline
+		\textbf{\normalsize{Study Program:}}         & \normalsize{\studiengang} \tabularnewline
 		%\textbf{\normalsize{Modul:}}                & \normalsize{IT4301} \tabularnewline
-		\textbf{\normalsize{Academic Year:}}        & \normalsize{\jahrgang} \tabularnewline
-		\textbf{\normalsize{Company Supervisor:}}   & \normalsize{\betreuerUnt} \tabularnewline
-		\textbf{\normalsize{University Supervisor:}}  & \normalsize{\betreuerHS} \tabularnewline
-		\textbf{\normalsize{Words:}}                & \normalsize{\wordcount}
+		\textbf{\normalsize{Academic Year:}}         & \normalsize{\jahrgang} \tabularnewline
+		\textbf{\normalsize{Company Supervisor:}}    & \normalsize{\betreuerUnt} \tabularnewline
+		\textbf{\normalsize{University Supervisor:}} & \normalsize{\betreuerHS} \tabularnewline
+		\textbf{\normalsize{Words:}}                 & \normalsize{\wordcount}
 	\end{tabular}
 	\doublesignature[(Date/Signature Training Manager)]{(Date/Signature Student)}
 }
@@ -425,14 +440,14 @@ Due to the naming conventions of objects in Kubernetes and similar systems, it m
 \section{Defining relations to out-of-cluster resources}
 \input{chapters/040-architecture/050-data.tex}
 
-\section{Handling dependencies for playbooks}
-\input{chapters/040-architecture/060-dependencies.tex}
-
 \section{Modeling the Ansible execution environment}
 \input{chapters/040-architecture/070-execution.tex}
 
 \chapter{Implementation of the operator}
 \input{chapters/050-implementation/000-intro.tex}
+
+\section{Selecting a Framework}
+\input{chapters/050-implementation/005-framework.tex}
 
 \section{Defining the operators API}
 \input{chapters/050-implementation/010-crds.tex}
