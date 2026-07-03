@@ -20,7 +20,7 @@ Ansible will default to the declared inventory name as hostname if no hostname i
 The format for specifying an inventory can be found below, sourced from \cite{ansibleinventoryintro}:
 
 %TC:ignore
-\begin{lstlisting}[caption=Example Ansible inventory with groups and hosts (source: \cite{ansibleinventoryintro})]
+\begin{lstlisting}[language=yaml,caption=Example Ansible inventory with groups and hosts (source: \cite{ansibleinventoryintro})]
 leafs:
   hosts:
     leaf01:
@@ -65,7 +65,7 @@ The \texttt{Tasks} here are operations like copying a file or setting the timezo
 The playbook below is an example of how one could manage webservers and database servers using an ansible playbook:
 
 %TC:ignore
-\begin{lstlisting}[caption=Ansible playbook example (source: \cite{ansibleplaybooks})]
+\begin{lstlisting}[language=yaml,caption=Ansible playbook example (source: \cite{ansibleplaybooks})]
 ---
 - name: Update web servers
   hosts: webservers
