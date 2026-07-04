@@ -1,4 +1,6 @@
 \begin{lstlisting}[language=go]
+package v1alpha1
+
 // AnsiblePlaybookSpec defines the desired state of AnsiblePlaybook
 // +kubebuilder:validation:XValidation:rule="has(self.inline) != has(self.git)",message="Inline and Git are mutually exclusive"
 type AnsiblePlaybookSpec struct {

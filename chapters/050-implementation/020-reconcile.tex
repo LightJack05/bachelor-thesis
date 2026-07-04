@@ -1,2 +1,148 @@
 The following chapter outlines the implemented logic for the \glspl{crd} defined in the previous chapters.
-We shall go over every individual \gls{crd} and explain the reconcile logic behind each object, to shed light on how 
+We shall go over every individual \glspl{crd} again and explain the reconcile logic behind each object.
+\anplaybook objects do not implement any logic and are therefore omitted here.
+
+\subsection{Reconciling the \anhost resource}
+As stated in the previous chapters, an \anhost needs to scan the \gls{ssh} host keys of the target machine.
+Since reconcile logic should be idempotent, we first check whether the secret for the ssh keys used to access the host exists.
+If it does not, this means that we are unable to access the host and we should requeue the request, waiting for the user to create the secret.
+
+%TC:ignore
+\begin{lstlisting}[language=go, caption=Checking whether the SSH key secret exists]
+// Ensure the private key secret exists
+privateKeySecretExists, err := r.hostPrivateKeySecretExists(ctx, &ansibleHost)
+// [...] error handler omitted
+
+if !privateKeySecretExists {
+    // If the private key secret does not exist, we can log the error and requeue the request
+    if err := r.setStatusNotReady(ctx, &ansibleHost, "PrivateKeySecretMissing", "The private key secret does not exist"); err != nil {
+        // [...] error handler omitted
+    }
+
+    lg.Info("Private key secret does not exist, requeuing.")
+    return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
+}
+\end{lstlisting}
+%TC:endignore
+
+The called function obtains the secret from the API and ensures that the required key is present in the secret data, and parses as an \gls{ssh} private key:
+
+%TC:ignore
+\begin{lstlisting}[language=go, caption=Validating the host private key secret exists]
+func (r *AnsibleHostReconciler) hostPrivateKeySecretExists(ctx context.Context, ansibleHost *ansibleoperatorv1alpha1.AnsibleHost) (bool, error) {
+	secret := &corev1.Secret{}
+	err := r.Get(ctx, client.ObjectKey{Namespace: ansibleHost.Namespace, Name: ansibleHost.Spec.SSH.SSHKeySecretRef.Name}, secret)
+	if errors.IsNotFound(err) {
+		return false, nil
+	}
+    // [...] error handler omitted
+
+	keyData, ok := secret.Data[sshKeySecretKey]
+	if !ok || len(keyData) == 0 {
+		return false, fmt.Errorf("private key secret is missing 'ssh_key' data or it is empty")
+	}
+
+	if _, err := cryptoSSH.ParsePrivateKey(keyData); err != nil {
+		return false, fmt.Errorf("failed to parse private key: %w", err)
+	}
+
+	return true, nil
+}
+\end{lstlisting}
+%TC:endignore
+
+If the secret is valid, we exit the reconcile function. If it's absent, we continue reconciling. If the secret is invalid, the status condition \enquote{Ready} on the \anhost is set to \enquote{False} and it is requeued.
+Next, unless the \enquote{IgnoreHostKey} option is set, we need to ensure the host key secret exists. This is done by performing an \gls{ssh} key scan on the target host.
+The common tool for this is the command line utility \enquote{ssh-keyscan}. However, since the tool is not easily executed from an operator container, we instead reimplement the same logic in Go. The full source code can be found in the appendix under section \ref{app:sshkeyscan}.
+Given that we may have several goroutines blocked on network \gls{io} while connections wait for a timeout, we also set a high parallelization level for this controller to allow multiple hosts to be reconciled at the same time.
+
+%TC:ignore
+\begin{lstlisting}[language=go, caption=Setting up the \anhost controller with 100 concurrent reconciles]
+// SetupWithManager sets up the controller with the Manager.
+func (r *AnsibleHostReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&ansibleoperatorv1alpha1.AnsibleHost{}).
+		Owns(&corev1.Secret{}).
+		Owns(&corev1.ConfigMap{}).
+		Named("ansiblehost").
+		// Run at most 100 concurrent reconciles.
+		// The high number here is irrelevant, since the threads aren't CPU bound, but just blocked on network IO for the most time.
+		WithOptions(controller.Options{MaxConcurrentReconciles: 100}).
+		Complete(r)
+}
+\end{lstlisting}
+%TC:endignore
+
+Once the keyscan is complete, we format the keys into the format used by the \gls{ssh} \enquote{known\_hosts} file, and store the data in a secret owned by the \anhost.
+
+Finally, we store the Ansible host vars in a \texttt{ConfigMap} so it can be mounted into the \texttt{Job} created by the \anrecjob.
+Once everything is complete, we set the \enquote{Ready} condition of the \anhost to \enquote{True} and exit the reconcile function.
+
+\subsection{Reconciling the \angroup resource}
+The reconcile cycle of the \angroup resource consists of a status check and ensuring the \texttt{ConfigMap} holding the group variables.
+We start by setting all conditions to \enquote{Unknown} on the resource, so they all exist, independently of where the reconcile loop terminates.
+
+%TC:ignore
+\begin{lstlisting}[language=go]
+// Set all conditions to unknown if they are not set
+if err := r.defaultStatusToUnknown(ctx, &group, ansibleoperatorv1alpha1.AnsibleGroupConditionHealthy); err != nil {
+	return ctrl.Result{}, fmt.Errorf("failed to set condition on AnsibleGroup: %v", err)
+}
+if err := r.defaultStatusToUnknown(ctx, &group, ansibleoperatorv1alpha1.AnsibleGroupConditionReferencesValid); err != nil {
+	return ctrl.Result{}, fmt.Errorf("failed to set condition on AnsibleGroup: %v", err)
+}
+if err := r.defaultStatusToUnknown(ctx, &group, ansibleoperatorv1alpha1.AnsibleGroupConditionReady); err != nil {
+	return ctrl.Result{}, fmt.Errorf("failed to set condition on AnsibleGroup: %v", err)
+}
+\end{lstlisting}
+%TC:endignore
+
+Afterward, we ensure the variables \texttt{ConfigMap} in the same way as we did for the \anhost resource.
+We obtain it from the Kubernetes API Server. If it is not found, we create it and set an owner reference on the resource, so we know it belongs to this \angroup.
+
+%TC:ignore
+\begin{lstlisting}[language=go, caption=Creating the group variables \texttt{ConfigMap}]
+cm = &v1.ConfigMap{
+	ObjectMeta: metav1.ObjectMeta{
+		Name:      group.Name + varsConfigMapSuffix,
+		Namespace: group.Namespace,
+	},
+	Data: map[string]string{
+		groupVarsConfigMapKey: vars,
+	},
+}
+if err := ctrl.SetControllerReference(group, cm, r.Scheme); err != nil {
+	return fmt.Errorf("failed to set owner reference for ConfigMap: %w", err)
+}
+if err := r.Create(ctx, cm); err != nil {
+	return fmt.Errorf("failed to create ConfigMap for AnsibleGroup vars: %w", err)
+}
+\end{lstlisting}
+%TC:endignore
+
+If a resource with the target name exists, we check whether it belongs to this \angroup, and if it does, we update the contents of it to reflect the current desired state.
+
+%TC:ignore
+\begin{lstlisting}[language=go, caption=Ensuring the group variables \texttt{ConfigMap} content matches the desired state]
+// Check the owner reference and update the vars if it is owned by the AnsibleGroup
+if metav1.IsControlledBy(cm, group) {
+	if cm.Data == nil {
+		cm.Data = make(map[string]string)
+	}
+	if cm.Data[groupVarsConfigMapKey] != vars {
+		cm.Data[groupVarsConfigMapKey] = vars
+		if err := r.Update(ctx, cm); err != nil {
+			return fmt.Errorf("failed to update ConfigMap for AnsibleGroup vars: %w", err)
+		}
+	}
+} else {
+	return fmt.Errorf("ConfigMap %s is not owned by AnsibleGroup %s", cm.Name, group.Name)
+}
+\end{lstlisting}
+%TC:endignore
+
+Finally, we iterate over every subgroup and host in the group and validate they both resolve to proper Kubernetes Objects, and they also have their \enquote{Ready} condition set to \enquote{True}.
+
+\subsection{Reconciling the \anrecjob resource}
+The \anrecjob resource has the most complex reconcile logic since it performs the most actions.
+
