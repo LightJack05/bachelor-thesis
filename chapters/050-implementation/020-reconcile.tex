@@ -145,4 +145,64 @@ Finally, we iterate over every subgroup and host in the group and validate they 
 
 \subsection{Reconciling the \anrecjob resource}
 The \anrecjob resource has the most complex reconcile logic since it performs the most actions.
+Firstly, the \anrecjob has three status conditions that need to be set:
 
+\begin{itemize}
+	\item{\textbf{Ready} indicates that the resource is ready to execute \texttt{Jobs}}
+	\item{\textbf{Progressing} indicates that a \texttt{Job} is currently running}
+	\item{\textbf{Successful} indicates that the last \texttt{Job} completed successfully}
+\end{itemize}
+
+When starting the reconcile loop, we set all of these to \enquote{Unknown}, unless they are already in \enquote{True} or \enquote{False} state.
+Once that is complete, the inventory \texttt{ConfigMap} needs to be templated from the inventory generated inside the namespace.
+First all \anhost and \angroup resources are acquired from the API Server and then stored into maps.
+These maps are then used to build the inventory content, which can be found as a Go struct in the appendix in chapter \ref{app:invstruct}.
+
+It is here that a decision was made about when to abort inventory generation, how to show errors and how to handle both unready hosts, groups and unresolved references.
+Unready hosts and groups will be shown as such, but will not be actioned by the \anrecjob.
+These errors are not fatal to job execution, will however show up as problems in the logs and the \enquote{Success} status of the \anrecjob resource.
+Meanwhile, an invalid inventory generated would be fatal to the entire \texttt{Job} executing and is therefore already recorded as an error while rendering the inventory.
+Should any references in the data given to the operator not resolve properly, the operator will treat the entire inventory as invalid, and stop reconciliation while recording the unresolved reference in the \enquote{Ready} status message, and set its status to \enquote{False}.
+It was also decided not to silently skip the generation of the problematic resource, since this would cause a silent failure and may lead to unexpected behavior.
+Once the inventory is constructed into the struct it is then rendered using the template function in \ref{app:templatefunc} into a string which is then stored in a \texttt{ConfigMap}.
+
+The known hosts file is created similarly, however, not from a template, but by simple string concatenation. All secrets are acquired, and their contents are concatenated onto each other, and then stored in a single \texttt{ConfigMap}, which can also be mounted into the \texttt{Job}.
+Additonally, the runtime \texttt{ConfigMap}, which determines where to acquire the repository, files and similar data is constructed from the data given in the referenced \anplaybook.
+
+With the configuration data built, the \texttt{CronJob} that will execute the playbooks against the constructed inventory is built.
+It gets several volume mounts, which are listed below.
+
+\begin{itemize}
+	\item{The inventory is mounted to \enquote{/inventory/hosts.yaml}}
+	\item{The known\_hosts file is mounted to \enquote{/ssh/known\_hosts}}
+	\item{The runtime \texttt{ConfigMap} is mounts several keys into these files under \enquote{/config}}
+	      \subitem{\enquote{playbook.yaml} contains the playbook to be executed}
+	      \subitem{\enquote{requirements.yml} contains the requirements for the playbook}
+	\item{Additionally, the runtime \texttt{ConfigMap} also provides environment variables to the \texttt{Job} \texttt{Pod} which are used for git sourced playbooks}
+	      \subitem{The variable \enquote{OPERATOR\_GIT\_REF} specifies which branch name or tag to use in the repository}
+	      \subitem{The variable \enquote{OPERATOR\_GIT\_REPO\_URL} specifies where to clone the repository from}
+	      \subitem{The variable \enquote{OPERATOR\_GIT\_PLAYBOOK\_PATH} specifies the path of the playbook within the repository}
+	      \subitem{The variable \enquote{OPERATOR\_GIT\_REQUIREMENTS\_PATH} specifies the path of the requirements file in the repository}
+	\item{The \gls{ssh} private keys are mounted into the \enquote{/ssh} directory, using their Kubernetes object names as filenames, since they are implicitly unique}
+	\item{The host variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/host\_vars} directory, using the inventory host names as filenames}
+	\item{The group variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/group\_vars} directory, using the inventory group names as filenames}
+\end{itemize}
+
+Within the \texttt{CronJob}, there is one init container and one regular container specified.
+The images used will be detailed in the following chapter about the Ansible execution environment.
+Once the \texttt{CronJob} is constructed, it is sent to the Kubernetes API server as a server-side apply request.
+This makes sure that all fields that are owned by the operator are replaced, ensuring no partial applies can create inconsistent objects.
+It also implicitly creates the object should it not exist.
+
+Once the \texttt{CronJob} is created, the status conditions are updated to reflect the current state of the resource.
+Every \anrecjob specifies its own name on \texttt{Jobs} belongig to it via a label on the resource.
+This way, all \texttt{Jobs} belonging to the current \anrecjob are acquired from the API Server and are then iterated over to find the one with the latest start time. Since the concurrency policy forbis concurrent execution, that \texttt{Job} is the only one that can be running.
+If the \texttt{Job} is running according to its status block, the \enquote{Progressing} condition on the \anrecjob is set to \enquote{True}.
+If no \texttt{Job} was found, the condition is set to \enquote{Unknown}.
+Otherwise it is set to \enquote{False}.
+According to the same \texttt{Job}, the \enquote{Success} status is also set, depending on the success state of the \texttt{Job}.
+
+During development it has become clear that interpreting the logs Ansible outputs is largely unnecessary, since they are best read and interpreted by a human in the case of failures.
+Outputting logs as \gls{json} and interpreting them in operator logic would allow for status reporting on objects, but may mask errors and make it harder to identify the tasks that led up to an error.
+Therefore, it has been decided to limit the status reporting of the \anrecjob to a basic success/failure state, and offload additional debugging capabilities to the logs of the relevant \texttt{Job}.
+It should be noted that this means that within a larger platform, logs for Ansible execution can easily be handled by an already existing log collection system, and may even be able to be tied into alerting systems.

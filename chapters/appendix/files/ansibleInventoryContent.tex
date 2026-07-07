@@ -1,0 +1,20 @@
+\begin{lstlisting}[language=go]
+type InventoryContentGroup struct {
+	Name      string
+	Subgroups []string
+	Hosts     []string
+}
+
+type InventoryContentHost struct {
+	KubernetesName string
+	InventoryName  string
+	Hostname       string
+	Port           uint16
+	Username       string
+	Become         bool
+}
+type InventoryContent struct {
+	Groups []InventoryContentGroup
+	Hosts  []InventoryContentHost
+}
+\end{lstlisting}
