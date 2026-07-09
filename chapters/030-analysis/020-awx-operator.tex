@@ -2,7 +2,7 @@ Since unnecessary implementation of software is generally an unnecessary strain 
 The solution chosen for comparison is AWX Operator in combination with AWX Resource Operator.
 
 AWX Resource Operator uses a AWX instance installed using the AWX Operator.
-AWX Resource Operator therefore does not execute ansible itsef, it merely controls an AWX instance and then is able to manage its resources.
+AWX Resource Operator therefore does not execute Ansible itself, it merely controls an AWX instance and then is able to manage its resources.
 That way, it is possible to execute Ansible playbooks using a \gls{crd}.
 
 The AWX Operator can be installed via a helm chart, making installation easily achieved by simply adding the repository to helm and running \enquote{helm install}.
@@ -22,4 +22,4 @@ Additionally, the infrastructure cannot be easily set up unattended, since AWX R
 
 In conclusion, while AWX Resource Operator and AWX Operator provide an interface between the Kubernetes API and Ansible, they do not fulfil all requirements laid out and do not reach a complete \enquote{hands-off} management model.
 Therefore, development of the project shall continue and implement a solution that improves upon the already existing concepts from AWX Operator and AWX Resource Operator.
-The conclusion from the analysis is that the implemented solution should also attempt to save resources, use the Kuberentes API as storage for data and provide the ability for users to manage the infrastructure with as little manual intervention as possible.
+The conclusion from the analysis is that the implemented solution should also attempt to save resources, use the Kubernetes API as storage for data and provide the ability for users to manage the infrastructure with as little manual intervention as possible.
