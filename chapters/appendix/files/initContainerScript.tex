@@ -1,0 +1,80 @@
+\begin{lstlisting}
+#!/usr/bin/env bash
+set -euxo pipefail
+
+repo_root="/tmp/repo"
+
+copy_from_repo() {
+    local rel_path="$1" dest="$2" resolved
+
+    resolved="$(realpath "$repo_root/$rel_path")" || {
+        echo "Path does not exist: $rel_path" >&2
+        return 1
+    }
+
+    case "$resolved" in
+        "$repo_root"/*) ;;
+        *) echo "Refusing path outside repo: $rel_path" >&2; return 1 ;;
+    esac
+
+    cp -- "$resolved" "$dest"
+}
+
+clone_repo() {
+    case "$OPERATOR_GIT_REPO_URL" in
+        https://*) ;;
+        http://*) ;;
+        *) echo "Refusing non-http(s) repo URL: $OPERATOR_GIT_REPO_URL" >&2; exit 1 ;;
+    esac
+    
+    if [[ "$OPERATOR_GIT_REF" == -* ]] || \
+       ! [[ "$OPERATOR_GIT_REF" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+        echo "Refusing suspicious git ref: $OPERATOR_GIT_REF" >&2
+        exit 1
+    fi
+    
+    GIT_TERMINAL_PROMPT=0 \
+    git clone \
+        --depth 1 \
+        --recurse-submodules \
+        --shallow-submodules \
+        --branch="$OPERATOR_GIT_REF" \
+        -- \
+        "$OPERATOR_GIT_REPO_URL" "$repo_root"
+}
+
+init_inline() {
+    cp /config/playbook.yml /playbook/playbook.yml
+    cp /config/requirements.yml /playbook/requirements.yml
+    echo "copied playbook and requirements to /playbook."
+}
+
+init_git() {
+    clone_repo
+    copy_from_repo "$OPERATOR_GIT_PLAYBOOK_PATH"     /playbook/playbook.yml
+    copy_from_repo "$OPERATOR_GIT_REQUIREMENTS_PATH" /playbook/requirements.yml
+}
+
+setup_dependencies() {
+    ansible-galaxy role install \
+            -r /playbook/requirements.yml \
+            -p /deps/roles
+    ansible-galaxy collection install \
+            -r /playbook/requirements.yml \
+            -p /deps/collections
+}
+
+main() {
+    if [ -f /config/playbook.yml ] && [ -f /config/requirements.yml ]; then
+        init_inline
+    elif [ -n "${OPERATOR_GIT_REPO_URL:-}" ] && [ -n "${OPERATOR_GIT_REF:-}" ] && [ -n "${OPERATOR_GIT_PLAYBOOK_PATH:-}" ] && [ -n "${OPERATOR_GIT_REQUIREMENTS_PATH:-}" ]; then
+        init_git
+    else
+        echo "Invalid runtime config!" > /dev/stderr
+        exit 1
+    fi
+    setup_dependencies
+}
+
+main
+\end{lstlisting}
