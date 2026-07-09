@@ -47,17 +47,16 @@ Wrapping tools like Kubernetes Workloads and Ansible Workloads underneath a comm
 \parencite{platformengineering-architects}
 
 \subsection{Incompatible modes of operation between Kubernetes and Ansible}
-When looking at Ansible and Kubernetes, one thing becomes clear: the two systems are very different in their nature.
-We will elaborate on the specifics more in later chapters, however the following should serve as a first introduction to how the two systems handle state.
-
+When looking at Ansible and Kubernetes, it becomes clear that their modes of operation differ.
 Kubernetes works by continuously comparing the observed state of infrastructure to the desired state as defined by configurations stored in the Kubernetes cluster.
 In this way, when the cluster state deviates from the desired state, Kubernetes will try to move the observed state closer to the desired state by using a \gls{reconcile} pattern.
 That means once the state deviates, or as long as it does, Kubernetes will run a reconcile on deviating objects, which may or may not affect other objects.
 This means that in Kubernetes, there are always two different states: the desired state and the observed state.
-If we apply the concept of promise theory to this model, which we will learn more about later, we can infer that Kubernetes is a promise based system.
+Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which is then used by an agent, the controller, to fulfill a promise, and asses whether the promise has been fulfilled, we can deductively infer that Kubernetes is a promise based system.
 
 Ansible does not follow this concept, it is closer to a script programming language than a reconciling system.
-In Ansible, the user can define a script called a playbook which will contain a number of actions to execute, similar to how bash would allow a user to do.
-Ansible does use the concept of \gls{idempotency}, which is similar on the first look, but works differently in practice.
-Ansible does also allow the user to use inherently not idempotent operations, such as directly running shell scripts.
-If we apply the concept of promise theory to Ansible, we will notice that Ansible is mainly an imposition based system.
+In Ansible, a user defines a list of tasks, which are then executed on the target system.
+While Ansible makes a promise to the user, it does not require the system targeted to make any promise in theory.
+Ansible merely executes its tasks on the target machine and assesses whether it was successful in doing so, with the host, if anything, only allowing Ansible to access it.
+It however never makes a promise to accept the concrete form of configuration.
+For these reasons, Ansible can be referred to as an imposition based system.

@@ -411,13 +411,7 @@ Thesis source code:
 \input{chapters/intro.tex}
 
 \chapter{Theoretical foundations}
-\input{chapters/010-theory/000-intro.tex}
-
-\section{Promise Theory}
 \input{chapters/010-theory/010-promise-theory.tex}
-
-\section{Defining a capability plane for arbitrary platforms using promises}
-\input{chapters/010-theory/030-capability-plane.tex}
 
 \chapter{Technical foundations}
 \input{chapters/020-technical-foundations/000-intro.tex}
@@ -437,14 +431,13 @@ Thesis source code:
 \section{Defining the problem to solve}
 \input{chapters/025-problem/010-defining-the-problem.tex}
 
+\section{Defining a platform capability for Ansible}
+\input{chapters/025-problem/015-capability-plane.tex}
+
 \section{Engineering the requirements for the resulting software}
 \input{chapters/025-problem/020-requriements.tex}
 
 \chapter{Analysis of existing integration between Kubernetes and Ansible}
-\input{chapters/030-analysis/000-intro.tex}
-
-% TODO: Check if we need to do a chapter on semaphore
-\section{AWX Operator and AWX Resource Operator}
 \input{chapters/030-analysis/020-awx-operator.tex}
 
 \chapter{Architectural design of the Operator}

@@ -1,0 +1,6 @@
+Since unnecessary implementation of software is generally an unnecessary strain on resources, and there may already be an integration between Kubernetes and Ansible that is freely available, the following chapter will produce a market analysis of existing solutions.
+The solution chosen for comparison is AWX Operator in combination with AWX Resource Operator.
+
+AWX Resource Operator uses a AWX instance installed using the AWX Operator.
+AWX Resource Operator therefore does not execute ansible itsef, it merely controls an AWX instance and then is able to manage its resources.
+That way, it is possible to execute Ansible playbooks using a \gls{crd}.
