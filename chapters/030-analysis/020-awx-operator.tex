@@ -4,3 +4,22 @@ The solution chosen for comparison is AWX Operator in combination with AWX Resou
 AWX Resource Operator uses a AWX instance installed using the AWX Operator.
 AWX Resource Operator therefore does not execute ansible itsef, it merely controls an AWX instance and then is able to manage its resources.
 That way, it is possible to execute Ansible playbooks using a \gls{crd}.
+
+The AWX Operator can be installed via a helm chart, making installation easily achieved by simply adding the repository to helm and running \enquote{helm install}.
+The AWX Resource Operator however needs to be installed using the Makefile in the repository or by using direct kustomize manifests.
+The installation of operators in this way makes it harder to manage updates and pin versions, as opposed to installing them via helm.
+
+Once both operators are installed, an AWX instance needs to be created.
+Here a negative point becomes clear: The AWX instance alone uses about 1GB or \gls{ram} while being idle.
+This is a substantial strain on resources for a container that is not actively performing actions.
+Additionally, it requires its own database, a PostgreSQL instance, in addition to the operators own controller-manager \texttt{Pod}.
+
+In addition to being a substantial strain on resources, all management of inventories etc. is intended to go through the AWX instance.
+This means that automated management through the Kubernetes API is not easily accomplished.
+The AWX Resource Operator provides primitives for some of the resources managed in AWX, however, notably absent are \glspl{crd} for Ansible hosts.
+This means that the inventory cannot be directly declared inside Kubernetes API \glspl{crd}, and needs to be either handled manually by logging in to the AWX user interface, using playbooks that interact with AWX itself, or other custom means.
+Additionally, the infrastructure cannot be easily set up unattended, since AWX Resource Operator requires the manual creation of an access token for AWX, so it can access the instance.
+
+In conclusion, while AWX Resource Operator and AWX Operator provide an interface between the Kubernetes API and Ansible, they do not fulfil all requirements laid out and do not reach a complete \enquote{hands-off} management model.
+Therefore, development of the project shall continue and implement a solution that improves upon the already existing concepts from AWX Operator and AWX Resource Operator.
+The conclusion from the analysis is that the implemented solution should also attempt to save resources, use the Kuberentes API as storage for data and provide the ability for users to manage the infrastructure with as little manual intervention as possible.
