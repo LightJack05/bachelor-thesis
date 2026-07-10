@@ -1,22 +1,14 @@
 This section will give an overview of the core problem that shall be addressed by this thesis.
+It includes details on why managing infrastructure at scale necessitates a scalable solution and abstraction layers.
 %TODO: Add more content in the preamble of this section
 
 \subsection{Managing infrastructure at scale}
-There is a universal problem that exists with managing infrastructure of any kind, and that is the required resources, especially human resources, that are needed to allow the infrastructure to function correctly.
-%TODO: Citation
-This problem is commonly addressed with either expanding on the personnel available for managing said infrastructure, or utilizing automation of some kind to reduce the required management itself.
-Usually one of the most automatable and least desirable areas of managing infrastructure are repetitive, regular tasks.
-In the \gls{sre} context, such tasks are referred to as \enquote{toil}.
-Toil specifically represents very automatable tasks that repeat on a regular interval and usually do not require much metal capacity of the person performing the actions.
-The goal of modern infrastructure management solutions is to eliminate toil as much as possible.
-\parencite{google-sre}
-
-Because of the nature of \gls{IT} systems makes them inherently automatable, since they are themselves systems intended for automation, there are several ways of eliminating toil in modern environments.
-Two such ways are the tools Kubernetes and Ansible.
-Both are tools that are intended to allow managing of Infrastructure and keep the required management of the systems as low as possible.
-We will shed light on the specific architecture of both systems in a later chapter.
-\parencite{ansibledocsindex, k8swebsite}
-%TODO: Link to Ansible/K8s Chapter
+When managing infrastructure, a common problem to occur is the ability for personnel to keep up with growing infrastructure.
+Common ways of addressing this situation is to use automation of some kind.
+Two tools frequently used for automating infrastructure are Kubernetes and Ansible.
+Both are tools that are intended to allow managing of Infrastructure and keep the required management of the systems as low as possible, and scale with as little extra human effort required as possible.
+Since the definition of normal changes as systems grow, it is important to use automation systems to automate infrastructure in a way that does not require individual handling of machines.
+\parencite{ansibledocsindex, k8swebsite, google-sre}
 
 \subsection{A common access plane}
 When managing infrastructure at scale, it is often essential to allow personnel to have an easy way to see the status of the infrastructure and interact with it.
@@ -24,7 +16,7 @@ It is even more important to have a unified way of describing or changing the in
 With traditional infrastructure management, one might create a virtual machine by hand, install an operating system, log in and install a specific software, so the machine fulfills a specific purpose.
 In this model, every machine is unique, has a unique underlying operating system, and needs to be handled independently.
 Even worse, the machine does not inherently have any documentation of what it is, what it does and why it exists.
-In growing environments this will lead to Problems, since there may not be one person managing infrastructure, but there may be several hundreds or even thousands.
+In growing environments this will lead to problems, since there may be several hundreds or even thousands of people managing infrastructure.
 In such environments, documentation is essential to being able to operate infrastructure reliably.
 \parencite{platformengineering-architects}
 
@@ -33,7 +25,7 @@ Both Kubernetes and Ansible attempt to solve these problems.
 Configurations are stored as files of different formats, which can in turn be stored in a version control system like git.
 If applied correctly, this allows anyone to read the configuration of a machine and understand what is set up in what way on the machine.
 It also allows quickly recreating machines in the event of a failure of the machine, since the configuration is stored outside the machine itself, while only the data may need to be recovered.
-This is invaluable in the event of drifting configurations, hardware failures or other issues where the machine itself may be faulty and need to be recreated.
+This is invaluable in the event of drifting configurations, hardware failures or other issues where the machine itself may be faulty and need to be replaced.
 \parencite{platformengineering-architects, poulton2025kubernetes}
 
 However, when applying such systems, it is important to state that when using multiple systems built for different purposes, it may result in the same problem that has existed with traditional infrastructure.
@@ -41,18 +33,17 @@ When there are several, fundamentally different systems in an organization, it m
 \parencite{platformengineering-architects}
 
 Therefore, it is important to establish a common mode of access and operation between the tools used to manage the infrastructure, and provide an abstraction, which is commonly referred to as a \enquote{platform}.
-The core goal is to provide a single interface and a common mental model of how resources are managed on the platform, with the platform handling the actual management of the resources.
-In platform engineering, the list of things possible via the platform are referred to as the \enquote{capability plane}.
-Wrapping tools like Kubernetes Workloads and Ansible Workloads underneath a common platform allows platform engineers to make sure that using the objects feels the same, regardless of the underlying technology.
+In platform engineering, the list of things possible via the platform is referred to as the \enquote{capability plane}.
+Wrapping Kubernetes Workloads and Ansible Workloads underneath a common platform allows platform engineers to make sure that using the objects feels the same, regardless of the underlying technology.
 \parencite{platformengineering-architects}
 
 \subsection{Incompatible modes of operation between Kubernetes and Ansible}
-When looking at Ansible and Kubernetes, it becomes clear that their modes of operation differ.
+The modes of operation of Ansible and Kubernetes differ.
 Kubernetes works by continuously comparing the observed state of infrastructure to the desired state as defined by configurations stored in the Kubernetes cluster.
 In this way, when the cluster state deviates from the desired state, Kubernetes will try to move the observed state closer to the desired state by using a \gls{reconcile} pattern.
 That means once the state deviates, or as long as it does, Kubernetes will run a reconcile on deviating objects, which may or may not affect other objects.
 This means that in Kubernetes, there are always two different states: the desired state and the observed state.
-Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which is then used by an agent, the controller, to fulfill a promise, and asses whether the promise has been fulfilled, we can deductively infer that Kubernetes is a promise based system.
+Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which is then used by an agent, the controller, to fulfill a promise, and assess whether the promise has been fulfilled, we can deductively infer that Kubernetes is a promise based system.
 
 Ansible does not follow this concept, it is closer to a script programming language than a reconciling system.
 In Ansible, a user defines a list of tasks, which are then executed on the target system.

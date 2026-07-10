@@ -1,5 +1,5 @@
 \gls{ssh} is a protocol used for secure communication between two parties.
-It is commonly used for login into remote systems for management.
+It is commonly used for login into remote systems for management. \parencite{ssharchitecturerfc}
 The following chapter shall give an introduction into the workings of the \gls{ssh} protocol and introduce the concepts required to understand the flow of the implemented operator.
 
 \subsection{Components of an SSH connection}
@@ -12,8 +12,8 @@ However, a major difference to \gls{tls} is that with SSH, the keys used for aut
 \subsection{Server authentication in SSH}
 In the \gls{ssh} protocol, the server authenticates itself by generating a host key.
 This host key is then used to verify the identity of the specific server during key exchange between client and server.
-While \gls{ssh} does support the central signing and distribution of host keys, it is more common to have each host generate its own key and for clients to maintain a central database of what key is associated with what host.
-In \gls{ssh} a host may have several host keys, each one for a different cryptographic algorithm.
+While \gls{ssh} does support the central signing and distribution of host keys, it is more common to have each host generate its own key and for clients to maintain a list of what key is associated with what host.
+A host may have several host keys, each one for a different cryptographic algorithm.
 For easier validation, \gls{ssh} clients will usually provide a fingerprint for validating the host key easily, allowing for quicker checks than validating an entire cryptographic key or signature.
 \parencite{ssharchitecturerfc, sshauthrfc}
 
@@ -29,8 +29,7 @@ However, it should be noted that during this authentication method, the clear te
 \subsubsection{Public key based authentication}
 Public key authentication uses a cryptographic key pair.
 This key pair has the same format as the host keys, but authenticates the client in this case.
-Before login, the public key of the key pair must be placed in onto the \gls{ssh} server, so it can be read by the \gls{ssh} server implementation.
-A user may then use it's private key to authenticate against the server.
-A user may have several key pairs, and a server may have multiple keys registered for a user.
-In this authentication protocol, the critical knowledge, the priviate key, never leaves the client, but is only validated via a challenge-response check.
+Before login, the public key of the key pair must be placed onto the machine hosting the \gls{ssh} server, so it can be read by the \gls{ssh} server implementation.
+A user may then use its private key to authenticate against the server.
+The advantage of this authentication mechanism is that the private key never leaves the client.
 \parencite{sshauthrfc, ssharchitecturerfc}

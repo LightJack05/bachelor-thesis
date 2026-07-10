@@ -1,5 +1,5 @@
 Kubernetes is the foundation for providing the unified interface and will provide the standardized \gls{api} for the software implemented.
-Therefor the following section will provide an introduction to the core concepts of Kubernetes, using promise theory as a way to explain functionalities.
+Therefore, the following section will provide an introduction to the core concepts of Kubernetes, using promise theory as a way to explain functionalities.
 First there will be an introduction to Kubernetes itself, and how it operates, followed by the concept of controllers.
 Following that will be an introduction to operators and their concepts, including how they utilize Kubernetes objects.
 
@@ -62,10 +62,10 @@ These supply the common objects one may know from using Kuberentes already, like
 Additionally, most node components are themselves controllers, like the kubelet, kube-scheduler or kube-proxy.
 \parencite{k8scontrollers, k8sclustercomponents}
 
-A controller uses a reconcile loop in order to move the actual or observed state of the cluster closer to the desired state as defined by an object's manifest.
+A controller uses a reconcile loop in order to move the actual or observed state of the cluster closer to the desired state as defined by an objects manifest.
 Assuming a \texttt{Deployment} object specifies that 3 instances of a pod with an nginx container should be running, several controllers now touch the object, until 3 containers are actually running.
 First, the kube-apiserver accepts the object manifest via a request and writes it into etcd.
-The \texttt{Deployment} controller notices the new \texttt{Deployment}, and performs the actions that are required to fulfil the promise it made, namely in this case to create a \texttt{ReplicaSet}.
+The \texttt{Deployment} controller notices the new \texttt{Deployment} and performs the actions that are required to fulfil the promise it made, namely in this case to create a \texttt{ReplicaSet}.
 Once the \texttt{ReplicaSet} is created, the \texttt{ReplicaSet} controller reconciles the object to move the observed state closer to the desired state.
 In this case, it creates several \texttt{Pod} objects, which for now remain unscheduled, in state \enquote{Pending}.
 Once the \texttt{Pods} are created, the kube-scheduler, a controller for \texttt{Pods}, notices the new \texttt{Pods} and assigns them to a \texttt{Node}.
@@ -75,13 +75,13 @@ It now instructs the \gls{cri} to run the containers required to meet the \textt
 
 \subsection{Extending Kubernetes with custom controllers}
 
-The strength of Kubernetes here is the ability to define so-called \gls{crd}.
+The strength of Kubernetes here is the ability to define so-called \glspl{crd}.
 These are themselves Kubernetes objects, which allow users of Kubernetes to specify custom resources in the Kubernetes \gls{api}.
 These objects may also allow the management of resources other than container workloads, since the controllers attached to them simply need to read the desired state from Kubernetes and can then perform arbitrary actions, such as reaching out to external \gls{api}s or creating other Kubernetes resources.
 \parencite{k8scustomresources, k8scontrollers}
 
 \subsubsection{Operator pattern}
-In Kubernetes, the concept of writing Controllers that manage other software or aggregate capabilities to orchestrate complex tasks is referred to as the operator pattern.
+In Kubernetes, the concept of writing controllers that manage other software or aggregate capabilities to orchestrate complex tasks is referred to as the \enquote{operator pattern}.
 An \enquote{Operator} here is a piece of software that is able to manage a complex task in the same way a human operator would.
 This could be tasks such as setting up databases, handling data recovery or creating credentials for external services.
 The goal here is to eliminate the standard tasks always required for setting up and managing specific software, and transforming the human knowledge required for it into code that can automate the process.
@@ -89,11 +89,11 @@ The goal here is to eliminate the standard tasks always required for setting up 
 
 There are numerous frameworks to make the implementation of operators easier, so writing repetitive code is reduced to the minimum.
 Common examples of operator frameworks are kubebuilder, Java Operator SDK and Kopf.
-These offer ways to build the complex \gls{crd} for the developer, automatically watch resources for changes and trigger a reconcile, so the developer only needs to focus on the actual business logic of the operator.
+Operator frameworks aim to simplify the development of operators by reducing repetitive code, allowing developers to focus on business logic.
 \parencite{k8soperators}
 
 \subsubsection{Asynchronous reconciliation}
-Kubernetes controllers, including operators, make use of a concept called asynchronous reconciliation.
+Controllers make use of a concept called asynchronous reconciliation.
 It means that the kube-apiserver only verifies the syntactical correctness of the \texttt{CustomResource} created based on a \gls{crd}, but usually doesn't validate the actual logical consistency.
 It is possible to implement such checks using admission webhooks, but validating logical consistency via admission webhooks is generally discouraged.
 Validation of the actual logical consistency and the ability to move the observed state to the desired state should be determined at reconcile time.
@@ -105,16 +105,15 @@ In Kubernetes, this concept is referred to as \enquote{eventually consistent}, t
 
 \subsubsection{Kubernetes object conditions}
 
-To allow an assessment of whether a controller was able to keep the promise it made with the \texttt{CustomResourceDefinition}, Kubernetes allows objects to carry conditions in their status block.
-Conditions can be thought of as a status report from the controller to the client that created the resource.
-A condition, when following the convention, should have static conditions in positive naming.
-Typically, this amounts to a condition called \enquote{Ready}, and additional conditions on more complex objects.
+Object conditions in Kubernetes map to the assessments found in promise theory, representing the controllers view of whether it has fulfilled its promise.
+A condition, when following the convention, should have conditions in positive naming.
+Typically, this amounts to a condition called \enquote{Ready} and additional conditions on more complex objects.
 Every condition can then have additional properties, the primary one indicating whether the condition is active, with additional ones indicating a reason as to why the resource is in the specific condition, a human-readable message from the controller as well as the transition time.
 \parencite{kubebuilder-book}
 
 \subsubsection{Garbage collection}
-Kubernetes garbage collection is a concept making use of owner references to allow for the automatic deletion of objects when the managing resource is deleted.
+Garbage collection is a concept making use of owner references to allow for the automatic deletion of objects when the managing resource is deleted.
 For this to work, the controller sets an owner reference on the managed object pointing back to the parent object.
-This owner references allow several features to work properly, including the controller to be notified when a child object is modified.
+Owner references allow several features to work properly, including the controller to be notified when a child object is modified.
 The owner reference also tells the kube-apiserver to delete any child resources when the parent is deleted, allowing for easy cleanup of child resources without making use of finalizes.
 \parencite{k8sgarbagecollection}

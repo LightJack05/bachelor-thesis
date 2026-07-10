@@ -1,23 +1,22 @@
 In platform engineering, \enquote{capabilities} are often the center of discussion around a platform.
 A capability here is a way of describing a service a platform offers.
 A capability can be as simple as \enquote{runs a container} and as complex as \enquote{provisions a clustered database across regions, with constant \gls{wal} archiving to achieve \gls{pitr}}.
-In the previous chapters, we learned about promises, which map very closely to what a capability is.
+The promises explained in previous chapter map closely to capabilities.
 \parencite{platformengineering-architects, cncfPlatformEngineering}
 \par
 The platform offers a service to a user, which can be directly mapped to a promise \parencite{promise-theory}:
 
 \[ P \xrightarrow{+b} U \]
 
-Where $P$ is the platform and $U$ indicates any user out of the group of users using the platform.
+Where $P$ is the platform and $U$ is a user of the platform.
 This means our capability would be $b$ in this case.
 
 \subsection{Promising impositions in a platform}
-An agent making an imposition inherently cannot fulfill it, only the agent on which it imposes behavior can.
 Since Ansible is imposition based and Kubernetes is imposition based, to provide Ansible as a Service using Kubernetes, a possibility needs to be engineered to map an imposition into a promise.
 The simplest and most common way to achieve that is by making a promise to impose.
 \parencite{promise-theory}
 
-First Ansible $A$ needs to impose a configuration $c$ on any Server $S_?
+First Ansible $A$ needs to impose any configuration $c$ on any Server $S_?
 	\in S$.
 
 \[ \pi _1: A \impose{+c}{5}

@@ -1,14 +1,14 @@
-Ansible, in contrast to Kubernetes' declarative approach, it uses scripts called playbooks to describe the target state of the machine, which are usually held idempotent to ensure that re-running the same playbook doesn't alter the state of the target machine if it already is in the requested state.
-This section is going to give an introduction to Ansible and it's components to give a good understanding for how Ansible works and what it's requirements for execution are.
+Ansible instead uses scripts called playbooks to describe the target state of the machine, which are usually held idempotent to ensure that re-running the same playbook doesn't alter the state of the target machine if it already is in the requested state.
+This section is going to give an introduction to Ansible and its components to give a good understanding for how Ansible works and what it requirements for execution are.
 The section will only focus on components that are going to be relevant to the implementation of the operator, so components that will be purposefully omitted as per scope definition will already be omitted here.
 \parencite{ansibledocsindex}
 
 \subsection{The Ansible inventory}
 The Ansible inventory is what tells Ansible what hosts to target, how they are grouped and what variables to use for them when evaluating playbooks or roles.
-It is written in a file or a predetermined directory structure, however this thesis will use the \gls{yaml} format with the directory layout for declaring the inventory, for easier manageability of scaling environments, as per \cite{ansibleinventoryintro}.
+It is written in a file or a predetermined directory structure. This thesis will build Ansible inventories using the directory layout, allowing easier manageability of scaling environments, as per \cite{ansibleinventoryintro}.
 
 An Ansible inventory is separated into \texttt{Groups} and \texttt{Hosts}, both of which can have variables.
-\texttt{Groups} are a way to \texttt{Group} multiple \texttt{Hosts} into a logical unit, which can be targeted by a playbook, as we will see in a later section.
+\texttt{Groups} are a way to group multiple \texttt{Hosts} into a logical unit, which can be targeted by a playbook.
 A \texttt{Group} is declared simply by creating a key in the YAML file that represents the inventory at root level.
 \texttt{Groups} may also have subgroups, which in turn makes the parent \texttt{Group} into a \enquote{metagroup}.
 \parencite{ansibleinventoryintro}
@@ -17,7 +17,7 @@ The individual \texttt{Hosts} are then declared as children of a specific Ansibl
 These \texttt{Hosts} need to have at least a name and hostname, so Ansible can access them.
 Ansible will default to the declared inventory name as hostname if no hostname is specified.
 
-The format for specifying an inventory can be found below, sourced from \cite{ansibleinventoryintro}:
+The format for specifying an inventory can be found below:
 
 %TC:ignore
 \begin{lstlisting}[language=yaml,caption=Example Ansible inventory with groups and hosts (source: \cite{ansibleinventoryintro})]
@@ -61,8 +61,8 @@ Notably spines and leafs are subgroups of network, and network and webservers ar
 
 \subsection{Ansible playbooks}
 A \texttt{Playbook} in Ansible is a file that contains several \texttt{Plays}, which in turn contain \texttt{Tasks} to perform on a target.
-The \texttt{Tasks} here are operations like copying a file or setting the timezone for a host. Each of those, depending on the nature, is usually idempotent.
-The playbook below is an example of how one could manage webservers and database servers using an ansible playbook:
+The \texttt{Tasks} here are operations like copying a file or setting the timezone for a host.
+The playbook below is an example of how one could manage web servers and database servers using an Ansible playbook:
 
 %TC:ignore
 \begin{lstlisting}[language=yaml,caption=Ansible playbook example (source: \cite{ansibleplaybooks})]

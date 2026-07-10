@@ -6,11 +6,11 @@ The following listing documents the functional requirements, ordered by priority
 
 \begin{itemize}
 	\item \textbf{Inventory management via Kubernetes Objects:}
-	      The inventory for Ansible should be defined using Kubernetes objects, which should represent one inventory object each (Like \texttt{AnsibleHost} or \texttt{AnsibleGroup} objects).
+	      The inventory for Ansible should be defined using Kubernetes objects, which should represent one inventory object each.
 	\item \textbf{Playbook sourcing from Git:}
 	      Playbooks should be pulled from Git for execution, which may or may not require authentication.
 	\item \textbf{Playbooks should be runnable on a regular schedule:}
-	      A playbook should not be executed once, but should be schedule on a regular interval (daily at 5am, weekly on sunday, etc.)
+	      Playbook execution should be schedulable on a regular interval.
 	\item \textbf{Status reporting for Objects:}
 	      After execution, the status of the last run should be reported back to the objects in Kubernetes, such as the success of the run or the number of changed events.
 \end{itemize}
@@ -27,4 +27,5 @@ The table below documents the non-functional requirements, again ordered by prio
 	      The operator should scale to a reasonable number of hosts, passing at least 1000 hosts total.
 \end{itemize}
 
-Based on these requirements, we shall design the architecture in the following chapter.
+These requirements will serve as the basis for the architecture and the implementation of the solution.
+
