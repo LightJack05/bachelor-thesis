@@ -7,7 +7,7 @@ Even though a \texttt{Job} is able to provide retry semantics, we shall disable 
 It is also important that the \enquote{.spec.concurrencyPolicy} field on the \texttt{CronJob} be set to \enquote{Forbid}, in order to avoid race conditions or collisions between playbook executions.
 
 \subsection{Runtime initialization}
-Before the \texttt{Job} is able to execute the playbook directly, it needs to be initialized. This includes cloning the repository with the playbook and requirements file if applicable, as well al installing any dependencies specified in the requirements file.
+Before the \texttt{Job} is able to execute the playbook directly, it needs to be initialized. This includes cloning the repository with the playbook and requirements file if applicable, as well as installing any dependencies specified in the requirements file.
 We shall use an init-container in order to achieve these steps before executing the playbook.
 An init-container runs before application-containers inside the \texttt{Pod} and may pass data to these containers, commonly via \enquote{EmptyDir} volumes.
 

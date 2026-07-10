@@ -5,13 +5,13 @@ Therefore, we will be documenting the requirements in the following chapter, sep
 The following listing documents the functional requirements, ordered by priority.
 
 \begin{itemize}
-	\item \textbf{Inventory management via Kubernetes Objects:}
+	\item \textbf{F1:}
 	      The inventory for Ansible should be defined using Kubernetes objects, which should represent one inventory object each.
-	\item \textbf{Playbook sourcing from Git:}
+	\item \textbf{F2:}
 	      Playbooks should be pulled from Git for execution, which may or may not require authentication.
-	\item \textbf{Playbooks should be runnable on a regular schedule:}
+	\item \textbf{F3:}
 	      Playbook execution should be schedulable on a regular interval.
-	\item \textbf{Status reporting for Objects:}
+	\item \textbf{F4:}
 	      After execution, the status of the last run should be reported back to the objects in Kubernetes, such as the success of the run or the number of changed events.
 \end{itemize}
 
@@ -19,11 +19,11 @@ The following listing documents the functional requirements, ordered by priority
 The table below documents the non-functional requirements, again ordered by priority.
 
 \begin{itemize}
-	\item \textbf{Adequate Security:}
+	\item \textbf{N1:}
 	      The operator must support adequate security for a tool that will be executing code on many hosts in the organization, which includes Kubernetes \gls{rbac} as well as proper \gls{ssh} authentication with host key checking.
-	\item \textbf{Execution environment security:}
+	\item \textbf{N2:}
 	      Since the runner pods may execute arbitrary code, the environment for the runner should be heavily restricted using Kubernetes security capabilities.
-	\item \textbf{Scalability:}
+	\item \textbf{N3:}
 	      The operator should scale to a reasonable number of hosts, passing at least 1000 hosts total.
 \end{itemize}
 

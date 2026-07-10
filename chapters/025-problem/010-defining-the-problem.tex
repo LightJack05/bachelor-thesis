@@ -13,8 +13,8 @@ Since the definition of normal changes as systems grow, it is important to use a
 \subsection{A common access plane}
 When managing infrastructure at scale, it is often essential to allow personnel to have an easy way to see the status of the infrastructure and interact with it.
 It is even more important to have a unified way of describing or changing the infrastructure.
-Both Kubernetes and Ansible attempt to solve these problems.
-Configurations are stored as files of different formats, which can in turn be stored in a version control system like git.
+Both Kubernetes and Ansible attempt to solve this.
+In these systems, configurations are stored as files of different formats, which can in turn be stored in a version control system like git.
 If applied correctly, this allows anyone to read the configuration of a machine and understand what is set up in what way on the machine.
 It also allows quickly recreating machines in the event of a failure of the machine, since the configuration is stored outside the machine itself, while only the data may need to be recovered.
 This is invaluable in the event of drifting configurations, hardware failures or other issues where the machine itself may be faulty and need to be replaced.
