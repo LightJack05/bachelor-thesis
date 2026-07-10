@@ -3,15 +3,23 @@ For this reason, there is a diagram below showing the layout of the objects and 
 
 
 \begin{figure}[H]
-    \centering
+	\centering
 	\includegraphics[width=1.1\textwidth]{bilder/object_relations.png}
 	\caption{Object relations in the Operator}
 	\label{pic:object_relations}
-    \source{Own diagram}
+	\source{Own diagram}
 \end{figure}
 
 The graphic uses a notation adjacent to the classic Peter-Chen notation to show the relations.
 As one can notice, the most relevant objects are created by the \anrecjob.
-Additionally, we can see that the coupling between the \anplaybook and the \angroup and \anhost objects is loose.
-This is because only the playbook source code references any objects in the inventory, as opposed to the other objects referencing it in their spec.
-All other relations are tight, being represented by explicit references to local Kubernetes objects.
+
+Several resources the operator manages need to contact external data sources or contact other external services in order to obtain their data or transfer information.
+The diagram below shows the relations of resources inside the cluster to external resources.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.1\textwidth]{bilder/Bachelor Thesis External Relations.drawio.png}
+	\caption{Object relations to external data}
+	\label{pic:object_data}
+	\source{Own diagram}
+\end{figure}
