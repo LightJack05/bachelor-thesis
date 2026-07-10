@@ -1,13 +1,7 @@
 \gls{ssh} is a protocol used for secure communication between two parties.
-It is commonly used for login into remote systems for management. \parencite{ssharchitecturerfc}
-The following chapter shall give an introduction into the workings of the \gls{ssh} protocol and introduce the concepts required to understand the flow of the implemented operator.
-
-\subsection{Components of an SSH connection}
-An \gls{ssh} connection is made between two systems, one acting as client and one as server.
-The client here is the system that wishes to access the server.
-\gls{ssh} has to authenticate both the client and the server, similar to a \gls{tls} handshake one might know from \gls{https}.
-However, a major difference to \gls{tls} is that with SSH, the keys used for authentication usually are not signed by a central authority, but self-signed by the server.
-\parencite{ssharchitecturerfc}
+The following chapter introduces both client and host authentication in SSH via keys.
+Password based authentication is omitted, since it sends the secret to the server.
+\parencite{sshauthrfc, ssharchitecturerfc}
 
 \subsection{Server authentication in SSH}
 In the \gls{ssh} protocol, the server authenticates itself by generating a host key.
@@ -17,16 +11,7 @@ A host may have several host keys, each one for a different cryptographic algori
 For easier validation, \gls{ssh} clients will usually provide a fingerprint for validating the host key easily, allowing for quicker checks than validating an entire cryptographic key or signature.
 \parencite{ssharchitecturerfc, sshauthrfc}
 
-\subsection{Client authentication in SSH}
-Client authentication in \gls{ssh} has three options, two of which will be detailed in this subsection.
-
-\subsubsection{Password based authentication}
-Password based authentication in \gls{ssh} uses a username and password combination to authenticate the user during connection.
-This is the most common and easiest to set up way of authenticating against an \gls{ssh} server, since most implementations simply use the operating system user and password to authenticate the user.
-However, it should be noted that during this authentication method, the clear text password is transmitted to the server, meaning that if the server is compromised, the password may be leaked to an attacker, even if the host key matches.
-\parencite{sshauthrfc, ssharchitecturerfc}
-
-\subsubsection{Public key based authentication}
+\subsection{Public key based client authentication}
 Public key authentication uses a cryptographic key pair.
 This key pair has the same format as the host keys, but authenticates the client in this case.
 Before login, the public key of the key pair must be placed onto the machine hosting the \gls{ssh} server, so it can be read by the \gls{ssh} server implementation.

@@ -4,89 +4,29 @@ First there will be an introduction to Kubernetes itself, and how it operates, f
 Following that will be an introduction to operators and their concepts, including how they utilize Kubernetes objects.
 
 \subsection{Core Kubernetes concepts}
-
-Kubernetes clusters consist of \texttt{Nodes} which represent servers that are running a kubelet instance.
-\texttt{Nodes} provide resources such as memory, \gls{cpu} and similar to the cluster to allow scheduling of \texttt{Pods}.
-There are several core components to Kubernetes that should be explained, so it becomes clear how the cluster manages resources.
-\parencite{poulton2025kubernetes}
-
-\subsubsection{General Node components}
-
-There are several components that run on every \texttt{Node} in a Kubernetes cluster, because they are required to ensure the proper functioning of \texttt{Nodes}.
-The first such component is kubelet itself.
-It serves as the component ensuring that \texttt{Pods} assigned to a node are running on the node, communicating with the \gls{cri} to ensure the containers match the \texttt{Pod} specification.
-\parencite{poulton2025kubernetes, k8sclustercomponents}
-
-The second component is the container runtime.
-It is responsible for actually starting containers when instructed to do so by the kubelet.
-There are several implementations in existence for container runtimes, which are standardized by the \gls{cri} specification.
-\parencite{poulton2025kubernetes, k8sclustercomponents}
-
-The third component is optional, but usually present in Kubernetes.
-The kube-proxy is responsible for orchestrating iptables rules to enable \texttt{Services} in Kubernetes to perform load balancing between containers.
-\parencite{poulton2025kubernetes, k8sclustercomponents}
-
-\subsubsection{The control plane}
-The Kubernetes control plane serves as the part of the cluster orchestrating workloads and managing the cluster lifecycle.
-It consists of one or more \texttt{Nodes}, where multiple \texttt{Nodes} are generally preferred for high availability and failover purposes.
-In addition to the control plane, there may be several worker \texttt{Nodes}, with the Google Kubernetes Engine reaching 65.000 \texttt{Nodes} per cluster.
-\parencite{google-gke-resource-limits, poulton2025kubernetes, k8sclustercomponents}
-
-The control plane hosts several core components that are necessary for cluster operation.
-The first such component is etcd, which is a highly consistent key-value store that is used to store the cluster configuration.
-It is used to store any objects that are passed to the control plane via commands such as \enquote{kubectl create}.
-\parencite{poulton2025kubernetes, k8sclustercomponents}
-
-The second service that runs on the control plane is the Kubernetes API server.
-It is the central component responsible for communication between clients such as kubectl and the Kubernetes cluster.
-The Kubernetes \gls{api} server offers a \gls{rest} \gls{api} which allows modification of the cluster.
-It also handles authentication and authorization of clients and enforces \gls{rbac} policies.
-\parencite{poulton2025kubernetes, k8sclustercomponents}
-
-The third service on the control plane is the kube-scheduler.
-It is responsible for assigning workloads to \texttt{Nodes}, considering resource usage, taints, and other aspects to ensure proper spread and assignment of workloads.
+Kubernetes works by storing objects in a key-value storage called etcd, which is accessed through the Kubernetes API server. The cluster then uses the data stored to determine a desired state of the cluster, and will try to move the actual state of the cluster closer to the desired state.
+This maps closely to the concept of a promise being made.
+The cluster promises to provide the desired state.
+Whether it is successful in doing so is something it reports back to the user consuming the promise.
 \parencite{poulton2025kubernetes, k8sclustercomponents}
 
 \subsection{Controllers and promises in Kubernetes}
-
-From the previous section, one can infer that a lot of the concepts of promise theory map quite closely to Kuberentes components.
-Several components are agents making promises about what they can do, and other agents consume them.
-Here it should be noted that for example the \gls{cri} is an agent promising to start containers when instructed to do so.
-Meanwhile, the kubelet promises to run pods assigned to the \texttt{Node} and use the promise of the \gls{cri} to run containers within those pods.
+Controllers manage a specific type of object in Kubernetes, and may watch any number of other objects.
+They are agents making promises about what they can do, and other agents consume them.
 \parencite{k8sclustercomponents, promise-theory, poulton2025kubernetes}
-
-This is where we need to talk about the concept of controllers.
-Controllers in Kubernets are software that are responsible for at least one resource type in Kubernetes.
-Kubernetes supplies several built-in controllers via the kube-controller-manager.
-These supply the common objects one may know from using Kuberentes already, like \texttt{Jobs}, \texttt{Deployments} or \texttt{Services}.
-Additionally, most node components are themselves controllers, like the kubelet, kube-scheduler or kube-proxy.
-\parencite{k8scontrollers, k8sclustercomponents}
-
-A controller uses a reconcile loop in order to move the actual or observed state of the cluster closer to the desired state as defined by an objects manifest.
-Assuming a \texttt{Deployment} object specifies that 3 instances of a pod with an nginx container should be running, several controllers now touch the object, until 3 containers are actually running.
-First, the kube-apiserver accepts the object manifest via a request and writes it into etcd.
-The \texttt{Deployment} controller notices the new \texttt{Deployment} and performs the actions that are required to fulfil the promise it made, namely in this case to create a \texttt{ReplicaSet}.
-Once the \texttt{ReplicaSet} is created, the \texttt{ReplicaSet} controller reconciles the object to move the observed state closer to the desired state.
-In this case, it creates several \texttt{Pod} objects, which for now remain unscheduled, in state \enquote{Pending}.
-Once the \texttt{Pods} are created, the kube-scheduler, a controller for \texttt{Pods}, notices the new \texttt{Pods} and assigns them to a \texttt{Node}.
-At this point, the \texttt{Pod} becomes the responsibility of the kubelet.
-It now instructs the \gls{cri} to run the containers required to meet the \texttt{Pod} manifest.
+A controller uses a reconcile loop in order to move the actual or observed state of the cluster closer to the desired state as defined by a manifest.
+Assuming a \texttt{Deployment} object specifies that three instances of a pod with an nginx container should be running, the controller responsible for \texttt{Deployment} objects will reconcile the object and assess its condition to ensure that there are actually three instances running.
 \parencite{poulton2025kubernetes, k8scontrollers, k8sclustercomponents}
 
 \subsection{Extending Kubernetes with custom controllers}
 
 The strength of Kubernetes here is the ability to define so-called \glspl{crd}.
 These are themselves Kubernetes objects, which allow users of Kubernetes to specify custom resources in the Kubernetes \gls{api}.
-These objects may also allow the management of resources other than container workloads, since the controllers attached to them simply need to read the desired state from Kubernetes and can then perform arbitrary actions, such as reaching out to external \gls{api}s or creating other Kubernetes resources.
+These objects may also allow the management of resources other than container workloads, since the controllers attached to them simply need to read the desired state from Kubernetes and can then perform arbitrary actions, such as reaching out to external \glspl{api} or creating other Kubernetes resources.
 \parencite{k8scustomresources, k8scontrollers}
 
-\subsubsection{Operator pattern}
-In Kubernetes, the concept of writing controllers that manage other software or aggregate capabilities to orchestrate complex tasks is referred to as the \enquote{operator pattern}.
-An \enquote{Operator} here is a piece of software that is able to manage a complex task in the same way a human operator would.
-This could be tasks such as setting up databases, handling data recovery or creating credentials for external services.
-The goal here is to eliminate the standard tasks always required for setting up and managing specific software, and transforming the human knowledge required for it into code that can automate the process.
-\parencite{k8soperators}
-
+The concept of writing controllers that manage other software or aggregate capabilities to orchestrate complex tasks is referred to as the \enquote{operator pattern}.
+An \enquote{operator} here is a piece of software that is able to manage a complex task in the same way a human operator would.
 There are numerous frameworks to make the implementation of operators easier, so writing repetitive code is reduced to the minimum.
 Common examples of operator frameworks are kubebuilder, Java Operator SDK and Kopf.
 Operator frameworks aim to simplify the development of operators by reducing repetitive code, allowing developers to focus on business logic.
@@ -105,7 +45,7 @@ In Kubernetes, this concept is referred to as \enquote{eventually consistent}, t
 
 \subsubsection{Kubernetes object conditions}
 
-Object conditions in Kubernetes map to the assessments found in promise theory, representing the controllers view of whether it has fulfilled its promise.
+Object conditions map to the assessments found in promise theory, representing the controllers view of whether it has fulfilled its promise.
 A condition, when following the convention, should have conditions in positive naming.
 Typically, this amounts to a condition called \enquote{Ready} and additional conditions on more complex objects.
 Every condition can then have additional properties, the primary one indicating whether the condition is active, with additional ones indicating a reason as to why the resource is in the specific condition, a human-readable message from the controller as well as the transition time.

@@ -13,14 +13,6 @@ Since the definition of normal changes as systems grow, it is important to use a
 \subsection{A common access plane}
 When managing infrastructure at scale, it is often essential to allow personnel to have an easy way to see the status of the infrastructure and interact with it.
 It is even more important to have a unified way of describing or changing the infrastructure.
-With traditional infrastructure management, one might create a virtual machine by hand, install an operating system, log in and install a specific software, so the machine fulfills a specific purpose.
-In this model, every machine is unique, has a unique underlying operating system, and needs to be handled independently.
-Even worse, the machine does not inherently have any documentation of what it is, what it does and why it exists.
-In growing environments this will lead to problems, since there may be several hundreds or even thousands of people managing infrastructure.
-In such environments, documentation is essential to being able to operate infrastructure reliably.
-\parencite{platformengineering-architects}
-
-%TODO: citation
 Both Kubernetes and Ansible attempt to solve these problems.
 Configurations are stored as files of different formats, which can in turn be stored in a version control system like git.
 If applied correctly, this allows anyone to read the configuration of a machine and understand what is set up in what way on the machine.
