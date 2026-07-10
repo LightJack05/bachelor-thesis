@@ -13,15 +13,6 @@ In this case, the \enquote{ansible-operator.lightjack.de/v1alpha1} \gls{api} ver
 Here, the \enquote{v1alpha1} indicates the first version of the operator \enquote{v1} with an alpha state resource \enquote{alpha} in the first version \enquote{1}.
 Should there be breaking changes to the \gls{api} once the operator is in a stable condition, this version should be changed and the resources moved to a different \gls{api} version.
 
-\subsection{Access controls, security and multi-tenancy}
-In Kubernetes, resources can be either \enquote{namespaced} or \enquote{global}.
-Namespaced resources are bound to a namespace and generally only access resources within their namespace, such as mounting \texttt{ConfigMaps} or \texttt{Secrets}.
-The decision to make all resources of the operator namespaced was made to allow for multi-tenancy and isolate resources from each other. It also helps with scalability, since an inventory can easily be split into multiple namespaces and therefore the generation of resources such as the inventory \texttt{ConfigMap} and similar resources can be split into multiple tenants, improving reconcile performance.
-
-Authorization and authentication against the operator itself is done via \gls{rbac} on the Kubernetes API Server itself. Kubernetes allows for assigning users very granular permissions on resources, including \glspl{crd}.
-That means that there needs to be no authentication of users within the operator itself.
-All \gls{ssh} hosts use key-based authentication and, unless disabled, check the host keys of the target machine against the keys obtained via \gls{tofu} when executing the playbook.
-
 \subsection{The \anhost resource}
 The complete \anhost spec type declaration can be found in the appendix under section \ref{app:anhostdeclare}.
 
