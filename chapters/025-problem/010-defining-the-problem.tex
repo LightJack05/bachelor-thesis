@@ -39,7 +39,7 @@ Kubernetes works by continuously comparing the observed state of infrastructure 
 In this way, when the cluster state deviates from the desired state, Kubernetes will try to move the observed state closer to the desired state by using a \gls{reconcile} pattern.
 That means once the state deviates, or as long as it does, Kubernetes will run a reconcile on deviating objects, which may or may not affect other objects.
 This means that in Kubernetes, there are always two different states: the desired state and the observed state.
-Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which is then used by an agent, the controller, to fulfill a promise, and assess whether the promise has been fulfilled, we can deductively infer that Kubernetes is a promise based system.
+Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which is then used by an agent, the controller, to fulfill a promise, and assess whether the promise has been fulfilled, it can be deductively inferred that Kubernetes is a promise based system.
 
 Ansible does not follow this concept, it is closer to a script programming language than a reconciling system.
 In Ansible, a user defines a list of tasks, which are then executed on the target system.

@@ -12,7 +12,7 @@ Where $P$ is the platform and $U$ is a user of the platform.
 This means our capability would be $b$ in this case.
 
 \subsection{Promising impositions in a platform}
-Since Ansible is imposition based and Kubernetes is imposition based, to provide Ansible as a Service using Kubernetes, a possibility needs to be engineered to map an imposition into a promise.
+Since Ansible is imposition based and Kubernetes is promise based, to provide Ansible as a Service using Kubernetes, a possibility needs to be engineered to map an imposition into a promise.
 The simplest and most common way to achieve that is by making a promise to impose.
 \parencite{promise-theory}
 
@@ -23,21 +23,19 @@ First Ansible $A$ needs to impose any configuration $c$ on any Server $S_?
 	S_?
 \]
 
-The server $S_?
-$ then makes a promise to accept the imposition by allowing Ansible to access it:
+The server $S_?$ then makes a promise to accept the imposition by allowing Ansible to access it:
 
 \[ \pi _2: S_? \xrightarrow{-c}
 	A \]
 
-This is important, because an imposition on a autonomous agent is only as strong as the promise by the target agent to accept it.
+This is important, because an imposition on an autonomous agent is only as strong as the promise by the target agent to accept it.
 \parencite{promise-theory}
 \par
 Following that, Ansible can promise its own behavior, since it is itself an agent that may make promises about its own behavior:
 
 \[ \sigma _1: A \xrightarrow{+\pi _1} P \]
 
-This means Ansible makes a promise to the platform $P$ to impose $c$ on any Server $S_?
-$ in the list of servers $S$.
+This means Ansible makes a promise to the platform $P$ to impose $c$ on any Server $S_?$ in the list of servers $S$.
 The platform promises to use the promise, which allows the platform to depend on a promise made by Ansible.
 
 \[ \sigma _2: P \xrightarrow{-\pi _1} A \]
@@ -46,17 +44,17 @@ Additionally, Ansible needs to provide feedback on whether it was successful in 
 
 \[ \phi _1: A \xrightarrow{+f} P, \phi _2: P \xrightarrow{-f} A \]
 
-This is now a promise, however, it is simply Ansible promising its own behavior to our platform.
-The issue here is that our platform cannot promise Ansible's behavior, since this would be in violation of the principle of autonomy.
+This is now a promise, however, it is simply Ansible promising its own behavior to the platform.
+The issue here is that the platform cannot promise Ansible's behavior, since this would be in violation of the principle of autonomy.
 \parencite{promise-theory}
 \par
-Instead, we may promise an outcome and make it subject to the assessment of another promise:
+Instead, the platform may promise an outcome and make it subject to the assessment of another promise:
 
 \[ \rho _1: P \xrightarrow{+D|\alpha _P(\sigma _1)} U \]
 
-This means our platform $P$ now promises to provide a desired state $D$ to our User $U$, subject to a successful assessment $\alpha$ by our platform $P$ of the promise $\sigma _1$.
-It should be noted that we explicitly rely on $\alpha _P(\sigma _1)$ based on $f$, the assessment of P on $\sigma _1$, rather than on the server being in the desired state, since the platform $P$ does not observe the state of $S_?
+This means the platform $P$ now promises to provide a desired state $D$ to the User $U$, subject to a successful assessment $\alpha$ by the platform $P$ of the promise $\sigma _1$.
+It should be noted that $\rho _1$ explicitly relies on $\alpha _P(\sigma _1)$ based on $f$, the assessment of P on $\sigma _1$, rather than on the server being in the desired state, since the platform $P$ does not observe the state of $S_?
 $.
 It can merely use the output provided by Ansible to assess whether it kept the promise.
-Since it is the body of our promise, our concrete capability is now $D$, which means our platform now has the capability to use a promise Ansible has made to it to apply a configuration to an arbitrary server.
+Since it is the body of the promise, the concrete capability is now $D$, which means the platform now has the capability to use a promise Ansible has made to it to apply a configuration to an arbitrary server.
 \parencite{promise-theory}

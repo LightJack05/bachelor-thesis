@@ -5,7 +5,8 @@ The section will only focus on components that are going to be relevant to the i
 
 \subsection{The Ansible inventory}
 The Ansible inventory is what tells Ansible what hosts to target, how they are grouped and what variables to use for them when evaluating playbooks or roles.
-It is written in a file or a predetermined directory structure. This thesis will build Ansible inventories using the directory layout, allowing easier manageability of scaling environments, as per \cite{ansibleinventoryintro}.
+It is written in a file or a predetermined directory structure.
+This thesis will build Ansible inventories using the directory layout, allowing easier manageability of scaling environments, as per \cite{ansibleinventoryintro}.
 
 An Ansible inventory is separated into \texttt{Groups} and \texttt{Hosts}, both of which can have variables.
 \texttt{Groups} are a way to group multiple \texttt{Hosts} into a logical unit, which can be targeted by a playbook.
@@ -98,12 +99,13 @@ The playbook below is an example of how one could manage web servers and databas
       state: started
 \end{lstlisting}
 %TC:endignore
-This playbook contains two \texttt{Plays} which target the \texttt{Groups} webservers and databases respectively. On webservers, they ensure the httpd package is installed with the latest version, and then write the configuration for it to \enquote{/etc/httpd.conf}, templating it from a local template file.
+This playbook contains two \texttt{Plays} which target the \texttt{Groups} webservers and databases respectively.
+On webservers, they ensure the httpd package is installed with the latest version, and then write the configuration for it to \enquote{/etc/httpd.conf}, templating it from a local template file.
 The second \texttt{Play} targets the databases and ensures PostgreSQL is installed and started.
 \parencite{ansibleplaybooks}
 
 \subsection{Ansible roles}
-\texttt{Roles} are reusable units of \texttt{Tasks} which we can use in Ansible to split configurations into reusable chunks to, for example, apply a similar configuration repeatedly to several logicial targets without having to contain them in playbooks.
+\texttt{Roles} are reusable units of \texttt{Tasks} which can be used to split configurations into reusable chunks to, for example, apply a similar configuration repeatedly to several logicial targets without having to contain them in playbooks.
 \texttt{Roles} also allow for easy delivery of templates and other files together with these tasks.
 Once created, \texttt{Roles} can be referenced either in \texttt{Playbooks} or within other roles as dependencies.
 Roles that are required for the execution of a playbook can be declared in a file called \enquote{requirements.yml} which can in turn be used to install all roles listed in the file.
