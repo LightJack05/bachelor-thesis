@@ -1,11 +1,11 @@
 The following chapter outlines the implemented logic for the \glspl{crd} defined in the previous chapters.
-We shall go over the individual \glspl{crd} again and explain the reconcile logic behind each object.
+Individual \glspl{crd} will be listed again and the reconcile logic for each object will be explained.
 \anplaybook objects do not implement any logic and are therefore omitted here.
 
 \subsection{Reconciling the \anhost resource}
 As stated in the previous chapters, an \anhost needs to scan the \gls{ssh} host keys of the target machine.
-Since reconcile logic should be idempotent, we first check whether the secret for the ssh keys used to access the host exists.
-If it does not, this means that we are unable to access the host and we should requeue the request, waiting for the user to create the secret.
+Since reconcile logic should be idempotent, first there needs to be a check whether the secret for the ssh keys used to access the host exists.
+If it does not, this means that the operator is unable to access the host, and the request should be requeued, waiting for the user to create the secret.
 
 %TC:ignore
 \begin{lstlisting}[language=go, caption=Checking whether the SSH key secret exists]
@@ -51,10 +51,12 @@ func (r *AnsibleHostReconciler) hostPrivateKeySecretExists(ctx context.Context, 
 \end{lstlisting}
 %TC:endignore
 
-If the secret is valid, we exit the reconcile function. If it's absent, we continue reconciling. If the secret is invalid, the status condition \enquote{Ready} on the \anhost is set to \enquote{False} and it is requeued.
-Next, unless the \enquote{IgnoreHostKey} option is set, we need to ensure the host key secret exists. This is done by performing an \gls{ssh} key scan on the target host.
-The common tool for this is the command line utility \enquote{ssh-keyscan}. However, since the tool is not easily executed from an operator container, we instead reimplement the same logic in Go. The full source code can be found in the appendix under section \ref{app:sshkeyscan}.
-Given that we may have several goroutines blocked on network \gls{io} while connections wait for a timeout, we also set a high parallelization level for this controller to allow multiple hosts to be reconciled at the same time.
+If the secret is valid, the reconcile function exits. If it's absent, reconciliation is continued. If the secret is invalid, the status condition \enquote{Ready} on the \anhost is set to \enquote{False}, and it is requeued.
+Next, unless the \enquote{IgnoreHostKey} option is set, the host key needs to be created. This is done by performing an \gls{ssh} key scan on the target host.
+The common tool for this is the command line utility \enquote{ssh-keyscan}.
+However, since the tool is not easily executed from an operator container, the logic was reimplemented in Go.
+The full source code can be found in the appendix under section \ref{app:sshkeyscan}.
+Given that there may be several goroutines blocked on network \gls{io} while connections wait for a timeout, the parallelization level for this controller needs to be high to allow multiple hosts to be reconciled at the same time.
 
 %TC:ignore
 \begin{lstlisting}[language=go, caption=Setting up the \anhost controller with 100 concurrent reconciles]
@@ -73,14 +75,14 @@ func (r *AnsibleHostReconciler) SetupWithManager(mgr ctrl.Manager) error {
 \end{lstlisting}
 %TC:endignore
 
-Once the keyscan is complete, we format the keys into the format used by the \gls{ssh} \enquote{known\_hosts} file, and store the data in a secret owned by the \anhost.
+Once the keyscan is complete, the keys are formatted into the format used by the \gls{ssh} \enquote{known\_hosts} file, and stored in a secret owned by the \anhost.
 
-Finally, we store the Ansible host vars in a \texttt{ConfigMap} so it can be mounted into the \texttt{Job} created by the \anrecjob.
-Once everything is complete, we set the \enquote{Ready} condition of the \anhost to \enquote{True} and exit the reconcile function.
+Finally, the \anhost vars are stored in a \texttt{ConfigMap}, so it can be mounted into the \texttt{Job} created by the \anrecjob.
+Once everything is complete, the \enquote{Ready} condition of the \anhost is set to \enquote{True} and the reconcile function exits.
 
 \subsection{Reconciling the \angroup resource}
 The reconcile cycle of the \angroup resource consists of a status check and ensuring the \texttt{ConfigMap} holding the group variables.
-We start by setting all conditions to \enquote{Unknown} on the resource, so they all exist, independently of where the reconcile loop terminates.
+First all status conditions are set to \enquote{Unknown} on the resource, so they all exist, independently of where the reconcile loop terminates.
 
 %TC:ignore
 \begin{lstlisting}[language=go]
@@ -97,8 +99,8 @@ if err := r.defaultStatusToUnknown(ctx, &group, ansibleoperatorv1alpha1.AnsibleG
 \end{lstlisting}
 %TC:endignore
 
-Afterward, we ensure the variables \texttt{ConfigMap} in the same way as we did for the \anhost resource.
-We obtain it from the Kubernetes API Server. If it is not found, we create it and set an owner reference on the resource, so we know it belongs to this \angroup.
+Afterward, the variables \texttt{ConfigMap} is ensured to exist in the same way as it was for the \anhost resource.
+It is obtained from the Kubernetes API Server. If it is not found, it is created and an owner reference is set on the resource, so it belongs to the respective \angroup.
 
 %TC:ignore
 \begin{lstlisting}[language=go, caption=Creating the group variables \texttt{ConfigMap}]
@@ -120,7 +122,7 @@ if err := r.Create(ctx, cm); err != nil {
 \end{lstlisting}
 %TC:endignore
 
-If a resource with the target name exists, we check whether it belongs to this \angroup, and if it does, we update the contents of it to reflect the current desired state.
+If a resource with the target name exists, its owner is checked, and if it does belong to the correct \angroup, it is updated the contents of its variables to reflect the current desired state.
 
 %TC:ignore
 \begin{lstlisting}[language=go, caption=Ensuring the group variables \texttt{ConfigMap} content matches the desired state]
@@ -141,7 +143,7 @@ if metav1.IsControlledBy(cm, group) {
 \end{lstlisting}
 %TC:endignore
 
-Finally, we iterate over every subgroup and host in the group and validate they both resolve to proper Kubernetes Objects, and they also have their \enquote{Ready} condition set to \enquote{True}.
+Finally, every subgroup and host is iterated over and validated to make sure they resolve to proper Kubernetes Objects, and they also have their \enquote{Ready} condition set to \enquote{True}.
 
 \subsection{Reconciling the \anrecjob resource}
 The \anrecjob resource has the most complex reconcile logic since it performs the most actions.
@@ -153,7 +155,7 @@ Firstly, the \anrecjob has three status conditions that need to be set:
 	\item{\textbf{Successful} indicates that the last \texttt{Job} completed successfully}
 \end{itemize}
 
-When starting the reconcile loop, we set all of these to \enquote{Unknown}, unless they are already in \enquote{True} or \enquote{False} state.
+When starting the reconcile loop, all of these conditions are set to \enquote{Unknown}, unless they are already in \enquote{True} or \enquote{False} state.
 Once that is complete, the inventory \texttt{ConfigMap} needs to be templated from the inventory generated inside the namespace.
 First all \anhost and \angroup resources are acquired from the API Server and then stored into maps.
 These maps are then used to build the inventory content, which can be found as a Go struct in the appendix in chapter \ref{app:invstruct}.
@@ -195,14 +197,14 @@ This makes sure that all fields that are owned by the operator are replaced, ens
 It also implicitly creates the object should it not exist.
 
 Once the \texttt{CronJob} is created, the status conditions are updated to reflect the current state of the resource.
-Every \anrecjob specifies its own name on \texttt{Jobs} belongig to it via a label on the resource.
-This way, all \texttt{Jobs} belonging to the current \anrecjob are acquired from the API Server and are then iterated over to find the one with the latest start time. Since the concurrency policy forbis concurrent execution, that \texttt{Job} is the only one that can be running.
+Every \anrecjob specifies its own name on \texttt{Jobs} belonging to it via a label on the resource.
+This way, all \texttt{Jobs} belonging to the current \anrecjob are acquired from the API Server and are then iterated over to find the one with the latest start time. Since the concurrency policy forbids concurrent execution, that \texttt{Job} is the only one that can be running.
 If the \texttt{Job} is running according to its status block, the \enquote{Progressing} condition on the \anrecjob is set to \enquote{True}.
 If no \texttt{Job} was found, the condition is set to \enquote{Unknown}.
-Otherwise it is set to \enquote{False}.
+Otherwise, it is set to \enquote{False}.
 According to the same \texttt{Job}, the \enquote{Success} status is also set, depending on the success state of the \texttt{Job}.
 
-During development it has become clear that interpreting the logs Ansible outputs is largely unnecessary, since they are best read and interpreted by a human in the case of failures.
+During development, it has become clear that interpreting the logs Ansible outputs is largely unnecessary, since they are best read and interpreted by a human in the case of failures.
 Outputting logs as \gls{json} and interpreting them in operator logic would allow for status reporting on objects, but may mask errors and make it harder to identify the tasks that led up to an error.
 Therefore, it has been decided to limit the status reporting of the \anrecjob to a basic success/failure state, and offload additional debugging capabilities to the logs of the relevant \texttt{Job}.
 It should be noted that this means that within a larger platform, logs for Ansible execution can easily be handled by an already existing log collection system, and may even be able to be tied into alerting systems.
