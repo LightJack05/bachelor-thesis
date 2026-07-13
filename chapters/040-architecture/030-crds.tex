@@ -1,6 +1,6 @@
-In order to manage Ansible workloads through Kubernetes, we need a way to interact with the cluster to tell it how to configure Ansible and the machines.
-For this reason, we will be defining the required resources we need in order to achieve a proper configuration layout and enable the use of Ansible features through Kubernetes.
-If we loop back to promise theory, we will be able to see that each resource makes a specific promise to the user of our platform layer.
+In order to manage Ansible workloads through Kubernetes, there needs to be a way to interact with the cluster to tell it how to configure Ansible and the machines.
+For this reason, the following resources are defined in order to achieve a proper configuration layout and enable the use of Ansible features through Kubernetes.
+In promise theory terms, each resource is a promise made by the platform to the user.
 
 During planing, the decision was made that all resources should be namespaced.
 This means that the resources are only scoped to a namespace, and that multiple namespaces can create objects without interfering with each other.

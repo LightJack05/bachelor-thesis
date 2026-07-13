@@ -18,7 +18,7 @@ The inventory management system should also support injecting host- and group-sp
 Security of the objects in this operator themselves will make use of the Kubernetes \gls{rbac} infrastructure to ease the implementation of access controls. Cluster administrators installing the operator into the cluster shall be expected to take care of setting access permissions for users of their cluster.
 
 Security of the \gls{ssh} connection shall be ensured by checking the host keys of the target hosts and injecting them into the Ansible environment at runtime.
-This means we should perform a \gls{tofu} operation on the hosts targeted when they are created.
+This means a \gls{tofu} operation should be performed on the hosts targeted when they are created.
 Changed host keys should be identified as a possible \gls{mitm} attack and should be prevented.
 For this feature, \gls{ssh} already provides sufficient infrastructure.
 
