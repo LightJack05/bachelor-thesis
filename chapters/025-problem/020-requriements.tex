@@ -23,7 +23,7 @@ The listing below documents the non-functional requirements, again ordered by pr
 	\item \textbf{N1 - RBAC support:}
 	      The operator must support Kubernetes \gls{rbac}, and use it itself to restrict the service account capabilities.
     \item \textbf{N2 - Host key checking:}
-          The operator needs to perform \gls{ssh} authentication with host key checking.
+          The operator needs to perform \gls{ssh} authentication with host key checking. If no key exists, it should perform \gls{tofu}.
 	\item \textbf{N3 - Runner restriction:}
 	      The environment for the runner should be heavily restricted, dropping all capabilities and using a restricted execution policy, as well as scheduling runs as non-root.
     \item \textbf{N4 - Reconciliation best practices:}
