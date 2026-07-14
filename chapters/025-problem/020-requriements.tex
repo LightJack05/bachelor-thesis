@@ -1,30 +1,35 @@
-To avoid issues during development, it is important to properly document the requirements for the developed software before beginning the development process.
-Therefore, the requirements will be documented in the following chapter, separating them into functional and non-functional requirements as described in \cite{braunNichtfunktionaleAnforderungen2016}.
+Based on the past sections, the requirements for the software developed are documented in the listings below, separating them into functional and non-functional requirements as described in \cite{braunNichtfunktionaleAnforderungen2016}.
 
 \subsection{Functional Requirements}
 The following listing documents the functional requirements, ordered by priority.
 
 \begin{itemize}
-	\item \textbf{F1:}
-	      The inventory for Ansible should be defined using Kubernetes objects, which should represent one inventory object each.
-	\item \textbf{F2:}
-	      Playbooks should be pulled from Git for execution, which may or may not require authentication.
-	\item \textbf{F3:}
-	      Playbook execution should be schedulable on a regular interval.
-	\item \textbf{F4:}
-	      After execution, the status of the last run should be reported back to the objects in Kubernetes, such as the success of the run or the number of changed events.
+	\item \textbf{F1 - Inventory management:}
+	      The inventory for Ansible needs to be defined using Kubernetes objects, representing groups and hosts respectively, including their respective variables.
+	\item \textbf{F2 - Playbook sources:}
+	      Playbooks need to be pulled from Git or specified in the Kubernetes object responsible. This should also allow pinning to specific branches or tags on git repositories.
+	\item \textbf{F3 - Playbook execution scheduling:}
+	      Playbook execution needs to be schedulable on a regular interval. Additionally, there should be some way of running playbooks ad-hoc.
+	\item \textbf{F4 - Status reporting:}
+	      After execution, the status of the last run needs to be reported back to the objects in Kubernetes.
+	\item \textbf{F5 - Bootstrap management:}
+	      The operator needs to bootstrap and manage itself without requiring human interaction, allowing for manifest management entirely via git.
 \end{itemize}
 
 \subsection{Non-Functional Requirements}
-The table below documents the non-functional requirements, again ordered by priority.
+The listing below documents the non-functional requirements, again ordered by priority.
 
 \begin{itemize}
-	\item \textbf{N1:}
-	      The operator must support adequate security for a tool that will be executing code on many hosts in the organization, which includes Kubernetes \gls{rbac} as well as proper \gls{ssh} authentication with host key checking.
-	\item \textbf{N2:}
-	      Since the runner pods may execute arbitrary code, the environment for the runner should be heavily restricted using Kubernetes security capabilities.
-	\item \textbf{N3:}
-	      The operator should scale to a reasonable number of hosts, passing at least 1000 hosts total.
+	\item \textbf{N1 - RBAC support:}
+	      The operator must support Kubernetes \gls{rbac}, and use it itself to restrict the service account capabilities.
+    \item \textbf{N2 - Host key checking:}
+          The operator needs to perform \gls{ssh} authentication with host key checking.
+	\item \textbf{N3 - Runner restriction:}
+	      The environment for the runner should be heavily restricted, dropping all capabilities and using a restricted execution policy, as well as scheduling runs as non-root.
+    \item \textbf{N4 - Reconciliation best practices:}
+          Reconciliation should be idempotent. Reconcile errors should result in a retry of the reconcile cycle. Deleting a managed resource must not leave behind any objects managed by that resource.
+    \item \textbf{N5 - Credential management:}
+          Credentials can never be inlined into custom resources, and must always be stored in Kubernetes \texttt{Secrets}.
 \end{itemize}
 
 These requirements will serve as the basis for the architecture and the implementation of the solution.
