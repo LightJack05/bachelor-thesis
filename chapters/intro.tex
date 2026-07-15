@@ -1,1 +1,33 @@
+With Kubernetes emerging as the standard platform for workload orchestration, more and more organizations are moving towards it.
+The operator pattern in Kubernetes enables encoding operational knowledge into software.
+On the other hand, a popular tool to automate the administration of workloads on legacy virtual machines is Ansible.
+It is attempting to solve the problem of infrastructure configuration in order to simplify and scale the management of those systems.
+\parencite{poulton2025kubernetes, k8soperators, ansibledocsindex}
 
+However, many organizations are using legacy infrastructure such as virtual machines that cannot be easily containerized or migrated to Kubernetes, leading to a split in their operational model.
+With some systems managed through Ansible and some systems managed through Kubernetes, information on how to access which system and how to manage it quickly becomes \gls{tribalknowledge}.
+This leads to increased overhead in managing the infrastructure, problems with onboarding new employees and a more complex mental model.
+\parencite{platformengineering-architects}
+
+This thesis therefore sets out to unify the management of two systems with opposing philosophies into a single control plane.
+For this purpose, a Kubernetes operator is implemented that enables Ansible-managed workloads to be managed through the Kubernetes \gls{api}.
+Two central questions will be guiding this thesis:
+
+\begin{itemize}
+    \item How can the management of Ansible-managed workloads be integrated into
+    Kubernetes?
+    \item To what extent can Ansible's imperative imposition model be
+    reconciled with Kubernetes' declarative, reconciliation-driven operator
+    pattern?
+\end{itemize}
+
+To achieve this goal and answer the questions, requirements are defined.
+Afterward, based on the requirements, an operator is designed and implemented.
+Finally, the implementation is evaluated against the requirements.
+
+The chapters \ref{ch:theory} and \ref{ch:technical} introduce theoretical and technical concepts required for understanding the basis on which this thesis builds.
+Chapter \ref{ch:goals} explains the goals of the thesis and explaining the problem this thesis is attempting to solve.
+Chapter \ref{ch:analysis} looks at the market and investigating whether there are already similar solutions available which could be adopted.
+This is followed by chapter \ref{ch:architecture} detailing the architecture of the operator and the \gls{api} it provides for managing Ansible workloads via the control plane.
+Next chapter \ref{ch:implementation} details the implemented logic and explains how the operator manages workloads.
+Finally, chapter \ref{ch:evaluation} provides an evaluation of the implemented logic and discusses whether the goals and the requirements have been fulfilled.

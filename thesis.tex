@@ -410,13 +410,15 @@ Thesis source code:
 %%%%%%%%%%% Einführung
 
 \chapter{Introduction}
-\label{chapter:intro}
+\label{ch:intro}
 \input{chapters/intro.tex}
 
 \chapter{Theoretical foundations}
+\label{ch:theory}
 \input{chapters/010-theory/010-promise-theory.tex}
 
 \chapter{Technical foundations}
+\label{ch:technical}
 \input{chapters/020-technical-foundations/000-intro.tex}
 
 \section{Core Kubernetes and operator concepts}
@@ -429,6 +431,7 @@ Thesis source code:
 \input{chapters/020-technical-foundations/030-ssh.tex}
 
 \chapter{Defining the goals of this thesis}
+\label{ch:goals}
 \input{chapters/025-problem/000-intro.tex}
 
 \section{Defining the problem to solve}
@@ -442,9 +445,11 @@ Thesis source code:
 \input{chapters/025-problem/020-requriements.tex}
 
 \chapter{Analysis of existing integration between Kubernetes and Ansible}
+\label{ch:analysis}
 \input{chapters/030-analysis/020-awx-operator.tex}
 
 \chapter{Architectural design of the Operator}
+\label{ch:architecture}
 \input{chapters/040-architecture/000-intro.tex}
 
 \section{Scoping the implementation}
@@ -460,6 +465,7 @@ Thesis source code:
 \input{chapters/040-architecture/070-execution.tex}
 
 \chapter{Implementation of the operator}
+\label{ch:implementation}
 \input{chapters/050-implementation/000-intro.tex}
 
 \section{Selecting a Framework}
@@ -475,14 +481,15 @@ Thesis source code:
 \input{chapters/050-implementation/030-jobs.tex}
 
 \chapter{Evaluating the implemented solution}
+\label{ch:evaluation}
 \input{chapters/060-evaluation/000-intro.tex}
 
 \chapter{Conclusion}
-\label{chapter:outro}
+\label{ch:outro}
 \input{chapters/conclusion}
 
 \chapter{Outlook}
-\label{chapter:future}
+\label{ch:future}
 \include*[]{chapters/future}
 
 \printbibliography
