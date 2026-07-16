@@ -3,10 +3,10 @@ During migrations from legacy systems such as Ansible managed virtual machines, 
 This in turn leads to tribal knowledge as to what systems are managed in what way, which results in increased overhead in managing infrastructure and harder onboarding of new employees.
 
 Therefore, this thesis set out to unify the management of the two systems under a single control plane.
-Firstly, the requirements for the implemented software were defined.
 The control plane chosen was Kubernetes, for its flexible extensibility and also because it is the standard for modern platform engineering.
 Afterwards, the theoretical basis for the solution was defined.
 It became clear that connecting an imposition based system like Ansible with a promise based system like Kubernetes requires making a promise to impose.
+Following that, the requirements for the implemented software were defined.
 A Kubernetes operator was implemented that is able to execute Ansible playbooks against an Inventory managed by the operator.
 Finally, this operator was evaluated against the requirements.
 
@@ -27,16 +27,13 @@ The \anplaybook resources enable using playbooks that are either inlined into th
 Finally, the \anrecjob enables scheduling of executions of these playbooks against the generated inventory.
 
 The second question needs a more nuanced answer.
-Ansible's model is not easily transferred into Kubernetes.
-It is fundamentally imperative, and therefore cannot be easily turned into a declarative system.
+Ansible's model is fundamentally imperative, and therefore cannot be easily turned into a declarative system.
 However, this operator provides a middle ground, allowing the user to declare the desired state of the machines targeted fully in Ansible, and handling the continuous application of Playbooks to the machines.
 The operator here handles the parts that can be done declaratively, including inventory management, authentication and scheduling of runs.
 What it fundamentally cannot handle is the logic of Ansible itself, like which roles to apply and in what order these should be applied.
-An important note here is a fundamental part of behavior of Ansible, which is that deleting something from a playbook will not automatically remove the configuration from the machine.
-In the same way, deleting an \anrecjob will not remove the configuration it creates, it just stops applying it.
 
 The requirements set forth in chapter \ref{ch:requirements} were mostly met, with detailed parsing of Ansible logs being decided against during development, and substantial runtime isolation not being achieved due to time constraints.
-The resulting software fulfills the other requirements defined and therefore is able to be used for the intended purpose.
+The resulting software fulfills the other requirements defined and therefore suitable for its intended purpose.
 
 These findings are significant because they allow the management of legacy systems through modern platforms based on Kubernetes.
 Additionally, they enable platform engineers to create a unified way of executing Ansible, instead of using it as an ad-hoc system for configuring a system once.

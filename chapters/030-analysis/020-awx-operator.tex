@@ -1,7 +1,7 @@
 In order to allow for a better understanding of the market as well as available solutions, this chapter will analyze currently available integrations between Kubernets and Ansible.
 It will then verify whether they match the requirements stated previously.
 
-\subsection{Subjects for market analysis}
+\section{Subjects for market analysis}
 There are numerous integrations between Kubernetes and other, primarily open source software.
 However, aside from commercial offerings from RedHat with their \enquote{Ansible Automation Platform}, the integrations are limited.
 Commercial offerings were excluded from this comparison due to availability reasons.
@@ -12,7 +12,7 @@ Based on the landscape, two candidates were selected for the market analysis.
 The first option is the AWX Operator, together with the AWX Resource Operator.
 The second option is to use a partially manual approach and manually schedule \texttt{CronJobs} that run a container which then executes the playbook.
 
-\subsection{AWX Operator and AWX Resource Operator}
+\section{AWX Operator and AWX Resource Operator}
 AWX Resource Operator uses a full AWX instance installed using the AWX Operator, and manages the resources inside this instance.
 This means that the operators together use substantial resources, with the \gls{ram} usage of the worker node jumping by over 1GB once the operators were installed.
 This was tested on AWX Operator version 2.19.1, as well as AWX Resource Operator at commit 6ad9905.
@@ -24,16 +24,16 @@ Furthermore, inventory management is intended to go through the AWX instance, me
 The AWX Resource Operator provides primitives for some of the resources managed in AWX, however, notably absent are \glspl{crd} for Ansible hosts.
 This means that the inventory cannot be directly declared inside Kubernetes API \glspl{crd}, and needs to be either handled manually by logging in to the AWX user interface, using playbooks that interact with AWX itself, or other custom means.
 Additionally, the infrastructure cannot be easily set up unattended, since AWX Resource Operator requires the manual creation of an access token for AWX, so it can access the instance.
-This method fails several of the functional requirements, most notably F1, since it does not support managing the inventory through Kubernetes without requiring extra overhead.
+This method fails at least the functional requirement F1, since it does not support managing the inventory through Kubernetes without requiring extra overhead.
 The conclusion of this is that the operators are not a match for the defined problem.
 
-\subsection{Manual execution of playbooks through Kubernetes}
+\section{Manual execution of playbooks through Kubernetes}
 This option involves build an inventory and required credentials, storing them inside Kubernetes and then creating a scheduled \texttt{CronJob} which regularly uses these created objects to execute a playbook.
 This process involves a lot of rather inconvenient management of objects, such as building an own runner image and storing the playbook and inventory in a \texttt{ConfigMap}.
 While being manual, this does satisfy some of the functional requirements.
 However, notably F1 is still not satisfied, since the inventory would be a single object, and not as it states, one object per host or group.
 
-\subsection{Conclusion of the market analysis}
+\section{Conclusion of the market analysis}
 Given the results of the market analysis, the implemented software should orient itself at the manual execution of playbooks.
 The main goal should be to make this concept scalable and usable enough to enable management of machines without added complexity.
 Additionally, it should be ensured that consistency of objects is validated and a proper assessment of the completion of a \texttt{Job} is possible without having to handle Kubernetes primitives or looking at \texttt{Pod} logs.

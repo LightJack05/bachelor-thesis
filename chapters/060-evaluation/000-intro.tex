@@ -47,14 +47,18 @@ Each one is noted as fulfilled, partially fulfilled or not fulfilled.
 
 \section{Discussion and threats to validity of results}
 While the results are largely fulfilling the requirements set forth, there are several threats to the long term stability and reliability of the operator, as well as its scalability.
-The primary issue is that due to time and resource constraints, thorough load testing was not possible in the realm of this thesis. Therefore, the scalability of the operator could not be validated and may not achieve sufficient volume.
+The primary issue is that due to time and resource constraints, thorough load testing was not possible in the realm of this thesis. Therefore, the scalability of the operator could not be validated and may not achieve sufficient throughput for large fleets.
 Additionally, no long term stability test could be performed due to time constraints. This may result in problems such as resource leaks that may only appear after the instance has been running for a sufficient amount of time, which cannot be validated at this time.
 Additionally, the evaluation was performed by the author of the software against a synthetic environment, rather than a real fleet of machines.
 
-Missing requirements are F4 and N3. F4 being only partially fulfilled was a decision made later in the development process, which resulted in the requirement not being implemented. The decision was made to simplify the debugging process, since Ansible produces verbose logs, which would have to be parsed and forwarded in an equal manner to the user by the operator, resulting in more obfuscation and possible failures.
-N3 by contrast was a requirement that is unmet due to time restrictions, rather than a decision. Implementing proper runtime security would have taken time that was not available during development, and therefore was omitted.
+Missing requirements are F4 and N3. F4 being only partially fulfilled was a decision made later in the development process, which resulted in the requirement not being implemented.
+The decision was made to simplify the debugging process, since Ansible produces verbose logs, which would have to be parsed and forwarded in an equal manner to the user by the operator, resulting in more obfuscation and possible failures.
+N3 by contrast was a requirement that is unmet due to time restrictions, rather than a decision.
+Implementing proper runtime security would have taken time that was not available during development, and therefore was omitted.
 This requirement should be fulfilled in a future development effort.
 The missing restrictions on the runtime containers currently allow for an easier sandbox escape due to missing restrictions and could allow attackers to execute arbitrary code on the server hosting the \texttt{Node}.
+An important note here is a limitation of Ansible itself, which is that deleting something from a playbook will not automatically remove the configuration from the machine.
+Deleting an \anrecjob will also not remove the configuration it creates, it just stops applying it.
 
 In summary, 8 out of the 10 requirements have been fully fulfilled, while one was partially and one was not fulfilled.
 The not fulfilled requirement was dropped due to time restrictions.
