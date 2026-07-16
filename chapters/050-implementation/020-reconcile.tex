@@ -1,4 +1,4 @@
-The following chapter outlines the implemented logic for the \glspl{crd} defined in the previous chapters.
+The following section outlines the implemented logic for the \glspl{crd} defined in the previous chapters.
 Individual \glspl{crd} will be listed again and the reconcile logic for each object will be explained.
 \anplaybook objects do not implement any logic and are therefore omitted here.
 
@@ -153,7 +153,7 @@ Firstly, the \anrecjob has three status conditions that need to be set:
 When starting the reconcile loop, all of these conditions are set to \enquote{Unknown}.
 Once that is complete, the inventory \texttt{ConfigMap} is templated.
 First all \anhost and \angroup resources are acquired from the API Server and then stored into maps.
-These maps are then used to build the inventory content, which can be found as a Go struct in the appendix in chapter \ref{app:invstruct}.
+These maps are then used to build the inventory content, which can be found as a Go struct in the appendix under section \ref{app:invstruct}.
 
 Unready hosts and groups will be shown as such, but will not be actioned by the \anrecjob, since these errors are not fatal to job execution.
 Meanwhile, an invalid inventory generated would be fatal to the entire \texttt{Job} executing and is therefore already recorded as an error while rendering the inventory.

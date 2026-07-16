@@ -11,7 +11,7 @@ The Ansible executable should be run against a prebuilt environment that contain
 This way, there is no need to parse Ansible files, reducing the tightness of coupling between Ansible and the operator, allowing for easier independent updates of Ansible from the operator.
 
 \subsubsection{Inventory management}
-The management of inventory objects has already been mentioned in the requirements chapter. In detail, this operator should provide \texttt{CustomResourceDefinitions} for the Ansible inventory primitives, and have a mechanism for delivering these primitives to the environment Ansible is executed in.
+The management of inventory objects has already been mentioned in the requirements section. In detail, this operator should provide \texttt{CustomResourceDefinitions} for the Ansible inventory primitives, and have a mechanism for delivering these primitives to the environment Ansible is executed in.
 The inventory management system should also support injecting host- and group-specific variables into the objects, which should be injected into the Ansible environment at runtime.
 
 \subsubsection{Authentication and security}
