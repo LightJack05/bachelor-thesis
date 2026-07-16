@@ -66,8 +66,8 @@ spec:
 \end{lstlisting}
 %TC:endignore
 
-This manifest would create an \angroup resource which has no groups as a subgroups, and contains \enquote{ssh-node-1} and \enquote{ssh-node-2} as hosts.
-It also injects the variables \enquote{http\_port} and \enquote{max\_clients} as group variables.
+This manifest would create an \angroup resource which has no \texttt{Groups} as subgroups, and contains \enquote{ssh-node-1} and \enquote{ssh-node-2} as \texttt{Hosts}.
+It also injects the variables \enquote{http\_port} and \enquote{max\_clients} as \texttt{Group} variables.
 
 \subsection{The \anplaybook resource}
 The complete \anplaybook spec type declaration can be found in the appendix under section \ref{app:anplaybookdeclare}.
@@ -75,13 +75,13 @@ The \anplaybook struct contains two mutually exclusive values, \enquote{AnsibleP
 Mutual exclusivity is enforced via a \gls{cel} statement wrapped in a kubebuilder annotation, which can be found below:
 
 %TC:ignore
-\begin{lstlisting}[caption=Kubebuilder CEL annotation for enforcing mutual exclusivity between inline and git playbook sources]
+\begin{lstlisting}[caption=Kubebuilder CEL annotation for enforcing mutual exclusivity between inline and git \texttt{Playbook} sources]
 // +kubebuilder:validation:XValidation:rule="has(self.inline) != has(self.git)",message="Inline and Git are mutually exclusive"
 \end{lstlisting}
 %TC:endignore
 
 Due to the mutual exclusivity between the \enquote{git} and \enquote{inline} fields, there are two fundamentally different ways in which an \anplaybook can be defined.
-The first one is to declare the playbook inline in the \anplaybook spec, embedding it directly into the manifest:
+The first one is to declare the \texttt{Playbook} inline in the \anplaybook spec, embedding it directly into the manifest:
 
 %TC:ignore
 \begin{lstlisting}[language=yaml, caption=Example \anplaybook definition with inline source]
@@ -121,11 +121,11 @@ spec:
 \end{lstlisting}
 %TC:endignore
 
-This declares an example playbook which has a dependency on one collection and role.
-If this playbook is referenced by an \anrecjob, it would be executed verbatim as written in the spec.
+This declares an example \texttt{Playbook} which has a dependency on one \texttt{Collection} and \texttt{Role}.
+If this \texttt{Playbook} is referenced by an \anrecjob, it would be executed verbatim as written in the spec.
 
-The other way to define an \anplaybook is to use an \gls{http} or \gls{https} git source for the playbook.
-That way, the git repository is cloned into the \texttt{Jobs} \texttt{Pod} and then the paths given are used to resolve dependencies and execute the playbook:
+The other way to define an \anplaybook is to use an \gls{http} or \gls{https} git source for the \texttt{Playbook}.
+That way, the git repository is cloned into the \texttt{Jobs} \texttt{Pod} and then the paths given are used to resolve dependencies and execute the \texttt{Playbook}:
 
 %TC:ignore
 \begin{lstlisting}[language=yaml, caption=Example \anplaybook definition with git source]

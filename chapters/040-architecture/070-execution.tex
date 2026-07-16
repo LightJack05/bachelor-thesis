@@ -1,16 +1,16 @@
-\subsection{Scheduling playbook executions}
+\subsection{Scheduling \texttt{Playbook} executions}
 Kubernetes provides a built-in tool for scheduling jobs to run on a regular interval, which is called the \texttt{CronJob}.
 A \texttt{CronJob} can be scheduled and will create a \texttt{Job} resource based on its \enquote{.spec.jobTemplate} field.
 It also provides a history of a specified number of past executions and logs for these.
 The \texttt{Job} itself then provides logs for the execution, dynamic resource scheduling and information on whether the \texttt{Job} was executed successfully.
 Even though a \texttt{Job} is able to provide retry semantics, those should be disabled on created \texttt{Jobs}.
-It is also important that the \enquote{.spec.concurrencyPolicy} field on the \texttt{CronJob} be set to \enquote{Forbid}, in order to avoid race conditions or collisions between playbook executions.
+It is also important that the \enquote{.spec.concurrencyPolicy} field on the \texttt{CronJob} be set to \enquote{Forbid}, in order to avoid race conditions or collisions between \texttt{Playbook} executions.
 
 \subsection{Runtime initialization}
-Before the \texttt{Job} is able to execute the playbook directly, it needs to be initialized. This includes cloning the repository with the playbook and requirements file if applicable, as well as installing any dependencies specified in the requirements file.
-An init-container is used in order to achieve these steps before executing the playbook.
+Before the \texttt{Job} is able to execute the \texttt{Playbook} directly, it needs to be initialized. This includes cloning the repository with the \texttt{Playbook} and requirements file if applicable, as well as installing any dependencies specified in the requirements file.
+An init-container is used in order to achieve these steps before executing the \texttt{Playbook}.
 An init-container runs before application-containers inside the \texttt{Pod} and may pass data to these containers, commonly via \enquote{EmptyDir} volumes.
 
-\subsection{Executing playbooks}
-Once runtime initialization is complete, the application container can start and run the \enquote{ansible-playbook} command against the playbook file, executing its contents.
+\subsection{Executing \texttt{Playbooks}}
+Once runtime initialization is complete, the application container can start and run the \enquote{ansible-playbook} command against the \texttt{Playbook} file, executing its contents.
 The container needs to be set up in a way that it points at the correct files, including the \enquote{known\_hosts}, inventory and SSH keys.

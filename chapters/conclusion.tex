@@ -7,7 +7,7 @@ The control plane chosen was Kubernetes, for its flexible extensibility and also
 Afterwards, the theoretical basis for the solution was defined.
 It became clear that connecting an imposition based system like Ansible with a promise based system like Kubernetes requires making a promise to impose.
 Following that, the requirements for the implemented software were defined.
-A Kubernetes operator was implemented that is able to execute Ansible playbooks against an Inventory managed by the operator.
+A Kubernetes operator was implemented that is able to execute Ansible \texttt{Playbooks} against an inventory managed by the operator.
 Finally, this operator was evaluated against the requirements.
 
 Two questions guided this thesis.
@@ -23,14 +23,14 @@ Two questions guided this thesis.
 The first of the two questions can be answerd using the implemented software.
 It exposes four \glspl{crd}, namely the \anhost, \angroup, \anplaybook and \anrecjob resources.
 These are able to build an inventory within Kubernetes and assign variables to individual \anhost and \angroup resources.
-The \anplaybook resources enable using playbooks that are either inlined into the resource, or pulled from a remote git server.
-Finally, the \anrecjob enables scheduling of executions of these playbooks against the generated inventory.
+The \anplaybook resources enable using \texttt{Playbooks} that are either inlined into the resource, or pulled from a remote git server.
+Finally, the \anrecjob enables scheduling of executions of these \texttt{Playbooks} against the generated inventory.
 
 The second question needs a more nuanced answer.
 Ansible's model is fundamentally imperative, and therefore cannot be easily turned into a declarative system.
-However, this operator provides a middle ground, allowing the user to declare the desired state of the machines targeted fully in Ansible, and handling the continuous application of Playbooks to the machines.
+However, this operator provides a middle ground, allowing the user to declare the desired state of the machines targeted fully in Ansible, and handling the continuous application of \texttt{Playbooks} to the machines.
 The operator here handles the parts that can be done declaratively, including inventory management, authentication and scheduling of runs.
-What it fundamentally cannot handle is the logic of Ansible itself, like which roles to apply and in what order these should be applied.
+What it fundamentally cannot handle is the logic of Ansible itself, like which \texttt{Roles} to apply and in what order these should be applied.
 
 The requirements set forth in section \ref{ch:requirements} were mostly met, with detailed parsing of Ansible logs being decided against during development, and substantial runtime isolation not being achieved due to time constraints.
 The resulting software fulfills the other requirements defined and therefore suitable for its intended purpose.

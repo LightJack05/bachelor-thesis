@@ -32,16 +32,16 @@ Each one is noted as fulfilled, partially fulfilled or not fulfilled.
 	\bottomrule
 	\endlastfoot
 	F1\newline Inventory management          & fulfilled           & Ansible inventory is managed via \anhost and \angroup objects, validated by End-to-End tests                                                                                                                                                  \\
-	F2\newline Playbook sources              & fulfilled           & \anplaybook may reference git repositories or inline playbooks, which can be validated via the Go struct in the appendix section \ref{app:anplaybookdeclare}                                                                                  \\
-	F3\newline Playbook execution scheduling & fulfilled           & \anrecjob executions are scheduled using Kubernetes \texttt{CronJobs}. Ad-hoc execution is possible by manually creating a \texttt{Job} from the created \texttt{CronJob}.                                                                    \\
+	F2\newline \texttt{Playbook} sources              & fulfilled           & \anplaybook may reference git repositories or inline \texttt{Playbooks}, which can be validated via the Go struct in the appendix section \ref{app:anplaybookdeclare}                                                                                  \\
+	F3\newline \texttt{Playbook} execution scheduling & fulfilled           & \anrecjob executions are scheduled using Kubernetes \texttt{CronJobs}. Ad-hoc execution is possible by manually creating a \texttt{Job} from the created \texttt{CronJob}.                                                                    \\
 	F4\newline Status reporting              & partially fulfilled & Success is reported to the \anrecjob resource, further statistics are omitted, such as the number of changed items or detailed failure reports, which need to be obtained via the \texttt{Job} logs.                                          \\
 	F5\newline Bootstrap management          & fulfilled           & The operator can be installed from helm via a manifest and may access \anhost objects immediately after deployment, which was validated by installing the operator via helm into the cluster and applying manifests immediately afterwards.   \\
 	\midrule
-	N1\newline RBAC support                  & fulfilled           & The operator fully supports Kubernetes RBAC and uses it to restrict its own capabilities via Kubebuilder annotations on controllers, which can be verified by running \enquote{kubectl auth can-i} on the service account in question.        \\
-	N2\newline Host key checking             & fulfilled           & The \anhost controller obtains the \gls{ssh} keys via \gls{tofu} on first encounter and then stores them inside a secret for future reference. This procedure is validated using End-to-End tests.                                            \\
+	N1\newline RBAC support                  & fulfilled           & The operator fully supports Kubernetes RBAC and uses it to restrict its own capabilities via Kubebuilder annotations on controllers, which can be verified by running \enquote{kubectl auth can-i} on the \texttt{ServiceAccount} in question.        \\
+	N2\newline Host key checking             & fulfilled           & The \anhost controller obtains the \gls{ssh} keys via \gls{tofu} on first encounter and then stores them inside a \texttt{Secret} for future reference. This procedure is validated using End-to-End tests.                                            \\
 	N3\newline Runner restriction            & not fulfilled       & This requirement could not be fulfilled in the current version due to time limitations, the current state still allows execution as root and does not automatically drop all capabilities.                                                    \\
 	N4\newline Reconciliation best practices & fulfilled           & Reconciliation is designed to be idempotent, does not modify objects unnecessarily and retries on failures. Garbage collection is natively handled by setting owner references on all created objects. This is tested using End-to-End tests. \\
-	N5\newline Credential management         & fulfilled           & All secrets handled are stored in \texttt{Secrets} and are mounted into the \texttt{Job} at runtime. Reading credentials from Secrets is validated via End-to-End tests for \anrecjob resources.                                              \\
+	N5\newline Credential management         & fulfilled           & All secrets handled are stored in \texttt{Secrets} and are mounted into the \texttt{Job} at runtime. Reading credentials from \texttt{Secrets} is validated via End-to-End tests for \anrecjob resources.                                              \\
 \end{xltabular}
 \endgroup
 
@@ -57,7 +57,7 @@ N3 by contrast was a requirement that is unmet due to time restrictions, rather 
 Implementing proper runtime security would have taken time that was not available during development, and therefore was omitted.
 This requirement should be fulfilled in a future development effort.
 The missing restrictions on the runtime containers currently allow for an easier sandbox escape due to missing restrictions and could allow attackers to execute arbitrary code on the server hosting the \texttt{Node}.
-An important note here is a limitation of Ansible itself, which is that deleting something from a playbook will not automatically remove the configuration from the machine.
+An important note here is a limitation of Ansible itself, which is that deleting something from a \texttt{Playbook} will not automatically remove the configuration from the machine.
 Deleting an \anrecjob will also not remove the configuration it creates, it just stops applying it.
 
 In summary, 8 out of the 10 requirements have been fully fulfilled, while one was partially and one was not fulfilled.

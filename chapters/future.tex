@@ -5,8 +5,8 @@ Firstly, the unmet requirements, especially the runtime security, need to be add
 This is the biggest gap in the current implementation, as it may open up a way to escape the runtime environment sandbox.
 
 Secondly, the limitation of handling configuration drift may be partially mitigated in several ways.
-One could establish a pattern or convention for cleanup playbooks or roles, possibly as an option to the role.
-Enabling this sort of convention can allow someone to set an option such as \enquote{applied} to \enquote{false} on the role applied, which then undoes everything the role usually does.
+One could establish a pattern or convention for cleanup \texttt{Playbooks} or \texttt{Roles}, possibly as an option to the \texttt{Role}.
+Enabling this sort of convention can allow someone to set an option such as \enquote{applied} to \enquote{false} on the \texttt{Role} applied, which then undoes everything the \texttt{Role} usually does.
 It would also be possible to handle machines similarly to containers, giving them a persistent data disk mounted in addition to the root disk.
 This would allow for spinning up machines, configuring them via the operator, and then simply replacing them should the configuration change.
 However, both of these are something that should be implemented by platform engineers using the operator, rather than by the operator itself.

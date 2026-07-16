@@ -9,7 +9,7 @@ Additionally, the resources this operator relies on are inherently namespaced in
 
 \subsection{The \texttt{AnsibleHost} \gls{crd}}
 The \anhost resource is the resource mapping directly to an entry in the Ansible inventory for a host endpoint.
-This resource will be used when specifying how to reach a host in the inventory, and its individual variables.
+This resource will be used when specifying how to reach a \texttt{Host} in the inventory, and its individual variables.
 It needs to include the following parameters in order to satisfy the minimum capabilities required for Ansible to work with the hosts:
 
 \begin{itemize}
@@ -18,36 +18,36 @@ It needs to include the following parameters in order to satisfy the minimum cap
 	\item{the \gls{ssh} port}
 	\item{the username for Ansible}
 	\item{the Ansible \enquote{become} option}
-	\item{the host variables for Ansible}
+	\item{the \texttt{Host} variables for Ansible}
 \end{itemize}
 
-This resources controller is required to scan the \gls{ssh} host keys of the target host, and write them into a secret.
+This resources controller is required to scan the \gls{ssh} host keys of the target host, and write them into a \texttt{Secret}.
 It also needs to link to credentials that can be used to access the hosts via \gls{ssh}.
 
 \subsection{The \texttt{AnsibleGroup} \gls{crd}}
-The \angroup resource is the resource mirroring an \texttt{Group} in Ansible, used for grouping multiple \anhost objects into logical groups that can be targeted and assigned variables.
+The \angroup resource is the resource mirroring a \texttt{Group} in Ansible, used for grouping multiple \anhost objects into logical groups that can be targeted and assigned variables.
 \angroup objects may also be nested and used as subgroups.
 In order to properly represent a \texttt{Group} in the Ansible inventory, it should include the following configuration parameters:
 
 \begin{itemize}
 	\item{the Ansible inventory name}
-	\item{the subordinate hosts in the group}
-	\item{the subgroups in the group}
-	\item{the group variables}
+	\item{the subordinate \texttt{Hosts} in the \texttt{Group}}
+	\item{the subgroups in the \texttt{Group}}
+	\item{the \texttt{Group} variables}
 \end{itemize}
 
-An \angroup should report its own health based on the health of subresources, including its subgroups and hosts.
+An \angroup should report its own health based on the health of subresources, including its subgroups and \texttt{Hosts}.
 
 \subsection{The \texttt{AnsiblePlaybook} \gls{crd}}
 The \anplaybook is the resource responsible for pointing the operator at the \texttt{Playbook} source code to execute.
-Its configuration, as per the requirements, should include both the option to source the playbook from git, and to source the playbook from an inline string within the resources parameters.
+Its configuration, as per the requirements, should include both the option to source the \texttt{Playbook} from git, and to source the \texttt{Playbook} from an inline string within the resources parameters.
 Therefore, the \anplaybook resource should include at least the following parameters to fulfil its purpose:
 
 \begin{itemize}
-	\item{the inline playbook source code}
+	\item{the inline \texttt{Playbook} source code}
 	\item{the inline requirements.yml file source code}
-	\item{the repository from where the playbook and requirements.yml should be sourced}
-	\item{the path of the playbook within the repository}
+	\item{the repository from where the \texttt{Playbook} and requirements.yml should be sourced}
+	\item{the path of the \texttt{Playbook} within the repository}
 	\item{the path of the requirements.yml file within the repository}
 \end{itemize}
 
@@ -55,7 +55,7 @@ An \anplaybook should have the options for inline and git sourcing be mutually e
 Only one should be able to be specified.
 
 \subsection{The \texttt{AnsibleReconcileJob} \gls{crd}}
-The \anrecjob serves as the scheduling mechanism for executing playbooks.
+The \anrecjob serves as the scheduling mechanism for executing \texttt{Playbooks}.
 It is an object soely responsible for livecycle management, and therefore does not map to an actual Ansible object.
 An \anrecjob should therefore include at least the following parameters:
 
@@ -68,6 +68,6 @@ An \anrecjob should perform the following actions when it is being reconciled:
 
 \begin{itemize}
 	\item{ensure a \texttt{ConfigMap} exists and contains the rendered inventory at the time of reconcile}
-	\item{ensure a \texttt{ConfigMap} exists that contains all \gls{ssh} host keys for the hosts in the inventory}
+	\item{ensure a \texttt{ConfigMap} exists that contains all \gls{ssh} host keys for the \texttt{Hosts} in the inventory}
 	\item{ensure a \texttt{CronJob} exists that mounts the created \texttt{ConfigMaps} and executes the runtime- and init-containers}
 \end{itemize}

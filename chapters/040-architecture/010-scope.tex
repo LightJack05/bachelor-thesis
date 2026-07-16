@@ -12,7 +12,7 @@ This way, there is no need to parse Ansible files, reducing the tightness of cou
 
 \subsubsection{Inventory management}
 The management of inventory objects has already been mentioned in the requirements section. In detail, this operator should provide \texttt{CustomResourceDefinitions} for the Ansible inventory primitives, and have a mechanism for delivering these primitives to the environment Ansible is executed in.
-The inventory management system should also support injecting host- and group-specific variables into the objects, which should be injected into the Ansible environment at runtime.
+The inventory management system should also support injecting \texttt{Host}- and \texttt{Group}-specific variables into the objects, which should be injected into the Ansible environment at runtime.
 
 \subsubsection{Authentication and security}
 Security of the objects in this operator themselves will make use of the Kubernetes \gls{rbac} infrastructure to ease the implementation of access controls. Cluster administrators installing the operator into the cluster shall be expected to take care of setting access permissions for users of their cluster.
@@ -26,10 +26,10 @@ Authentication against the hosts should be limited to key-based authentication.
 The private keys should be injected into the runtime environment and should be mapped to the \texttt{Hosts}.
 Each \texttt{Host} may have a different key that needs to be used, so there needs to be a mapping for each \texttt{Host} with a separate private key file.
 
-\subsubsection{Playbook sourcing and dependencies}
-Playbooks should both be able to be inline for easy management within Kubernetes, and be able to be pulled from Git repositories so they can be easier version controlled.
-Pulling playbooks from Git should be possible via \gls{http}.
-Playbooks should also have the ability to have dependencies via a \enquote{requirements.yml} file that should be resolved by the operator.
+\subsubsection{\texttt{Playbook} sourcing and dependencies}
+\texttt{Playbooks} should both be able to be inline for easy management within Kubernetes, and be able to be pulled from Git repositories so they can be easier version controlled.
+Pulling \texttt{Playbooks} from Git should be possible via \gls{http}.
+\texttt{Playbooks} should also have the ability to have dependencies via a \enquote{requirements.yml} file that should be resolved by the operator.
 
 \subsection{Explicit non-goals for the implementation}
 This subsection lists features that explicitly should not be implemented.

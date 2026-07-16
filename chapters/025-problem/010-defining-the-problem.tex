@@ -33,8 +33,8 @@ This means that in Kubernetes, there are always two different states: the desire
 Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which is then used by an agent, the controller, to fulfill a promise, and assess whether the promise has been fulfilled, it can be stated that Kubernetes is a promise based system.
 
 Ansible does not follow this concept, it is closer to a script programming language than a reconciling system.
-In Ansible, a user defines a list of tasks, which are then executed on the target system.
+In Ansible, a user defines a list of \texttt{Tasks}, which are then executed on the target system.
 While Ansible makes a promise to the user, it does not require the system targeted to make any promise in theory.
-Ansible merely executes its tasks on the target machine and assesses whether it was successful in doing so, with the host, if anything, only allowing Ansible to access it.
+Ansible merely executes its \texttt{Tasks} on the target machine and assesses whether it was successful in doing so, with the host, if anything, only allowing Ansible to access it.
 It however never makes a promise to accept the concrete form of configuration.
 For these reasons, Ansible can be referred to as an imposition based system.

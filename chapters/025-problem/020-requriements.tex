@@ -5,11 +5,11 @@ The following listing documents the functional requirements, ordered by priority
 
 \begin{itemize}
 	\item \textbf{F1 - Inventory management:}
-	      The inventory for Ansible needs to be defined using Kubernetes objects, representing groups and hosts respectively, including their respective variables.
-	\item \textbf{F2 - Playbook sources:}
-	      Playbooks need to be pulled from Git or specified in the Kubernetes object responsible. This should also allow pinning to specific branches or tags on git repositories.
-	\item \textbf{F3 - Playbook execution scheduling:}
-	      Playbook execution needs to be schedulable on a regular interval. Additionally, there should be some way of running playbooks ad-hoc.
+	      The inventory for Ansible needs to be defined using Kubernetes objects, representing \texttt{Groups} and \texttt{Hosts} respectively, including their respective variables.
+	\item \textbf{F2 - \texttt{Playbook} sources:}
+	      \texttt{Playbooks} need to be pulled from Git or specified in the Kubernetes object responsible. This should also allow pinning to specific branches or tags on git repositories.
+	\item \textbf{F3 - \texttt{Playbook} execution scheduling:}
+	      \texttt{Playbook} execution needs to be schedulable on a regular interval. Additionally, there should be some way of running \texttt{Playbooks} ad-hoc.
 	\item \textbf{F4 - Status reporting:}
 	      After execution, the status of the last run needs to be reported back to the objects in Kubernetes.
 	\item \textbf{F5 - Bootstrap management:}
@@ -21,7 +21,7 @@ The listing below documents the non-functional requirements, again ordered by pr
 
 \begin{itemize}
 	\item \textbf{N1 - RBAC support:}
-	      The operator must support Kubernetes \gls{rbac}, and use it itself to restrict the service account capabilities.
+	      The operator must support Kubernetes \gls{rbac}, and use it itself to restrict the \texttt{ServiceAccount} capabilities.
     \item \textbf{N2 - Host key checking:}
           The operator needs to perform \gls{ssh} authentication with host key checking. If no key exists, it should perform \gls{tofu}.
 	\item \textbf{N3 - Runner restriction:}

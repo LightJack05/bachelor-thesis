@@ -15,7 +15,7 @@ Controllers manage a specific type of object in Kubernetes, and may watch any nu
 They are agents making promises about what they can do, and other agents consume them.
 \parencite{k8sclustercomponents, promise-theory, poulton2025kubernetes}
 A controller uses a reconcile loop in order to move the actual or observed state of the cluster closer to the desired state as defined by a manifest.
-Assuming a \texttt{Deployment} object specifies that three instances of a pod with an nginx container should be running, the controller responsible for \texttt{Deployment} objects will reconcile the object and assess its condition to ensure that there are actually three instances running.
+Assuming a \texttt{Deployment} object specifies that three instances of a \texttt{Pod} with an nginx container should be running, the controller responsible for \texttt{Deployment} objects will reconcile the object and assess its condition to ensure that there are actually three instances running.
 \parencite{poulton2025kubernetes, k8scontrollers, k8sclustercomponents}
 
 \subsection{Extending Kubernetes with custom controllers}

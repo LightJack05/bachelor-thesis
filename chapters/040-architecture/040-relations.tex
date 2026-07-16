@@ -12,7 +12,7 @@ For this reason, there is a diagram below showing the layout of the objects and 
 
 The graphic uses a notation adjacent to the classic Peter-Chen notation to show the relations.
 The most relevant objects are created by the \anrecjob.
-Coupling between the \anplaybook and the inventory objects is loose, since only the playbook source references them; all other relations are explicit references between Kubernetes objects.
+Coupling between the \anplaybook and the inventory objects is loose, since only the \texttt{Playbook} source references them; all other relations are explicit references between Kubernetes objects.
 
 Several resources the operator manages need to contact external data sources or contact other external services in order to obtain their data or transfer information.
 The diagram below shows the relations of resources inside the cluster to external resources.
@@ -25,4 +25,4 @@ The diagram below shows the relations of resources inside the cluster to externa
 	\source{Own diagram}
 \end{figure}
 
-Externally, the operator contacts the \gls{ssh} hosts and may optionally download collections or roles from Ansible galaxy or git servers, as well as the playbook files themselves.
+Externally, the operator contacts the \gls{ssh} hosts and may optionally download \texttt{Collections} or \texttt{Roles} from Ansible galaxy or git servers, as well as the \texttt{Playbook} files themselves.
