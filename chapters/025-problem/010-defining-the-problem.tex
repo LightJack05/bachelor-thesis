@@ -1,30 +1,22 @@
 This section will give an overview of the core problem that shall be addressed by this thesis.
 It includes details on why managing infrastructure at scale necessitates a scalable solution and abstraction layers.
-%TODO: Add more content in the preamble of this section
 
 \subsection{Managing infrastructure at scale}
 When managing infrastructure, a common problem to occur is the ability for personnel to keep up with growing infrastructure.
 Common ways of addressing this situation is to use automation of some kind.
 Two tools frequently used for automating infrastructure are Kubernetes and Ansible.
 Both are tools that are intended to allow managing of Infrastructure and keep the required management of the systems as low as possible, and scale with as little extra human effort required as possible.
-Since the definition of normal changes as systems grow, it is important to use automation systems to automate infrastructure in a way that does not require individual handling of machines.
 \parencite{ansibledocsindex, k8swebsite, google-sre}
 
-\subsection{A common access plane}
-When managing infrastructure at scale, it is often essential to allow personnel to have an easy way to see the status of the infrastructure and interact with it.
-It is even more important to have a unified way of describing or changing the infrastructure.
-In both Kubernetes and Ansible, configurations are stored as files of different formats, which can in turn be stored in a version control system like git.
+When managing this kind of infrastructure, it is essential to allow personnel to have single way of accessing and assessing infrastructure.
+In both Kubernetes and Ansible, configurations are stored as files, which can in turn be stored in a version control system like git.
+Because Ansible is agentless and requires no dedicated infrastructure, organizations frequently adopt it to manage workloads before solutions like Kubernetes.
 If applied correctly, this allows anyone to read the configuration of a machine and understand what is set up in what way on the machine.
-It also allows quickly recreating machines in the event of a failure of the machine, since the configuration is stored outside the machine itself, while only the data may need to be recovered.
-This is invaluable in the event of drifting configurations, hardware failures or other issues where the machine itself may be faulty and need to be replaced.
 \parencite{platformengineering-architects, poulton2025kubernetes}
 
-However, when applying such systems, it is important to state that when using multiple systems built for different purposes, it may result in the same problem that has existed with traditional infrastructure.
-When there are several, fundamentally different systems in an organization, it may again lead to \gls{tribalknowledge}, resulting in the same problem, just at a different level.
-Because Ansible is agentless and requires no dedicated infrastructure, organizations frequently adopt it to manage workloads before solutions like Kubernetes.
+However, it is important to state that when using multiple such systems, it may again lead to \gls{tribalknowledge}.
 In such organizations, this results in a landscape built on Ansible, which needs to be maintained after a company moves to another technology.
-Legacy workloads residing inside virtual machines may stay outside the cluster or even move into it, running on something like Kubevirt.
-However, because Ansible has no native integration with Kubernetes, it requires the use of a separate interface for managing legacy workloads as opposed to managing newer ones.
+Legacy workloads residing inside virtual machines may stay outside the cluster or even move into it, running on something like Kubevirt, but are still managed via Ansible from outside the cluster.
 An alternative would be to remove Ansible entirely, however because the entire tooling is built on Ansible, switching it out for a different system would lead to a substantial migration effort.
 Therefore, it is important to establish a common mode of access and operation between the tools used to manage the infrastructure, and provide an abstraction, which is commonly referred to as a \enquote{platform}.
 In this way, both systems have a native integration with the new platform, while requiring minimal changes to how the systems themselves are configured.
