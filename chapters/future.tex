@@ -1,1 +1,25 @@
+In its current state, the operator is functional and meets its purpose.
+However, several points still remain open, and the operator may be extended in the future.
 
+Firstly, the unmet requirements, especially the runtime security, need to be addressed first.
+This is the biggest gap in the current implementation, as it may open up a way for someone controlling the playbook sources to escape the runtime environment.
+Additionally, parsing of Ansible logs has already been decided against during the implementation.
+THe decision not to parse logs from Ansible has already been made during implementation, see chapter \ref{ch:implementation}.
+
+Secondly, the limitation of handling configuration drift may be partially mitigated in several ways.
+One could establish a pattern or convention for cleanup playbooks or roles, possibly as an option to the role.
+Enabling this sort of convention can allow someone to set an option such as \enquote{applied} to \enquote{false} on the role applied, which then undoes everything the role usually does.
+Additionally, there could also be a convention established of not modifying the configuration of a machine once it exists.
+It would be possible to handle machines similarly to containers, giving them a persistent data disk mounted in addition to the root disk.
+This would allow for spinning up machines, configuring them via the operator, and then simply replacing them should the configuration change.
+However, both of these are something that should be implemented by platform engineers using the operator, rather than by the operator itself.
+
+Thirdly, the features of Ansible the operator currently supports should be expanded on in the future.
+Right now, only the basic concept of running the \texttt{Playbook} and pulling in dependencies is supported.
+Several features of Ansible are unsupported, notably Ansible Vault, which should be implemented into the operator \gls{api}.
+Additionally, authentication against private repositories, and connections to \gls{ssh} based git servers entirely, are currently unsupported, and should be implemented.
+Scalability should also be addressed, and the current model used by the operator could enable splitting the inventory into several chunks to allow Ansible to better scale as opposed to running it against a huge inventory.
+
+
+Ultimately, given that more companies adopt Kubernetes as their platform for infrastructure orchestration, tools that enable moving legacy systems into this new infrastructure remain valuable.
+This operator is a tool that bridges the gap between legacy infrastructure and the cloud-native landscape.
