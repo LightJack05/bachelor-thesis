@@ -4,7 +4,6 @@ However, several points still remain open, and the operator may be extended in t
 Firstly, the unmet requirements, especially the runtime security, need to be addressed first.
 This is the biggest gap in the current implementation, as it may open up a way for someone controlling the playbook sources to escape the runtime environment.
 Additionally, parsing of Ansible logs has already been decided against during the implementation.
-THe decision not to parse logs from Ansible has already been made during implementation, see chapter \ref{ch:implementation}.
 
 Secondly, the limitation of handling configuration drift may be partially mitigated in several ways.
 One could establish a pattern or convention for cleanup playbooks or roles, possibly as an option to the role.
