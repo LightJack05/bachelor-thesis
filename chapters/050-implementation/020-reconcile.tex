@@ -160,7 +160,6 @@ Once that is complete, the inventory \texttt{ConfigMap} needs to be templated fr
 First all \anhost and \angroup resources are acquired from the API Server and then stored into maps.
 These maps are then used to build the inventory content, which can be found as a Go struct in the appendix in chapter \ref{app:invstruct}.
 
-It is here that a decision was made about when to abort inventory generation, how to show errors and how to handle both unready hosts, groups and unresolved references.
 Unready hosts and groups will be shown as such, but will not be actioned by the \anrecjob.
 These errors are not fatal to job execution, will however show up as problems in the logs and the \enquote{Success} status of the \anrecjob resource.
 Meanwhile, an invalid inventory generated would be fatal to the entire \texttt{Job} executing and is therefore already recorded as an error while rendering the inventory.
@@ -207,4 +206,4 @@ According to the same \texttt{Job}, the \enquote{Success} status is also set, de
 During development, it has become clear that interpreting the logs Ansible outputs is largely unnecessary, since they are best read and interpreted by a human in the case of failures.
 Outputting logs as \gls{json} and interpreting them in operator logic would allow for status reporting on objects, but may mask errors and make it harder to identify the tasks that led up to an error.
 Therefore, it has been decided to limit the status reporting of the \anrecjob to a basic success/failure state, and offload additional debugging capabilities to the logs of the relevant \texttt{Job}.
-It should be noted that this means that within a larger platform, logs for Ansible execution can easily be handled by an already existing log collection system, and may even be able to be tied into alerting systems.
+In existing platforms, logs can therefore be handled by existing infrastructure.

@@ -8,7 +8,7 @@ In the \gls{ssh} protocol, the server authenticates itself by generating a host 
 This host key is then used to verify the identity of the specific server during key exchange between client and server.
 While \gls{ssh} does support the central signing and distribution of host keys, it is more common to have each host generate its own key and for clients to maintain a list of what key is associated with what host.
 A host may have several host keys, each one for a different cryptographic algorithm.
-For easier validation, \gls{ssh} clients will usually provide a fingerprint for validating the host key easily, allowing for quicker checks than validating an entire cryptographic key or signature.
+For easier validation, \gls{ssh} clients will usually provide a fingerprint for validating the host key.
 \parencite{ssharchitecturerfc, sshauthrfc}
 
 \subsection{Public key based client authentication}
