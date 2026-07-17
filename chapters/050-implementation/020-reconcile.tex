@@ -175,7 +175,7 @@ It gets several volume mounts, which are listed below.
 	      \subitem{\enquote{requirements.yml} contains the requirements for the \texttt{Playbook}}
 	\item{Additionally, the runtime \texttt{ConfigMap} also provides environment variables to the \texttt{Job} \texttt{Pod} which are used for Git-sourced \texttt{Playbooks}}
 	      \subitem{\enquote{OPERATOR\_GIT\_REF} specifies which branch or tag to use in the repository}
-	      \subitem{\enquote{OPERATOR\_GIT\_REPO\_URL} specifies the repository remote repository to clone}
+	      \subitem{\enquote{OPERATOR\_GIT\_REPO\_URL} specifies the remote repository to clone}
 	      \subitem{\enquote{OPERATOR\_GIT\_PLAYBOOK\_PATH} specifies the path of the \texttt{Playbook} within the repository}
 	      \subitem{\enquote{OPERATOR\_GIT\_REQUIREMENTS\_PATH} specifies the path of the requirements file in the repository}
 	\item{The \gls{ssh} private keys are mounted into the \enquote{/ssh} directory, using their Kubernetes object names as filenames}
@@ -183,7 +183,7 @@ It gets several volume mounts, which are listed below.
 	\item{The \texttt{Group} variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/group\_vars} directory, using the inventory \texttt{Group} names as filenames}
 \end{itemize}
 
-Within the \texttt{CronJob} exists one init container and one regular container.
+Within the \texttt{CronJob} is one init container and one regular container defined.
 Once the \texttt{CronJob} is constructed, it is server-side applied to the Kubernetes API server.
 This both implicitly creates the object and also ensures that only the new configuration applied remains with no stale values.
 
