@@ -1,12 +1,12 @@
-The following chapter evaluates whether the implemented software fulfills the requirements set forth in the chapter \ref{ch:requirements}.
+The following chapter evaluates whether the implemented software fulfills the requirements set forth in section \ref{ch:requirements}.
 
 \section{Testing setup}
-Testing for these requirements is conducted by using a local kind cluster to provide an easy way to reset the environment to a clean state.
-Automated testing is done via End-to-End using the Ginkgo testing framework against the operator installed into a Kind cluster, targeting OpenSSH containers.
-Additionally, for testing git sources, a cgit server is set up to host the git repositories used for testing.
+Testing for these requirements is conducted by using a local Kind cluster to provide an easy way to reset the environment to a clean state.
+Automated testing is done via End-to-End tests using the Ginkgo testing framework against the operator installed into a Kind cluster, targeting OpenSSH containers.
+Additionally, for testing Git sources, a cgit server is set up to host the Git repositories used for testing.
 Tests are executed both before a merge in the CI/CD pipeline for Pull Requests, and locally via the Makefile target \enquote{test-e2e}.
-Test cases are limited to End-to-End tests since testing an operator like this using integration tests or similar would require substantial mocking, which would result in testing the mocked interface moreso than the implemented reconcile logic.
-Therefore, End-to-End tests were chosen to allow testing against real implemented \gls{ssh} servers as well as Ansible itself.
+Test cases are limited to End-to-End tests since testing an operator like this using integration tests or similar would require substantial mocking, which would result in testing the mocked interface more so than the implemented reconcile logic.
+Therefore, End-to-End tests were chosen to allow testing against real \gls{ssh} server implementations as well as Ansible itself.
 
 \section{Results of the evaluation}
 The table below lists the functional and non-functional requirements.
@@ -32,33 +32,33 @@ Each one is noted as fulfilled, partially fulfilled or not fulfilled.
 	\bottomrule
 	\endlastfoot
 	F1\newline Inventory management          & fulfilled           & Ansible inventory is managed via \anhost and \angroup objects, validated by End-to-End tests                                                                                                                                                  \\
-	F2\newline Playbook sources              & fulfilled           & \anplaybook may reference git repositories or inline playbooks, which can be validated via the Go struct in the appendix section \ref{app:anplaybookdeclare}                                                                                  \\
-	F3\newline Playbook execution scheduling & fulfilled           & \anrecjob executions are scheduled using Kubernetes \texttt{CronJobs}. Ad-hoc execution is possible by manually creating a \texttt{Job} from the created \texttt{CronJob}.                                                                    \\
-	F4\newline Status reporting              & partially fulfilled & Success is reported to the \anrecjob resource, further statistics are omitted, such as the number of changed items or detailed failure reports, which need to be obtained via the \texttt{Job} logs.                                          \\
-	F5\newline Bootstrap management          & fulfilled           & The operator can be installed from helm via a manifest and may access \anhost objects immediately after deployment, which was validated by installing the operator via helm into the cluster and applying manifests immediately afterwards.   \\
+	F2\newline \texttt{Playbook} sources              & fulfilled           & \anplaybook may reference Git repositories or inline \texttt{Playbooks}, which can be validated via the Go struct in the appendix section \ref{app:anplaybookdeclare}                                                                                  \\
+	F3\newline \texttt{Playbook} execution scheduling & fulfilled           & \anrecjob executions are scheduled using Kubernetes \texttt{CronJobs}. Ad-hoc execution is possible by manually creating a \texttt{Job} from the created \texttt{CronJob}.                                                                    \\
+	F4\newline Status reporting              & partially fulfilled & Success is reported to the \anrecjob resource; further statistics are omitted, such as the number of changed items or detailed failure reports, which need to be obtained via the \texttt{Job} logs.                                          \\
+	F5\newline Bootstrap management          & fulfilled           & The operator can be installed from Helm via a manifest and may access \anhost objects immediately after deployment, which was validated by installing the operator via Helm into the cluster and applying manifests immediately afterwards.   \\
 	\midrule
-	N1\newline RBAC support                  & fulfilled           & The operator fully supports Kubernetes RBAC and uses it to restrict its own capabilities via Kubebuilder annotations on controllers, which can be verified by running \enquote{kubectl auth can-i} on the service account in question.        \\
-	N2\newline Host key checking             & fulfilled           & The \anhost controller obtains the \gls{ssh} keys via \gls{tofu} on first encounter and then stores them inside a secret for future reference. This procedure is validated using End-to-End tests.                                            \\
-	N3\newline Runner restriction            & not fulfilled       & This requirement could not be fulfilled in the current version due to time limitations, the current state still allows execution as root and does not automatically drop all capabilities.                                                    \\
+	N1\newline RBAC support                  & fulfilled           & The operator fully supports Kubernetes RBAC and uses it to restrict its own capabilities via Kubebuilder annotations on controllers, which can be verified by running \enquote{kubectl auth can-i} on the \texttt{ServiceAccount} in question.        \\
+	N2\newline Host key checking             & fulfilled           & The \anhost controller obtains the \gls{ssh} keys via \gls{tofu} on first encounter and then stores them inside a \texttt{Secret} for future reference. This procedure is validated using End-to-End tests.                                            \\
+	N3\newline Runner restriction            & not fulfilled       & This requirement could not be fulfilled in the current version due to time limitations; the current state still allows execution as root and does not automatically drop all capabilities.                                                    \\
 	N4\newline Reconciliation best practices & fulfilled           & Reconciliation is designed to be idempotent, does not modify objects unnecessarily and retries on failures. Garbage collection is natively handled by setting owner references on all created objects. This is tested using End-to-End tests. \\
-	N5\newline Credential management         & fulfilled           & All secrets handled are stored in \texttt{Secrets} and are mounted into the \texttt{Job} at runtime. Reading credentials from Secrets is validated via End-to-End tests for \anrecjob resources.                                              \\
+	N5\newline Credential management         & fulfilled           & All secrets handled are stored in \texttt{Secrets} and are mounted into the \texttt{Job} at runtime. Reading credentials from \texttt{Secrets} is validated via End-to-End tests for \anrecjob resources.                                              \\
 \end{xltabular}
 \endgroup
 
 \section{Discussion and threats to validity of results}
-While the results are largely fulfilling the requirements set forth, there are several threats to the long term stability and reliability of the operator, as well as its scalability.
-The primary issue is that due to time and resource constraints, thorough load testing was not possible in the realm of this thesis. Therefore, the scalability of the operator could not be validated and may not achieve sufficient throughput for large fleets.
-Additionally, no long term stability test could be performed due to time constraints. This may result in problems such as resource leaks that may only appear after the instance has been running for a sufficient amount of time, which cannot be validated at this time.
+While the results largely fulfill the requirements set forth, there are several threats to the long-term stability and reliability of the operator, as well as its scalability.
+The primary issue is that due to time and resource constraints, thorough load testing was not possible within the scope of this thesis. Therefore, the scalability of the operator could not be validated, and the operator may not achieve sufficient throughput for large fleets.
+Additionally, no long-term stability test could be performed due to time constraints. This may result in problems such as resource leaks that may only appear after the instance has been running for a sufficient amount of time, which cannot be validated at this time.
 Additionally, the evaluation was performed by the author of the software against a synthetic environment, rather than a real fleet of machines.
 
 Missing requirements are F4 and N3. F4 being only partially fulfilled was a decision made later in the development process, which resulted in the requirement not being implemented.
 The decision was made to simplify the debugging process, since Ansible produces verbose logs, which would have to be parsed and forwarded in an equal manner to the user by the operator, resulting in more obfuscation and possible failures.
-N3 by contrast was a requirement that is unmet due to time restrictions, rather than a decision.
+N3, by contrast, was a requirement that is unmet due to time restrictions, rather than a decision.
 Implementing proper runtime security would have taken time that was not available during development, and therefore was omitted.
 This requirement should be fulfilled in a future development effort.
-The missing restrictions on the runtime containers currently allow for an easier sandbox escape due to missing restrictions and could allow attackers to execute arbitrary code on the server hosting the \texttt{Node}.
-An important note here is a limitation of Ansible itself, which is that deleting something from a playbook will not automatically remove the configuration from the machine.
-Deleting an \anrecjob will also not remove the configuration it creates, it just stops applying it.
+The missing restrictions on the runtime containers currently allow for an easier sandbox escape and could allow attackers to execute arbitrary code on the server hosting the \texttt{Node}.
+An important note here is a limitation of Ansible itself, which is that deleting something from a \texttt{Playbook} will not automatically remove the configuration from the machine.
+Deleting an \anrecjob will also not remove the configuration it creates; it just stops applying it.
 
-In summary, 8 out of the 10 requirements have been fully fulfilled, while one was partially and one was not fulfilled.
-The not fulfilled requirement was dropped due to time restrictions.
+In summary, 8 out of the 10 requirements have been fully fulfilled, while one was partially fulfilled and one was not fulfilled.
+The unfulfilled requirement was dropped due to time restrictions.

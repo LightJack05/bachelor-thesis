@@ -1,7 +1,7 @@
 There is a wide range of options for implementing Kubernetes operators in several programming languages.
 For multiple reasons, the decision was made to use the Go programming language for implementing the operator.
 The first one is that Kubernetes itself is written in Go, and therefore using the same language allows both the use of the native type declarations of Kubernetes, and the Kubernetes controller-runtime without needing language bindings or other abstraction layers.
-Go is also by far the most popular language to implement operators in, as stated by \cite{redhatoperatorlanguages} in a post on RedHats website.
+Go is also by far the most popular language to implement operators in, as stated by \cite{redhatoperatorlanguages} in a post on Red Hat's website.
 
-The framework decision first fell on operator-sdk by RedHat, which was chosen for its popularity and familiarity in the development team. However, it was later discovered that operator-sdk projects are not easily packaged into helm charts, and therefore are not easily installed using the helm package manager.
+The framework choice initially fell on operator-sdk by Red Hat, which was chosen for its popularity and familiarity in the development team. However, it was later discovered that operator-sdk projects are not easily packaged into Helm charts, and therefore are not easily installed using the Helm package manager.
 For this reason, the project was moved to Kubebuilder, a project by a Kubernetes \enquote{Special Interest Group}.

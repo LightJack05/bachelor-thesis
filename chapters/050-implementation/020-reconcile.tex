@@ -1,11 +1,11 @@
-The following chapter outlines the implemented logic for the \glspl{crd} defined in the previous chapters.
+The following section outlines the implemented logic for the \glspl{crd} defined in the previous chapters.
 Individual \glspl{crd} will be listed again and the reconcile logic for each object will be explained.
 \anplaybook objects do not implement any logic and are therefore omitted here.
 
 \subsection{Reconciling the \anhost resource}
 As stated in the previous chapters, an \anhost needs to scan the \gls{ssh} host keys of the target machine.
-Since reconcile logic should be idempotent, first there needs to be a check whether the secret for the ssh keys used to access the host exists.
-if the secret does not exist, the host is requeued.
+Since reconcile logic should be idempotent, first there needs to be a check whether the \texttt{Secret} for the \gls{ssh} keys used to access the host exists.
+If the \texttt{Secret} does not exist, the \anhost is requeued.
 
 %TC:ignore
 \begin{lstlisting}[language=go, caption=Checking whether the SSH key secret exists]
@@ -25,7 +25,7 @@ if !privateKeySecretExists {
 \end{lstlisting}
 %TC:endignore
 
-The called function obtains the secret from the API and ensures that the key is present and parses as an \gls{ssh} private key:
+The called function obtains the \texttt{Secret} from the API and ensures that the key is present and parses as an \gls{ssh} private key:
 
 %TC:ignore
 \begin{lstlisting}[language=go, caption=Validating the host private key secret exists]
@@ -51,7 +51,7 @@ func (r *AnsibleHostReconciler) hostPrivateKeySecretExists(ctx context.Context, 
 \end{lstlisting}
 %TC:endignore
 
-If the secret is invalid, the status condition \enquote{Ready} on the \anhost is set to \enquote{False}, and it is requeued.
+If the \texttt{Secret} is invalid, the status condition \enquote{Ready} on the \anhost is set to \enquote{False}, and it is requeued.
 Next, unless the \enquote{IgnoreHostKey} option is set, the host key needs to be created.
 This is done by performing an \gls{ssh} key scan on the target host, which was accomplished using a custom reimplementation of the logic used by \enquote{ssh-keyscan} in Go, which can be found in the appendix under section \ref{app:sshkeyscan}.
 Given that there may be several goroutines blocked on network \gls{io} while connections wait for a timeout, the parallelization level for this controller needs to be high.
@@ -73,12 +73,12 @@ func (r *AnsibleHostReconciler) SetupWithManager(mgr ctrl.Manager) error {
 \end{lstlisting}
 %TC:endignore
 
-Once the keyscan is complete, the keys are formatted into the format used by the \gls{ssh} \enquote{known\_hosts} file, and stored in a secret owned by the \anhost.
+Once the keyscan is complete, the keys are formatted into the format used by the \gls{ssh} \enquote{known\_hosts} file, and stored in a \texttt{Secret} owned by the \anhost.
 Finally, the \anhost vars are stored in a \texttt{ConfigMap} and then the \enquote{Ready} condition of the \anhost is set to \enquote{True}.
 
 \subsection{Reconciling the \angroup resource}
-The reconcile cycle of the \angroup resource consists of a status check and ensuring the \texttt{ConfigMap} holding the group variables.
-First all status conditions are set to \enquote{Unknown} on the resource, so they all exist, independently of where the reconcile loop terminates.
+The reconcile cycle of the \angroup resource consists of a status check and ensuring the \texttt{ConfigMap} holding the \texttt{Group} variables exists.
+First, all status conditions are set to \enquote{Unknown} on the resource, so they all exist, independently of where the reconcile loop terminates.
 
 %TC:ignore
 \begin{lstlisting}[language=go]
@@ -98,7 +98,7 @@ if err := r.defaultStatusToUnknown(ctx, &group, ansibleoperatorv1alpha1.AnsibleG
 Afterward, the variables \texttt{ConfigMap} is ensured to exist in the same way as it was for the \anhost resource.
 
 %TC:ignore
-\begin{lstlisting}[language=go, caption=Creating the group variables \texttt{ConfigMap}]
+\begin{lstlisting}[language=go, caption=Creating the \texttt{Group} variables \texttt{ConfigMap}]
 cm = &v1.ConfigMap{
 	ObjectMeta: metav1.ObjectMeta{
 		Name:      group.Name + varsConfigMapSuffix,
@@ -120,7 +120,7 @@ if err := r.Create(ctx, cm); err != nil {
 If a resource with the target name exists, it is only updated if it is owned by the correct \angroup, so the contents reflect the current desired state.
 
 %TC:ignore
-\begin{lstlisting}[language=go, caption=Ensuring the group variables \texttt{ConfigMap} content matches the desired state]
+\begin{lstlisting}[language=go, caption=Ensuring the \texttt{Group} variables \texttt{ConfigMap} content matches the desired state]
 // Check the owner reference and update the vars if it is owned by the AnsibleGroup
 if metav1.IsControlledBy(cm, group) {
 	if cm.Data == nil {
@@ -138,7 +138,7 @@ if metav1.IsControlledBy(cm, group) {
 \end{lstlisting}
 %TC:endignore
 
-Finally, every subgroup and host is iterated over and validated to make sure they resolve to proper Kubernetes Objects, and they also have their \enquote{Ready} condition set to \enquote{True}.
+Finally, all subgroups and \texttt{Hosts} are iterated over and validated to make sure they resolve to proper Kubernetes objects and that they also have their \enquote{Ready} condition set to \enquote{True}.
 
 \subsection{Reconciling the \anrecjob resource}
 The \anrecjob resource has the most complex reconcile logic since it performs the most actions.
@@ -152,50 +152,50 @@ Firstly, the \anrecjob has three status conditions that need to be set:
 
 When starting the reconcile loop, all of these conditions are set to \enquote{Unknown}.
 Once that is complete, the inventory \texttt{ConfigMap} is templated.
-First all \anhost and \angroup resources are acquired from the API Server and then stored into maps.
-These maps are then used to build the inventory content, which can be found as a Go struct in the appendix in chapter \ref{app:invstruct}.
+First, all \anhost and \angroup resources are acquired from the API server and then stored in maps.
+These maps are then used to build the inventory content, which can be found as a Go struct in the appendix under section \ref{app:invstruct}.
 
-Unready hosts and groups will be shown as such, but will not be actioned by the \anrecjob, since these errors are not fatal to job execution.
-Meanwhile, an invalid inventory generated would be fatal to the entire \texttt{Job} executing and is therefore already recorded as an error while rendering the inventory.
+Unready \texttt{Hosts} and \texttt{Groups} will be shown as such, but will not be actioned by the \anrecjob, since these errors are not fatal to \texttt{Job} execution.
+Meanwhile, an invalid generated inventory would be fatal to the execution of the entire \texttt{Job} and is therefore already recorded as an error while rendering the inventory.
 Should any references in the data given to the operator not resolve properly, the operator will treat the entire inventory as invalid, and stop reconciliation while recording the unresolved reference in the \enquote{Ready} status message, and set its status to \enquote{False}.
 It was decided not to silently skip problematic resources, since this would cause a silent failure and may lead to unexpected behavior.
 Once the inventory is constructed into the struct, it is rendered using the template function in \ref{app:templatefunc} into a string which is then stored in a \texttt{ConfigMap}.
 
-The known hosts file is created similarly, however, not from a template, but by simple string concatenation of the content of the secrets in question.
-Additonally, the runtime \texttt{ConfigMap}, which determines where to acquire the repository, files and similar data is constructed from the data given in the referenced \anplaybook.
+The known hosts file is created similarly, however, not from a template, but by simple string concatenation of the content of the \texttt{Secrets} in question.
+Additionally, the runtime \texttt{ConfigMap}, which determines where to acquire the repository, files and similar data, is constructed from the data given in the referenced \anplaybook.
 
-With the configuration data built, the \texttt{CronJob} that will execute the playbooks against the constructed inventory is built.
+With the configuration data built, the \texttt{CronJob} that will execute the \texttt{Playbooks} against the constructed inventory is built.
 It gets several volume mounts, which are listed below.
 
 \begin{itemize}
 	\item{The inventory is mounted to \enquote{/inventory/hosts.yaml}}
 	\item{The known\_hosts file is mounted to \enquote{/ssh/known\_hosts}}
-	\item{The runtime \texttt{ConfigMap} is mounts several keys into these files under \enquote{/config}}
-	      \subitem{\enquote{playbook.yaml} contains the playbook to be executed}
-	      \subitem{\enquote{requirements.yml} contains the requirements for the playbook}
-	\item{Additionally, the runtime \texttt{ConfigMap} also provides environment variables to the \texttt{Job} \texttt{Pod} which are used for git sourced playbooks}
-	      \subitem{The variable \enquote{OPERATOR\_GIT\_REF} specifies which branch name or tag to use in the repository}
-	      \subitem{The variable \enquote{OPERATOR\_GIT\_REPO\_URL} specifies where to clone the repository from}
-	      \subitem{The variable \enquote{OPERATOR\_GIT\_PLAYBOOK\_PATH} specifies the path of the playbook within the repository}
-	      \subitem{The variable \enquote{OPERATOR\_GIT\_REQUIREMENTS\_PATH} specifies the path of the requirements file in the repository}
-	\item{The \gls{ssh} private keys are mounted into the \enquote{/ssh} directory, using their Kubernetes object names as filenames, since they are implicitly unique}
-	\item{The host variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/host\_vars} directory, using the inventory host names as filenames}
-	\item{The group variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/group\_vars} directory, using the inventory group names as filenames}
+	\item{The runtime \texttt{ConfigMap} mounts several keys into the following files under \enquote{/config}}
+	      \subitem{\enquote{playbook.yaml} contains the \texttt{Playbook} to be executed}
+	      \subitem{\enquote{requirements.yml} contains the requirements for the \texttt{Playbook}}
+	\item{Additionally, the runtime \texttt{ConfigMap} also provides environment variables to the \texttt{Job} \texttt{Pod} which are used for Git-sourced \texttt{Playbooks}}
+	      \subitem{\enquote{OPERATOR\_GIT\_REF} specifies which branch or tag to use in the repository}
+	      \subitem{\enquote{OPERATOR\_GIT\_REPO\_URL} specifies the remote repository to clone}
+	      \subitem{\enquote{OPERATOR\_GIT\_PLAYBOOK\_PATH} specifies the path of the \texttt{Playbook} within the repository}
+	      \subitem{\enquote{OPERATOR\_GIT\_REQUIREMENTS\_PATH} specifies the path of the requirements file in the repository}
+	\item{The \gls{ssh} private keys are mounted into the \enquote{/ssh} directory, using their Kubernetes object names as filenames}
+	\item{The \texttt{Host} variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/host\_vars} directory, using the inventory \texttt{Host} names as filenames}
+	\item{The \texttt{Group} variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/group\_vars} directory, using the inventory \texttt{Group} names as filenames}
 \end{itemize}
 
-Within the \texttt{CronJob}, there is one init container and one regular container specified.
-Once the \texttt{CronJob} is constructed, it is sent to the Kubernetes API server as a server-side apply request.
-This both implicitly creates the object, and ensures that only the new configuration remains with no stale values.
+Within the \texttt{CronJob} is one init container and one regular container defined.
+Once the \texttt{CronJob} is constructed, it is server-side applied to the Kubernetes API server.
+This both implicitly creates the object and also ensures that only the new configuration applied remains with no stale values.
 
 Once the \texttt{CronJob} is created, the status conditions are updated to reflect the current state of the resource.
 Every \anrecjob specifies its own name on \texttt{Jobs} belonging to it via a label on the resource.
-This way, all \texttt{Jobs} belonging to the current \anrecjob are acquired from the API Server and are then iterated over to find the one with the latest start time. Since the concurrency policy forbids concurrent execution, that \texttt{Job} is the only one that can be running.
+This way, all \texttt{Jobs} belonging to the current \anrecjob are acquired from the API server and are then iterated over to find the one with the latest start time. Since the concurrency policy forbids concurrent execution, that \texttt{Job} is the only one that can be running.
 If the \texttt{Job} is running according to its status block, the \enquote{Progressing} condition on the \anrecjob is set to \enquote{True}.
 If no \texttt{Job} was found, the condition is set to \enquote{Unknown}.
-Otherwise, it is set to \enquote{False}.
-According to the same \texttt{Job}, the \enquote{Success} status is also set, depending on the success state of the \texttt{Job}.
+Otherwise, the condition is set to \enquote{False}.
+According to the same \texttt{Job}, the \enquote{Successful} condition is also set, depending on the success state of the \texttt{Job}.
 
 During development, it has become clear that interpreting the logs Ansible outputs is largely unnecessary, since they are best read and interpreted by a human in the case of failures.
-Outputting logs as \gls{json} and interpreting them in operator logic would allow for status reporting on objects, but may mask errors and make it harder to identify the tasks that led up to an error.
+Outputting logs as \gls{json} and interpreting them in operator logic would allow for status reporting on objects, but may mask errors and make it harder to identify the \texttt{Tasks} that led up to an error.
 Therefore, it has been decided to limit the status reporting of the \anrecjob to a basic success/failure state, and offload additional debugging capabilities to the logs of the relevant \texttt{Job}.
 In existing platforms, logs can therefore be handled by existing infrastructure.

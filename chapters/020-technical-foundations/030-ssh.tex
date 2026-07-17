@@ -1,20 +1,20 @@
 \gls{ssh} is a protocol used for secure communication between two parties.
-The following chapter introduces both client and host authentication in SSH via keys.
-Password based authentication is omitted, since it sends the secret to the server.
+The following section introduces both client and host authentication in \gls{ssh} via keys.
+Password-based authentication is omitted, since it sends the secret to the server.
 \parencite{sshauthrfc, ssharchitecturerfc}
 
 \subsection{Server authentication in SSH}
 In the \gls{ssh} protocol, the server authenticates itself by generating a host key.
 This host key is then used to verify the identity of the specific server during key exchange between client and server.
-While \gls{ssh} does support the central signing and distribution of host keys, it is more common to have each host generate its own key and for clients to maintain a list of what key is associated with what host.
+While \gls{ssh} does support the central signing and distribution of host keys, it is more common for each host to generate its own key and for clients to maintain a list of what key is associated with what host.
 A host may have several host keys, each one for a different cryptographic algorithm.
 For easier validation, \gls{ssh} clients will usually provide a fingerprint for validating the host key.
 \parencite{ssharchitecturerfc, sshauthrfc}
 
-\subsection{Public key based client authentication}
+\subsection{Public key-based client authentication}
 Public key authentication uses a cryptographic key pair.
 This key pair has the same format as the host keys, but authenticates the client in this case.
 Before login, the public key of the key pair must be placed onto the machine hosting the \gls{ssh} server, so it can be read by the \gls{ssh} server implementation.
-A user may then use its private key to authenticate against the server.
+A user may then use their private key to authenticate against the server.
 The advantage of this authentication mechanism is that the private key never leaves the client.
 \parencite{sshauthrfc, ssharchitecturerfc}
