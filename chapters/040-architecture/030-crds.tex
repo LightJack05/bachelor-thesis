@@ -2,7 +2,7 @@ In order to manage Ansible workloads through Kubernetes, there needs to be a way
 For this reason, the following resources are defined in order to achieve a proper configuration layout and enable the use of Ansible features through Kubernetes.
 In promise theory terms, each resource is a promise made by the platform to the user.
 
-During planing, the decision was made that all resources should be namespaced.
+During planning, the decision was made that all resources should be namespaced.
 This means that the resources are only scoped to a namespace, and that multiple namespaces can create objects without interfering with each other.
 This decision was made to allow multi-tenancy within one Kubernetes cluster.
 Additionally, the resources this operator relies on are inherently namespaced in Kubernetes core, like \texttt{ConfigMaps} and \texttt{Secrets}, making it difficult to properly scope other resources that use these.
@@ -21,7 +21,7 @@ It needs to include the following parameters in order to satisfy the minimum cap
 	\item{the \texttt{Host} variables for Ansible}
 \end{itemize}
 
-This resources controller is required to scan the \gls{ssh} host keys of the target host, and write them into a \texttt{Secret}.
+This resource's controller is required to scan the \gls{ssh} host keys of the target host, and write them into a \texttt{Secret}.
 It also needs to link to credentials that can be used to access the hosts via \gls{ssh}.
 
 \subsection{The \texttt{AnsibleGroup} \gls{crd}}
@@ -40,8 +40,8 @@ An \angroup should report its own health based on the health of subresources, in
 
 \subsection{The \texttt{AnsiblePlaybook} \gls{crd}}
 The \anplaybook is the resource responsible for pointing the operator at the \texttt{Playbook} source code to execute.
-Its configuration, as per the requirements, should include both the option to source the \texttt{Playbook} from git, and to source the \texttt{Playbook} from an inline string within the resources parameters.
-Therefore, the \anplaybook resource should include at least the following parameters to fulfil its purpose:
+Its configuration, as per the requirements, should include both the option to source the \texttt{Playbook} from Git, and to source the \texttt{Playbook} from an inline string within the resource's parameters.
+Therefore, the \anplaybook resource should include at least the following parameters to fulfill its purpose:
 
 \begin{itemize}
 	\item{the inline \texttt{Playbook} source code}
@@ -51,12 +51,12 @@ Therefore, the \anplaybook resource should include at least the following parame
 	\item{the path of the requirements.yml file within the repository}
 \end{itemize}
 
-An \anplaybook should have the options for inline and git sourcing be mutually exclusive.
+An \anplaybook should have the options for inline and Git sourcing be mutually exclusive.
 Only one should be able to be specified.
 
 \subsection{The \texttt{AnsibleReconcileJob} \gls{crd}}
 The \anrecjob serves as the scheduling mechanism for executing \texttt{Playbooks}.
-It is an object soely responsible for livecycle management, and therefore does not map to an actual Ansible object.
+It is an object solely responsible for lifecycle management, and therefore does not map to an actual Ansible object.
 An \anrecjob should therefore include at least the following parameters:
 
 \begin{itemize}

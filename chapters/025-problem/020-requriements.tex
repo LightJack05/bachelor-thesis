@@ -7,13 +7,13 @@ The following listing documents the functional requirements, ordered by priority
 	\item \textbf{F1 - Inventory management:}
 	      The inventory for Ansible needs to be defined using Kubernetes objects, representing \texttt{Groups} and \texttt{Hosts} respectively, including their respective variables.
 	\item \textbf{F2 - \texttt{Playbook} sources:}
-	      \texttt{Playbooks} need to be pulled from Git or specified in the Kubernetes object responsible. This should also allow pinning to specific branches or tags on git repositories.
+	      \texttt{Playbooks} need to be pulled from Git or specified in the Kubernetes object responsible. This should also allow pinning to specific branches or tags on Git repositories.
 	\item \textbf{F3 - \texttt{Playbook} execution scheduling:}
-	      \texttt{Playbook} execution needs to be schedulable on a regular interval. Additionally, there should be some way of running \texttt{Playbooks} ad-hoc.
+	      \texttt{Playbook} execution needs to be schedulable on a regular interval. Additionally, there should be some way of running \texttt{Playbooks} ad hoc.
 	\item \textbf{F4 - Status reporting:}
 	      After execution, the status of the last run needs to be reported back to the objects in Kubernetes.
 	\item \textbf{F5 - Bootstrap management:}
-	      The operator needs to bootstrap and manage itself without requiring human interaction, allowing for manifest management entirely via git.
+	      The operator needs to bootstrap and manage itself without requiring human interaction, allowing for manifest management entirely via Git.
 \end{itemize}
 
 \subsection{Non-Functional Requirements}

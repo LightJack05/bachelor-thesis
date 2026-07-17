@@ -1,7 +1,7 @@
 In its current state, the operator is functional and meets its purpose.
 However, several points still remain open, and the operator may be extended in the future.
 
-Firstly, the unmet requirements, especially the runtime security, need to be addressed first.
+Firstly, the unmet requirements, especially the runtime security, need to be addressed.
 This is the biggest gap in the current implementation, as it may open up a way to escape the runtime environment sandbox.
 
 Secondly, the limitation of handling configuration drift may be partially mitigated in several ways.
@@ -14,8 +14,8 @@ However, both of these are something that should be implemented by platform engi
 Thirdly, the features of Ansible the operator currently supports should be expanded on in the future.
 Right now, only the basic concept of running the \texttt{Playbook} and pulling in dependencies is supported.
 Several features of Ansible are unsupported, notably Ansible Vault, which should be implemented into the operator \gls{api}.
-Additionally, authentication against private repositories, and connections to \gls{ssh} based git servers entirely, are currently unsupported, and should be implemented.
+Additionally, authentication against private repositories, and connections to \gls{ssh}-based Git servers entirely, are currently unsupported, and should be implemented.
 The currently implemented model could also enable splitting the inventory into several chunks to improve scalability.
 
-Ultimately, given that more companies adopt Kubernetes as their platform for infrastructure orchestration, tools that enable moving legacy systems into this new infrastructure remain valuable.
+Ultimately, as more companies adopt Kubernetes as their platform for infrastructure orchestration, tools that enable moving legacy systems into this new infrastructure remain valuable.
 This operator is a tool that bridges the gap between legacy infrastructure and the cloud-native landscape.

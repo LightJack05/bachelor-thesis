@@ -8,7 +8,7 @@ The following list displays goals that should be fulfilled by the implementation
 \subsubsection{Ansible execution}
 Execution of Ansible should be handled by Ansible itself.
 The Ansible executable should be run against a prebuilt environment that contains all required files for running, authenticating, etc.
-This way, there is no need to parse Ansible files, reducing the tightness of coupling between Ansible and the operator, allowing for easier independent updates of Ansible from the operator.
+This way, there is no need to parse Ansible files, reducing the tightness of coupling between Ansible and the operator, allowing for easier updates of Ansible independent of the operator.
 
 \subsubsection{Inventory management}
 The management of inventory objects has already been mentioned in the requirements section. In detail, this operator should provide \texttt{CustomResourceDefinitions} for the Ansible inventory primitives, and have a mechanism for delivering these primitives to the environment Ansible is executed in.
@@ -27,7 +27,7 @@ The private keys should be injected into the runtime environment and should be m
 Each \texttt{Host} may have a different key that needs to be used, so there needs to be a mapping for each \texttt{Host} with a separate private key file.
 
 \subsubsection{\texttt{Playbook} sourcing and dependencies}
-\texttt{Playbooks} should both be able to be inline for easy management within Kubernetes, and be able to be pulled from Git repositories so they can be easier version controlled.
+\texttt{Playbooks} should both be able to be inline for easy management within Kubernetes, and be able to be pulled from Git repositories so they can be more easily version controlled.
 Pulling \texttt{Playbooks} from Git should be possible via \gls{http}.
 \texttt{Playbooks} should also have the ability to have dependencies via a \enquote{requirements.yml} file that should be resolved by the operator.
 
@@ -35,10 +35,10 @@ Pulling \texttt{Playbooks} from Git should be possible via \gls{http}.
 This subsection lists features that explicitly should not be implemented.
 
 \subsubsection{Ansible Vault}
-Ansible Vault is a way of injecting confidential variables into an Ansible inventory in the form of encrypted files which allows Ansible to receive confidential data via Git or other public means, decrypting the data at runtime.
+Ansible Vault is a way of injecting confidential variables into an Ansible inventory in the form of encrypted files, which allows Ansible to receive confidential data via Git or other public means, decrypting the data at runtime.
 While this feature is useful, it shall not be supported by the operator at this time, since the implementation would necessitate additional logic.
 
 \subsubsection{Authentication against Git servers and \gls{ssh} communication}
-For the time of this thesis, authentication against private Git repositories shall not be implemented.
+Within the time frame of this thesis, authentication against private Git repositories shall not be implemented.
 Implementation would necessitate additional preparation of the runtime environment, Git credential helpers and injecting additional secrets into the runtime.
 Similarly, \gls{ssh} communication would necessitate additional \gls{tofu} procedures for secure communication as well as the implementation of credential injection for \gls{ssh} authentication.

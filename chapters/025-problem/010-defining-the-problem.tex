@@ -2,26 +2,26 @@ This section will give an overview of the core problem that shall be addressed b
 It includes details on why managing infrastructure at scale necessitates a scalable solution and abstraction layers.
 
 \subsection{Managing infrastructure at scale}
-When managing infrastructure, a common problem to occur is the ability for personnel to keep up with growing infrastructure.
-Common ways of addressing this situation is to use automation of some kind.
+When managing infrastructure, a common problem to occur is the inability of personnel to keep up with growing infrastructure.
+A common way of addressing this situation is to use automation of some kind.
 Two tools frequently used for automating infrastructure are Kubernetes and Ansible.
-Both are tools that are intended to allow managing of Infrastructure and keep the required management of the systems as low as possible, and scale with as little extra human effort required as possible.
+Both are tools that are intended to allow the management of infrastructure while keeping the required management of the systems as low as possible, and to scale with as little extra human effort as possible.
 \parencite{ansibledocsindex, k8swebsite, google-sre}
 
-When managing this kind of infrastructure, it is essential to allow personnel to have single way of accessing and assessing infrastructure.
-In both Kubernetes and Ansible, configurations are stored as files, which can in turn be stored in a version control system like git.
+When managing this kind of infrastructure, it is essential to allow personnel to have a single way of accessing and assessing infrastructure.
+In both Kubernetes and Ansible, configurations are stored as files, which can in turn be stored in a version control system like Git.
 Because Ansible is agentless and requires no dedicated infrastructure, organizations frequently adopt it to manage workloads before solutions like Kubernetes.
 If applied correctly, this allows anyone to read the configuration of a machine and understand what is set up in what way on the machine.
 \parencite{platformengineering-architects, poulton2025kubernetes}
 
-However, it is important to state that when using multiple such systems, it may again lead to \gls{tribalknowledge}.
+However, it is important to state that using multiple such systems may again lead to \gls{tribalknowledge}.
 In such organizations, this results in a landscape built on Ansible, which needs to be maintained after a company moves to another technology.
-Legacy workloads residing inside virtual machines may stay outside the cluster or even move into it, running on something like Kubevirt, but are still managed via Ansible from outside the cluster.
-An alternative would be to remove Ansible entirely, however because the entire tooling is built on Ansible, switching it out for a different system would lead to a substantial migration effort.
+Legacy workloads residing inside virtual machines may stay outside the cluster or even move into it, running on something like KubeVirt, but are still managed via Ansible from outside the cluster.
+An alternative would be to remove Ansible entirely; however, because the entire tooling is built on Ansible, switching it out for a different system would lead to a substantial migration effort.
 Therefore, it is important to establish a common mode of access and operation between the tools used to manage the infrastructure, and provide an abstraction, which is commonly referred to as a \enquote{platform}.
 In this way, both systems have a native integration with the new platform, while requiring minimal changes to how the systems themselves are configured.
 In platform engineering, the list of features usable via the platform is referred to as the \enquote{capability plane}, while individual features are called \enquote{capabilities}.
-Wrapping Kubernetes Workloads and Ansible Workloads underneath a common platform allows platform engineers to make sure that using the objects feels the same, regardless of the underlying technology.
+Wrapping Kubernetes workloads and Ansible workloads underneath a common platform allows platform engineers to make sure that using the objects feels the same, regardless of the underlying technology.
 \parencite{platformengineering-architects, kubevirt}
 
 \subsection{Incompatible modes of operation between Kubernetes and Ansible}
@@ -30,11 +30,11 @@ Kubernetes works by continuously comparing the observed state of infrastructure 
 In this way, when the cluster state deviates from the desired state, Kubernetes will try to move the observed state closer to the desired state by using a \gls{reconcile} pattern.
 That means once the state deviates, or as long as it does, Kubernetes will run a reconcile on deviating objects, which may or may not affect other objects.
 This means that in Kubernetes, there are always two different states: the desired state and the observed state.
-Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which is then used by an agent, the controller, to fulfill a promise, and assess whether the promise has been fulfilled, it can be stated that Kubernetes is a promise based system.
+Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which are then used by an agent, the controller, to fulfill a promise, and assess whether the promise has been fulfilled, it can be stated that Kubernetes is a promise-based system.
 
-Ansible does not follow this concept, it is closer to a script programming language than a reconciling system.
+Ansible does not follow this concept; it is closer to a script programming language than a reconciling system.
 In Ansible, a user defines a list of \texttt{Tasks}, which are then executed on the target system.
 While Ansible makes a promise to the user, it does not require the system targeted to make any promise in theory.
 Ansible merely executes its \texttt{Tasks} on the target machine and assesses whether it was successful in doing so, with the host, if anything, only allowing Ansible to access it.
-It however never makes a promise to accept the concrete form of configuration.
-For these reasons, Ansible can be referred to as an imposition based system.
+It, however, never makes a promise to accept the concrete form of configuration.
+For these reasons, Ansible can be referred to as an imposition-based system.

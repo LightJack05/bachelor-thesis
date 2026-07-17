@@ -4,8 +4,8 @@ In order to execute the \texttt{Job} created by the \anrecjob, there is one init
 \subsection{The init container}
 The init container consists of two main parts.
 It is built using a Dockerfile that creates an image with all dependencies based on Alpine Linux.
-These dependencies include Ansible itself, as well as several other packages such as an \gls{ssh} client and git.
-The dockerfile below is used to build the init container image:
+These dependencies include Ansible itself, as well as several other packages such as an \gls{ssh} client and Git.
+The Dockerfile below is used to build the init container image:
 
 %TC:ignore
 \begin{lstlisting}
@@ -28,13 +28,13 @@ ENTRYPOINT ["/entrypoint.sh"]
 The \enquote{entrypoint.sh} script is the code executed within the container.
 The entire script can be found in the appendix under section \ref{app:initcontainerscript}.
 First, the type of \texttt{Playbook} source is detected by the container by checking whether a mounted \texttt{Playbook} exists.
-Should the files be mounted, they are used. Otherwise, the script validates the environment variables exist and then uses them instead.
+Should the files be mounted, they are used. Otherwise, the script validates that the environment variables exist and then uses them instead.
 In the case of a mounted \texttt{Playbook}, the files are copied into the \enquote{/playbook} directory directly.
-For git \texttt{Playbooks}, the repository is cloned, and the files are copied from there.
+For Git-sourced \texttt{Playbooks}, the repository is cloned, and the files are copied from there.
 Additional validation is performed on the user-defined content to minimize the risk of code injection.
 Once initialization of the files is complete, the dependencies for the \texttt{Playbook} are installed using the \enquote{requirements.yml} file obtained from one of the two sources.
 
 \subsection{The runtime container}
 The execution of the \texttt{Playbook} itself is handled by the runtime container.
-It is built using a similar to the init container, but additionally includes an Ansible configuration file that is used to point it at the mounted inventory and \texttt{Roles} path, as well as the \enquote{known\_hosts} file.
+It is built using a Dockerfile similar to that of the init container, but additionally includes an Ansible configuration file that is used to point it at the mounted inventory and \texttt{Roles} path, as well as the \enquote{known\_hosts} file.
 The \texttt{Playbook} is executed using the \enquote{ansible-playbook} command.

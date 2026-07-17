@@ -1,11 +1,11 @@
 This thesis aimed to handle the problem of infrastructure management split between Kubernetes and Ansible.
-During migrations from legacy systems such as Ansible managed virtual machines, a split can develop in the management of these systems, leading to two diverging modes of operation.
+During migrations from legacy systems such as Ansible-managed virtual machines, a split can develop in the management of these systems, leading to two diverging modes of operation.
 This in turn leads to tribal knowledge as to what systems are managed in what way, which results in increased overhead in managing infrastructure and harder onboarding of new employees.
 
 Therefore, this thesis set out to unify the management of the two systems under a single control plane.
 The control plane chosen was Kubernetes, for its flexible extensibility and also because it is the standard for modern platform engineering.
 Afterwards, the theoretical basis for the solution was defined.
-It became clear that connecting an imposition based system like Ansible with a promise based system like Kubernetes requires making a promise to impose.
+It became clear that connecting an imposition-based system like Ansible with a promise-based system like Kubernetes requires making a promise to impose.
 Following that, the requirements for the implemented software were defined.
 A Kubernetes operator was implemented that is able to execute Ansible \texttt{Playbooks} against an inventory managed by the operator.
 Finally, this operator was evaluated against the requirements.
@@ -20,10 +20,10 @@ Two questions guided this thesis.
 	      pattern?
 \end{itemize}
 
-The first of the two questions can be answerd using the implemented software.
+The first of the two questions can be answered using the implemented software.
 It exposes four \glspl{crd}, namely the \anhost, \angroup, \anplaybook and \anrecjob resources.
 These are able to build an inventory within Kubernetes and assign variables to individual \anhost and \angroup resources.
-The \anplaybook resources enable using \texttt{Playbooks} that are either inlined into the resource, or pulled from a remote git server.
+The \anplaybook resources enable using \texttt{Playbooks} that are either inlined into the resource, or pulled from a remote Git server.
 Finally, the \anrecjob enables scheduling of executions of these \texttt{Playbooks} against the generated inventory.
 
 The second question needs a more nuanced answer.
@@ -33,12 +33,12 @@ The operator here handles the parts that can be done declaratively, including in
 What it fundamentally cannot handle is the logic of Ansible itself, like which \texttt{Roles} to apply and in what order these should be applied.
 
 The requirements set forth in section \ref{ch:requirements} were mostly met, with detailed parsing of Ansible logs being decided against during development, and substantial runtime isolation not being achieved due to time constraints.
-The resulting software fulfills the other requirements defined and therefore suitable for its intended purpose.
+The resulting software fulfills the other requirements defined and is therefore suitable for its intended purpose.
 
 These findings are significant because they allow the management of legacy systems through modern platforms based on Kubernetes.
 Additionally, they enable platform engineers to create a unified way of executing Ansible, instead of using it as an ad-hoc system for configuring a system once.
 This reduces \gls{tribalknowledge} and unifies the management interface for both types of infrastructure.
-However, this approach fundamentally cannot achieve the same level of fine-grained management and drift-detection as a full containerized approach, due to the mismatch between the two operational models of Ansible and Kubernetes.
+However, this approach fundamentally cannot achieve the same level of fine-grained management and drift detection as a fully containerized approach, due to the mismatch between the two operational models of Ansible and Kubernetes.
 Ansible is unable to handle completely replacing instances or removing older configurations.
 
-In summary, while this approach is valid as a migration tool or handling exceptions in infrastructure, constructing reliable, observable infrastructure on it that can be dynamically changed should be considered carefully.
+In summary, while this approach is valid as a migration tool or for handling exceptions in infrastructure, constructing reliable, observable infrastructure on it that can be dynamically changed should be considered carefully.

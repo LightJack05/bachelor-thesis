@@ -1,5 +1,5 @@
-Ansible instead uses scripts called \texttt{Playbooks} to describe the target state of the machine, which are usually held idempotent to ensure that re-running the same \texttt{Playbook} doesn't alter the state of the target machine if it already is in the requested state.
-This section is going to give an introduction to Ansible and its components to give a good understanding for how Ansible works and what it requirements for execution are.
+Ansible instead uses scripts called \texttt{Playbooks} to describe the target state of the machine, which are usually kept idempotent to ensure that re-running the same \texttt{Playbook} does not alter the state of the target machine if it already is in the requested state.
+This section is going to give an introduction to Ansible and its components to give a good understanding of how Ansible works and what its requirements for execution are.
 The section will only focus on components that are going to be relevant to the implementation of the operator.
 \parencite{ansibledocsindex}
 
@@ -16,7 +16,7 @@ A \texttt{Group} is declared simply by creating a key in the YAML file that repr
 
 The individual \texttt{Hosts} are then declared as children of a specific Ansible \texttt{Group}.
 These \texttt{Hosts} need to have at least a name and hostname, so Ansible can access them.
-Ansible will default to the declared inventory name as hostname if no hostname is specified.
+Ansible will default to the declared inventory name as the hostname if no hostname is specified.
 
 The format for specifying an inventory can be found below:
 
@@ -56,7 +56,7 @@ datacenter:
 %TC:endignore
 
 The listing shows an inventory file declaring the \texttt{Groups} leafs, spines, network, webservers and datacenter, with the corresponding \texttt{Hosts}.
-Notably spines and leafs are subgroups of network, and network and webservers are subgroups of datacenter.
+Notably, spines and leafs are subgroups of network, and network and webservers are subgroups of datacenter.
 
 %TODO: Check if we need to explain vars in detail.
 
@@ -100,13 +100,13 @@ The \texttt{Playbook} below is an example of how one could manage web servers an
 \end{lstlisting}
 %TC:endignore
 This \texttt{Playbook} contains two \texttt{Plays} which target the \texttt{Groups} webservers and databases respectively.
-On webservers, they ensure the httpd package is installed with the latest version, and then write the configuration for it to \enquote{/etc/httpd.conf}, templating it from a local template file.
+On webservers, the first \texttt{Play} ensures the httpd package is installed with the latest version, and then writes the configuration for it to \enquote{/etc/httpd.conf}, templating it from a local template file.
 The second \texttt{Play} targets the databases and ensures PostgreSQL is installed and started.
 \parencite{ansibleplaybooks}
 
 \subsection{Ansible \texttt{Roles}}
-\texttt{Roles} are reusable units of \texttt{Tasks} which can be used to split configurations into reusable chunks to, for example, apply a similar configuration repeatedly to several logicial targets without having to contain them in \texttt{Playbooks}.
+\texttt{Roles} are reusable units of \texttt{Tasks} which can be used to split configurations into reusable chunks to, for example, apply a similar configuration repeatedly to several logical targets without having to contain them in \texttt{Playbooks}.
 \texttt{Roles} also allow for easy delivery of templates and other files together with these \texttt{Tasks}.
 Once created, \texttt{Roles} can be referenced either in \texttt{Playbooks} or within other \texttt{Roles} as dependencies.
-\texttt{Roles} that are required for the execution of a \texttt{Playbook} can be declared in a file called \enquote{requirements.yml} which can in turn be used to install all \texttt{Roles} listed in the file.
+\texttt{Roles} that are required for the execution of a \texttt{Playbook} can be declared in a file called \enquote{requirements.yml}, which can in turn be used to install all \texttt{Roles} listed in the file.
 \parencite{ansibleroles, ansiblegalaxyuserguide}
