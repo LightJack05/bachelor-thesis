@@ -15,7 +15,7 @@ If applied correctly, this allows anyone to read the configuration of a machine 
 \parencite{platformengineering-architects, poulton2025kubernetes}
 
 However, it is important to state that using multiple such systems may again lead to \gls{tribalknowledge}.
-In such organizations, this results in a landscape built on Ansible, which needs to be maintained after a company moves to another technology.
+In such organizations, this results in a landscape built on Ansible, which requires maintenance after a company moves to another technology.
 Legacy workloads residing inside virtual machines may stay outside the cluster or even move into it, running on something like KubeVirt, but are still managed via Ansible from outside the cluster.
 An alternative would be to remove Ansible entirely; however, because the entire tooling is built on Ansible, switching it out for a different system would lead to a substantial migration effort.
 Therefore, it is important to establish a common mode of access and operation between the tools used to manage the infrastructure, and provide an abstraction, which is commonly referred to as a \enquote{platform}.
@@ -31,6 +31,7 @@ In this way, when the cluster state deviates from the desired state, Kubernetes 
 That means once the state deviates, or as long as it does, Kubernetes will run a reconcile on deviating objects, which may or may not affect other objects.
 This means that in Kubernetes, there are always two different states: the desired state and the observed state.
 Since the Kubernetes architecture hinges on the individual components providing promises to accept in the form of \glspl{crd}, which are then used by an agent, the controller, to fulfill a promise, and assess whether the promise has been fulfilled, it can be stated that Kubernetes is a promise-based system.
+\parencite{poulton2025kubernetes, platformengineering-architects}
 
 Ansible does not follow this concept; it is closer to a script programming language than a reconciling system.
 In Ansible, a user defines a list of \texttt{Tasks}, which are then executed on the target system.
@@ -38,3 +39,4 @@ While Ansible makes a promise to the user, it does not require the system target
 Ansible merely executes its \texttt{Tasks} on the target machine and assesses whether it was successful in doing so, with the host, if anything, only allowing Ansible to access it.
 It, however, never makes a promise to accept the concrete form of configuration.
 For these reasons, Ansible can be referred to as an imposition-based system.
+\parencite{ansibledocsindex, ansibleplaybooks, ansibleroles}

@@ -174,25 +174,25 @@ It gets several volume mounts, which are listed below.
 	      \subitem{\enquote{playbook.yaml} contains the \texttt{Playbook} to be executed}
 	      \subitem{\enquote{requirements.yml} contains the requirements for the \texttt{Playbook}}
 	\item{Additionally, the runtime \texttt{ConfigMap} also provides environment variables to the \texttt{Job} \texttt{Pod} which are used for Git-sourced \texttt{Playbooks}}
-	      \subitem{The variable \enquote{OPERATOR\_GIT\_REF} specifies which branch name or tag to use in the repository}
-	      \subitem{The variable \enquote{OPERATOR\_GIT\_REPO\_URL} specifies where to clone the repository from}
-	      \subitem{The variable \enquote{OPERATOR\_GIT\_PLAYBOOK\_PATH} specifies the path of the \texttt{Playbook} within the repository}
-	      \subitem{The variable \enquote{OPERATOR\_GIT\_REQUIREMENTS\_PATH} specifies the path of the requirements file in the repository}
-	\item{The \gls{ssh} private keys are mounted into the \enquote{/ssh} directory, using their Kubernetes object names as filenames, since they are implicitly unique}
+	      \subitem{\enquote{OPERATOR\_GIT\_REF} specifies which branch or tag to use in the repository}
+	      \subitem{\enquote{OPERATOR\_GIT\_REPO\_URL} specifies the repository remote repository to clone}
+	      \subitem{\enquote{OPERATOR\_GIT\_PLAYBOOK\_PATH} specifies the path of the \texttt{Playbook} within the repository}
+	      \subitem{\enquote{OPERATOR\_GIT\_REQUIREMENTS\_PATH} specifies the path of the requirements file in the repository}
+	\item{The \gls{ssh} private keys are mounted into the \enquote{/ssh} directory, using their Kubernetes object names as filenames}
 	\item{The \texttt{Host} variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/host\_vars} directory, using the inventory \texttt{Host} names as filenames}
 	\item{The \texttt{Group} variable \texttt{ConfigMaps} are mounted into the \enquote{/inventory/group\_vars} directory, using the inventory \texttt{Group} names as filenames}
 \end{itemize}
 
-Within the \texttt{CronJob}, there is one init container and one regular container specified.
-Once the \texttt{CronJob} is constructed, it is sent to the Kubernetes API server as a server-side apply request.
-This both implicitly creates the object and ensures that only the new configuration remains with no stale values.
+Within the \texttt{CronJob} exists one init container and one regular container.
+Once the \texttt{CronJob} is constructed, it is server-side applied to the Kubernetes API server.
+This both implicitly creates the object and also ensures that only the new configuration applied remains with no stale values.
 
 Once the \texttt{CronJob} is created, the status conditions are updated to reflect the current state of the resource.
 Every \anrecjob specifies its own name on \texttt{Jobs} belonging to it via a label on the resource.
 This way, all \texttt{Jobs} belonging to the current \anrecjob are acquired from the API server and are then iterated over to find the one with the latest start time. Since the concurrency policy forbids concurrent execution, that \texttt{Job} is the only one that can be running.
 If the \texttt{Job} is running according to its status block, the \enquote{Progressing} condition on the \anrecjob is set to \enquote{True}.
 If no \texttt{Job} was found, the condition is set to \enquote{Unknown}.
-Otherwise, it is set to \enquote{False}.
+Otherwise, the condition is set to \enquote{False}.
 According to the same \texttt{Job}, the \enquote{Successful} condition is also set, depending on the success state of the \texttt{Job}.
 
 During development, it has become clear that interpreting the logs Ansible outputs is largely unnecessary, since they are best read and interpreted by a human in the case of failures.
