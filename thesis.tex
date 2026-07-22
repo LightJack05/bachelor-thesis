@@ -20,6 +20,7 @@
 \usepackage[utf8]{inputenc}
 %\usepackage[ngerman]{babel}
 %\usepackage{bibgerm}
+\usepackage{tcolorbox}
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{enumitem}
@@ -494,6 +495,10 @@ Thesis source code:
 
 \printbibliography
 
+%TC:ignore
+\input{chapters/AI.tex}
+%TC:endignore
+
 % No header or footer
 \thispagestyle{empty}
 % But still include in the table of contents (uncomment if needed)
@@ -515,7 +520,7 @@ Ich bin mir bewusst, dass die Verwendung von Texten oder anderen Inhalten und Pr
 Ich verantworte die Übernahme jeglicher von mir verwendeter maschinell generierter Passagen vollumfänglich selbst und trage die Verantwortung für eventuell durch die \acrshort{KI} generierte fehlerhafte oder verzerrte Inhalte, fehlerhafte Referenzen, Verstöße gegen das Datenschutz- und Urheberrecht oder Plagiate.
 
 \begin{tabular}{lp{2em}l}
-	\hspace{4cm} &  & \hspace{5cm}        \\\cline{1-1}\cline{3-3}
+	\hspace{4cm} &  & \hspace{5cm}       \\\cline{1-1}\cline{3-3}
 	Ort, Datum   &  & \text{Elias Paitz} \\
 	\\
 	\\
