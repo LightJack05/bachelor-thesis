@@ -4,4 +4,5 @@ Because Ansible is imperative and imposition based, while Kubernetes operates on
 After defining requirements, a Kubernetes operator was designed and implemented that allows scheduling Ansible executions and defining an Ansible inventory from the Kubernetes API.
 The notable exposed CRDs are \anhost and \angroup used to declare the inventory, \anplaybook pointing the operator at the playbook source, either inlined into the resource or pulled from git, as well as \anrecjob which schedules the execution of the playbook.
 The implemented operator fulfills 8 out of the 10 requirements defined fully, with one being postponed due to time constraints, and one being decided against during development.
+It should be stated that the integration between the two systems is not perfect. Ansible itself notably does not remove configurations that were removed from playbooks from the target, which means the operator also cannot make such changes.
 In conclusion the operator serves as a migration bridge but is not a full replacement for containerized workloads in Kubernetes.
