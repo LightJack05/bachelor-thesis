@@ -1,3 +1,4 @@
+%TC:ignore
 Kubernetes has developed as the standard for workload orchestration.
 However, with Ansible being a popular tool to manage stateful workloads such as virtual machines, a bridge is needed to combine both under a common access plane.
 Because Ansible is imperative and imposition based, while Kubernetes operates on a promise based model, combining the two systems under the Kubernetes API requires making a promise to impose.
@@ -6,3 +7,4 @@ The notable exposed CRDs are \anhost and \angroup used to declare the inventory,
 The implemented operator fulfills 8 out of the 10 requirements defined fully, with one being postponed due to time constraints, and one being decided against during development.
 It should be stated that the integration between the two systems is not perfect. Ansible itself notably does not remove configurations that were removed from playbooks from the target, which means the operator also cannot make such changes.
 In conclusion the operator serves as a migration bridge but is not a full replacement for containerized workloads in Kubernetes.
+%TC:endignore
