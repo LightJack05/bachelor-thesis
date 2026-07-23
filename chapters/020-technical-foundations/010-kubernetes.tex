@@ -13,10 +13,9 @@ Whether it is successful in doing so is something it reports back to the user co
 \subsection{Controllers and promises in Kubernetes}
 Controllers manage a specific type of object in Kubernetes, and may watch any number of other objects.
 They are agents making promises about what they can do, and other agents consume them.
-\parencite{k8sclustercomponents, promise-theory, poulton2025kubernetes}
 A controller uses a reconcile loop in order to move the actual or observed state of the cluster closer to the desired state as defined by a manifest.
 Assuming a \texttt{Deployment} object specifies that three instances of a \texttt{Pod} with an nginx container should be running, the controller responsible for \texttt{Deployment} objects will reconcile the object and assess its condition to ensure that there are actually three instances running.
-\parencite{poulton2025kubernetes, k8scontrollers, k8sclustercomponents}
+\parencite{poulton2025kubernetes, promise-theory, k8scontrollers, k8sclustercomponents}
 
 \subsection{Extending Kubernetes with custom controllers}
 
@@ -35,7 +34,7 @@ These frameworks aim to simplify the development of operators by reducing repeti
 Controllers make use of a concept called asynchronous reconciliation.
 It means that the kube-apiserver only verifies the syntactical correctness of the \texttt{CustomResource} created based on a \gls{crd}, but usually does not validate the actual logical consistency.
 It is possible to implement such checks using admission webhooks, but validating logical consistency via admission webhooks is generally discouraged.
-Validation of the actual logical consistency and the ability to move the observed state to the desired state should be determined at reconcile time.
+Validation of the actual logical validity and the ability to move the observed state to the desired state should be determined at reconcile time.
 This in turn means that while an object may be accepted by the kube-apiserver, it does not automatically mean that the desired state will be able to match the observed state of the cluster.
 In promise theory terms, this means that the assessment of whether the promise of the controller has been kept cannot be made at admission time, but only over time, and only by observing the status reported by the controller on the object.
 It also means that the client cannot assume that the promise has been fulfilled after the object has been accepted by the kube-apiserver, but that it may take a large amount of time, sometimes minutes or longer, to be fulfilled.
