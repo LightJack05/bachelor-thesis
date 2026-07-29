@@ -1,14 +1,14 @@
-In order to allow for a better understanding of the market as well as available solutions, this chapter will analyze currently available integrations between Kubernetes and Ansible.
+In order to allow for a better understanding of available solutions, this chapter will analyze currently available integrations between Kubernetes and Ansible.
 It will then verify whether they match the requirements stated previously.
 
-\section{Subjects for market analysis}
+\section{Subjects for comparison}
 There are numerous integrations between Kubernetes and other, primarily open source software.
 However, aside from commercial offerings from Red Hat with their \enquote{Ansible Automation Platform}, the integrations are limited.
 Commercial offerings were excluded from this comparison due to availability reasons.
 Most tools focus on the exact opposite, setting up Kubernetes using Ansible, instead of running Ansible \texttt{Playbooks} from Kubernetes.
 Another big group of tools executes Ansible automatically, but does not manage it through Kubernetes.
 Instead, custom implementations are used to execute Ansible, such as Semaphore UI or AWX.
-Based on the landscape, two candidates were selected for the market analysis.
+Based on the landscape, two candidates were selected for comparison.
 The first option is the AWX Operator, together with the AWX Resource Operator.
 The second option is to use a partially manual approach and manually schedule \texttt{CronJobs} that run a container which then executes the \texttt{Playbook}.
 
@@ -22,7 +22,8 @@ Additionally, it requires its own database, a PostgreSQL instance, in addition t
 
 Furthermore, inventory management is intended to go through the AWX instance, meaning automated management through the Kubernetes API is not easily accomplished.
 The AWX Resource Operator provides primitives for some of the resources managed in AWX; however, notably absent are \glspl{crd} for Ansible \texttt{Hosts}.
-This means that the inventory cannot be directly declared inside Kubernetes API \glspl{crd}, and needs to be handled either manually by logging in to the AWX user interface, by using \texttt{Playbooks} that interact with AWX itself, or by other custom means.
+This means that the inventory cannot be directly declared inside Kubernetes API \glspl{crd}.
+Instead, it needs to be handled either manually by logging in to the AWX user interface, by using \texttt{Playbooks} that interact with AWX itself, or by other custom means.
 Additionally, the infrastructure cannot be easily set up unattended, since AWX Resource Operator requires the manual creation of an access token for AWX, so it can access the instance.
 This method fails at least the functional requirement F1, since it does not support managing the inventory through Kubernetes without requiring extra overhead.
 The conclusion of this is that the operators are not a match for the defined problem.
@@ -33,8 +34,9 @@ This process involves a lot of rather inconvenient management of objects, such a
 While being manual, this does satisfy some of the functional requirements.
 However, notably F1 is still not satisfied, since the inventory would be a single object, and not, as it states, one object per \texttt{Host} or \texttt{Group}.
 
-\section{Conclusion of the market analysis}
-Given the results of the market analysis, the implemented software should orient itself towards the manual execution of \texttt{Playbooks}.
+\section{Conclusion of the analysis}
+%TODO: Maybe add something here that summarizes or compares the two options
+Given the results of the comparison, the implemented software should orient itself towards the manual execution of \texttt{Playbooks}.
 The main goal should be to make this concept scalable and usable enough to enable management of machines without added complexity.
 Additionally, it should be ensured that consistency of objects is validated and a proper assessment of the completion of a \texttt{Job} is possible without having to handle Kubernetes primitives or look at \texttt{Pod} logs.
 Furthermore, the implemented solution should also attempt to save resources, use the Kubernetes API as storage for data and provide the ability for users to manage the infrastructure with as little manual intervention as possible.

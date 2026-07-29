@@ -52,7 +52,8 @@ Additionally, no long-term stability test could be performed due to time constra
 Additionally, the evaluation was performed by the author of the software against a synthetic environment, rather than a real fleet of machines.
 
 Missing requirements are F4 and N3. F4 being only partially fulfilled was a decision made later in the development process, which resulted in the requirement not being implemented.
-The decision was made to simplify the debugging process, since Ansible produces verbose logs, which would have to be parsed and forwarded in an equal manner to the user by the operator, resulting in more obfuscation and possible failures.
+This decision was made to simplify the debugging process.
+Ansible produces verbose logs, which would have to be parsed and forwarded in an equal manner to the user by the operator, resulting in more obfuscation and possible failures.
 N3, by contrast, was a requirement that is unmet due to time restrictions, rather than a decision.
 Implementing proper runtime security would have taken time that was not available during development, and therefore was omitted.
 This requirement should be fulfilled in a future development effort.
