@@ -38,7 +38,7 @@ The resulting software fulfills the other requirements defined and is therefore 
 These findings are significant because they allow the management of legacy systems through modern platforms based on Kubernetes.
 Additionally, they enable platform engineers to create a unified way of executing Ansible, instead of using it as an ad-hoc system for configuring a system once.
 This reduces \gls{tribalknowledge} and unifies the management interface for both types of infrastructure.
-However, this approach fundamentally cannot achieve the same level of fine-grained management and drift detection as a fully containerized approach, due to the mismatch between the two operational models of Ansible and Kubernetes.
-Ansible is unable to handle completely replacing instances or removing older configurations.
+However, this approach cannot achieve the same level of fine-grained management and drift detection as a fully containerized approach, since Ansible is unable to handle completely replacing instances or removing older configurations.
+This is a fundamental limitation of Ansible, rather than of the implemented solution.
 
 In summary, while this approach is valid as a migration tool or for handling exceptions in infrastructure, constructing reliable, observable infrastructure on it that can be dynamically changed should be considered carefully.
