@@ -12,6 +12,7 @@ In this case, the \enquote{ansible-operator.lightjack.de/v1alpha1} \gls{api} ver
 Here, the \enquote{v1alpha1} indicates the first version of the operator \enquote{v1} with an alpha state resource \enquote{alpha} in the first version \enquote{1}.
 Should there be breaking changes to the \gls{api} once the operator is in a stable condition, this version will be changed and the resources moved to a different \gls{api} version.
 
+\clearpage
 \subsection{The \anhost resource}
 The complete \anhost spec type declaration can be found in the appendix under section \ref{app:anhostdeclare}.
 
@@ -42,7 +43,7 @@ spec:
 One notable variable is the \enquote{AnsibleName}, which is used to specify the name of the resource within the Ansible inventory.
 The \enquote{ignoreHostKey} option is used to disable getting and enforcing the \gls{ssh} host key.
 
-
+\clearpage
 \subsection{The \angroup resource}
 The complete \angroup spec type declaration can be found in the appendix under section \ref{app:angroupdeclare}.
 
@@ -69,6 +70,7 @@ spec:
 This manifest would create an \angroup resource which has no \texttt{Groups} as subgroups, and contains \enquote{ssh-node-1} and \enquote{ssh-node-2} as \texttt{Hosts}.
 It also injects the variables \enquote{http\_port} and \enquote{max\_clients} as \texttt{Group} variables.
 
+\clearpage
 \subsection{The \anplaybook resource}
 The complete \anplaybook spec type declaration can be found in the appendix under section \ref{app:anplaybookdeclare}.
 The \anplaybook struct contains two mutually exclusive values, \enquote{AnsiblePlaybookInline} and \enquote{AnsiblePlaybookGit}, which are therefore declared as pointers.
@@ -81,7 +83,8 @@ Mutual exclusivity is enforced via a \gls{cel} statement wrapped in a Kubebuilde
 %TC:endignore
 
 Due to the mutual exclusivity between the \enquote{git} and \enquote{inline} fields, there are two fundamentally different ways in which an \anplaybook can be defined.
-The first one is to declare the \texttt{Playbook} inline in the \anplaybook spec, embedding it directly into the manifest:
+The first one is to declare the \texttt{Playbook} inline in the \anplaybook spec, embedding it directly into the manifest.
+\clearpage
 
 %TC:ignore
 \begin{lstlisting}[language=yaml, caption=Example \anplaybook definition with inline source]
@@ -100,17 +103,14 @@ spec:
       - name: Test install flow
         hosts: web_tier
         become: true
-
         roles:
           - geerlingguy.ntp
-
         tasks:
           - name: Set a sysctl value (ansible.posix)
             ansible.posix.sysctl:
               name: vm.swappiness
               value: '10'
               state: present
-
           - name: Tweak login banner perms (ansible.posix)
             ansible.posix.mount:
               path: /mnt/testtmp
@@ -123,6 +123,7 @@ spec:
 
 This declares an example \texttt{Playbook} which has a dependency on one \texttt{Collection} and \texttt{Role}.
 If this \texttt{Playbook} is referenced by an \anrecjob, it would be executed verbatim as written in the spec.
+\clearpage
 
 The other way to define an \anplaybook is to use an \gls{http} or \gls{https} Git source for the \texttt{Playbook}.
 That way, the Git repository is cloned into the \texttt{Job}'s \texttt{Pod} and then the paths given are used to resolve dependencies and execute the \texttt{Playbook}:
@@ -142,6 +143,7 @@ spec:
 \end{lstlisting}
 %TC:endignore
 
+\clearpage
 \subsection{The \anrecjob resource}
 The complete \anrecjob spec type declaration can be found in the appendix under section \ref{app:anrecjobdeclare}.
 While the controller for this resource holds most of the logic for the operator, the resource itself only holds two fields:
@@ -162,3 +164,4 @@ spec:
 %TC:endignore
 
 In this case, this declares an \anrecjob that will run every day at 0:00 and will execute the \enquote{inline-playbook} \anplaybook.
+\clearpage

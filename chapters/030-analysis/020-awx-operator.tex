@@ -12,6 +12,7 @@ Based on the landscape, two candidates were selected for comparison.
 The first option is the AWX Operator, together with the AWX Resource Operator.
 The second option is to use a partially manual approach and manually schedule \texttt{CronJobs} that run a container which then executes the \texttt{Playbook}.
 
+\clearpage
 \section{AWX Operator and AWX Resource Operator}
 AWX Resource Operator uses a full AWX instance installed using the AWX Operator, and manages the resources inside this instance.
 This means that the operators together use substantial resources, with the \gls{ram} usage of the worker node jumping by over 1GB once the operators were installed.

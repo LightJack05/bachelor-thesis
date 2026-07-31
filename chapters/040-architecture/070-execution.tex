@@ -11,6 +11,7 @@ Before the \texttt{Job} is able to execute the \texttt{Playbook} directly, it ne
 An init-container is used in order to achieve these steps before executing the \texttt{Playbook}.
 An init-container runs before application containers inside the \texttt{Pod} and may pass data to these containers, commonly via \enquote{EmptyDir} volumes.
 
+\clearpage
 \subsection{Executing \texttt{Playbooks}}
 Once runtime initialization is complete, the application container can start and run the \enquote{ansible-playbook} command against the \texttt{Playbook} file, executing its contents.
 The container needs to be set up in a way that it points at the correct files, including the \enquote{known\_hosts}, inventory and SSH keys.

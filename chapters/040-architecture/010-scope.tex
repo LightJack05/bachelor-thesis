@@ -2,6 +2,7 @@ The following section gives an introduction to what features of Ansible should b
 The first subsection will give an introduction to what should be supported, giving more detail compared to the requirements.
 The second subsection shall then define what explicitly should not be implemented at this time, and should be subject to a second version that may be implemented after this thesis is complete.
 
+\clearpage
 \subsection{Required features and goals for the implementation}
 The following list displays goals that should be fulfilled by the implementation that can be achieved in this thesis.
 
@@ -34,6 +35,7 @@ Pulling \texttt{Playbooks} from Git should be possible via \gls{http}.
 \subsection{Explicit non-goals for the implementation}
 This subsection lists features that explicitly should not be implemented.
 
+\clearpage
 \subsubsection{Ansible Vault}
 Ansible Vault is a way of injecting confidential variables into an Ansible inventory in the form of encrypted files, which allows Ansible to receive confidential data via Git or other public means, decrypting the data at runtime.
 While this feature is useful, it shall not be supported by the operator at this time, since the implementation would necessitate additional logic.

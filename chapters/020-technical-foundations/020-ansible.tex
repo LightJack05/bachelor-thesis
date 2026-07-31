@@ -8,6 +8,8 @@ The Ansible inventory is what tells Ansible what hosts to target, how they are g
 It is written in a file or a predetermined directory structure.
 This thesis will build Ansible inventories using the directory layout, allowing easier manageability of scaling environments, as per \cite{ansibleinventoryintro}.
 
+\clearpage
+
 An Ansible inventory is separated into \texttt{Groups} and \texttt{Hosts}, both of which can have variables.
 \texttt{Groups} are a way to group multiple \texttt{Hosts} into a logical unit, which can be targeted by a \texttt{Playbook}.
 A \texttt{Group} is declared simply by creating a key in the YAML file that represents the inventory at root level.
@@ -17,6 +19,8 @@ A \texttt{Group} is declared simply by creating a key in the YAML file that repr
 The individual \texttt{Hosts} are then declared as children of a specific Ansible \texttt{Group}.
 These \texttt{Hosts} need to have at least a name and hostname, so Ansible can access them.
 Ansible will default to the declared inventory name as the hostname if no hostname is specified.
+
+\clearpage
 
 The format for specifying an inventory can be found below:
 
@@ -28,26 +32,22 @@ leafs:
       ansible_host: 192.0.2.100
     leaf02:
       ansible_host: 192.0.2.110
-
 spines:
   hosts:
     spine01:
       ansible_host: 192.0.2.120
     spine02:
       ansible_host: 192.0.2.130
-
 network:
   children:
     leafs:
     spines:
-
 webservers:
   hosts:
     webserver01:
       ansible_host: 192.0.2.140
     webserver02:
       ansible_host: 192.0.2.150
-
 datacenter:
   children:
     network:
@@ -71,13 +71,11 @@ The \texttt{Playbook} below is an example of how one could manage web servers an
 - name: Update web servers
   hosts: webservers
   remote_user: root
-
   tasks:
   - name: Ensure apache is at the latest version
     ansible.builtin.yum:
       name: httpd
       state: latest
-
   - name: Write the apache config file
     ansible.builtin.template:
       src: /srv/httpd.j2
@@ -86,13 +84,11 @@ The \texttt{Playbook} below is an example of how one could manage web servers an
 - name: Update db servers
   hosts: databases
   remote_user: root
-
   tasks:
   - name: Ensure postgresql is at the latest version
     ansible.builtin.yum:
       name: postgresql
       state: latest
-
   - name: Ensure that postgresql is started
     ansible.builtin.service:
       name: postgresql

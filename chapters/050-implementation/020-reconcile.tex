@@ -25,6 +25,7 @@ if !privateKeySecretExists {
 \end{lstlisting}
 %TC:endignore
 
+\clearpage
 The called function obtains the \texttt{Secret} from the API and ensures that the key is present and parses as an \gls{ssh} private key:
 
 %TC:ignore
@@ -76,6 +77,7 @@ func (r *AnsibleHostReconciler) SetupWithManager(mgr ctrl.Manager) error {
 Once the keyscan is complete, the keys are formatted into the format used by the \gls{ssh} \enquote{known\_hosts} file, and stored in a \texttt{Secret} owned by the \anhost.
 Finally, the \anhost vars are stored in a \texttt{ConfigMap} and then the \enquote{Ready} condition of the \anhost is set to \enquote{True}.
 
+\clearpage
 \subsection{Reconciling the \angroup resource}
 The reconcile cycle of the \angroup resource consists of a status check and ensuring the \texttt{ConfigMap} holding the \texttt{Group} variables exists.
 First, all status conditions are set to \enquote{Unknown} on the resource, so they all exist, independently of where the reconcile loop terminates.
@@ -95,6 +97,7 @@ if err := r.defaultStatusToUnknown(ctx, &group, ansibleoperatorv1alpha1.AnsibleG
 \end{lstlisting}
 %TC:endignore
 
+\clearpage
 Afterward, the variables \texttt{ConfigMap} is ensured to exist in the same way as it was for the \anhost resource.
 
 %TC:ignore
@@ -117,6 +120,7 @@ if err := r.Create(ctx, cm); err != nil {
 \end{lstlisting}
 %TC:endignore
 
+\clearpage
 If a resource with the target name exists, it is only updated if it is owned by the correct \angroup, so the contents reflect the current desired state.
 
 %TC:ignore
@@ -140,6 +144,7 @@ if metav1.IsControlledBy(cm, group) {
 
 Finally, all subgroups and \texttt{Hosts} are iterated over and validated to make sure they resolve to proper Kubernetes objects and that they also have their \enquote{Ready} condition set to \enquote{True}.
 
+\clearpage
 \subsection{Reconciling the \anrecjob resource}
 The \anrecjob resource has the most complex reconcile logic since it performs the most actions.
 Firstly, the \anrecjob has three status conditions that need to be set:
@@ -161,8 +166,9 @@ Should any references in the data given to the operator not resolve properly, th
 It was decided not to silently skip problematic resources, since this would cause a silent failure and may lead to unexpected behavior.
 Once the inventory is constructed into the struct, it is rendered using the template function in \ref{app:templatefunc} into a string which is then stored in a \texttt{ConfigMap}.
 
+\clearpage
 The known hosts file is created similarly, however, not from a template, but by simple string concatenation of the content of the \texttt{Secrets} in question.
-Additionally, the runtime \texttt{ConfigMap}, which determines where to acquire the repository, files and similar data, is constructed from the data given in the referenced \anplaybook.
+Additionally, the runtime \texttt{ConfigMap}, which determines where to acquire the repository, files and similar data, is constructed from the data given in the\linebreak referenced \anplaybook.
 
 With the configuration data built, the \texttt{CronJob} that will execute the \texttt{Playbooks} against the constructed inventory is built.
 It gets several volume mounts, which are listed below.

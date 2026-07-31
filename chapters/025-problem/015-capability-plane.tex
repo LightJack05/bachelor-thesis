@@ -3,7 +3,8 @@ A capability here is a way of describing a service a platform offers.
 A capability can be as simple as \enquote{runs a container} and as complex as \enquote{provisions a clustered database across regions, with constant \gls{wal} archiving to achieve \gls{pitr}}.
 The promises explained in the previous chapters map closely to capabilities.
 \parencite{platformengineering-architects, cncfPlatformEngineering}
-\par
+
+\clearpage
 The platform offers a service to a user, which can be directly mapped to a promise \parencite{promise-theory}:
 
 \[ P \xrightarrow{+b} U \]
@@ -30,7 +31,8 @@ The server $S_?$ then makes a promise to accept the imposition by allowing Ansib
 
 This is important, because an imposition on an autonomous agent is only as strong as the promise by the target agent to accept it.
 \parencite{promise-theory}
-\par
+
+\clearpage
 Following that, Ansible can promise its own behavior, since it is itself an agent that may make promises about its own behavior:
 
 \[ \sigma _1: A \xrightarrow{+\pi _1} P \]

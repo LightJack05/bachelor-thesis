@@ -2,6 +2,7 @@ In order to manage Ansible workloads through Kubernetes, there needs to be a way
 For this reason, the following resources are defined in order to achieve a proper configuration layout and enable the use of Ansible features through Kubernetes.
 In promise theory terms, each resource is a promise made by the platform to the user.
 
+\clearpage
 During planning, the decision was made that all resources should be namespaced.
 This means that the resources are only scoped to a namespace, and that multiple namespaces can create objects without interfering with each other.
 This decision was made to allow multi-tenancy within one Kubernetes cluster.
@@ -38,6 +39,7 @@ In order to properly represent a \texttt{Group} in the Ansible inventory, it sho
 
 An \angroup should report its own health based on the health of subresources, including its subgroups and \texttt{Hosts}.
 
+\clearpage
 \subsection{The \texttt{AnsiblePlaybook} \gls{crd}}
 The \anplaybook is the resource responsible for pointing the operator at the \texttt{Playbook} source code to execute.
 Its configuration, as per the requirements, should include both the option to source the \texttt{Playbook} from Git, and to source the \texttt{Playbook} from an inline string within the resource's parameters.
@@ -71,3 +73,4 @@ An \anrecjob should perform the following actions when it is being reconciled:
 	\item{ensure a \texttt{ConfigMap} exists that contains all \gls{ssh} host keys for the \texttt{Hosts} in the inventory}
 	\item{ensure a \texttt{CronJob} exists that mounts the created \texttt{ConfigMaps} and executes the runtime- and init-containers}
 \end{itemize}
+\clearpage
