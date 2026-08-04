@@ -33,7 +33,7 @@ These frameworks aim to simplify the development of operators by reducing repeti
 \subsubsection{Asynchronous reconciliation}
 Controllers make use of a concept called asynchronous reconciliation.
 It means that the kube-apiserver only verifies the syntactical correctness of the \texttt{CustomResource} created based on a \gls{crd}, but usually does not validate the actual logical consistency.
-It is possible to implement such checks using admission webhooks, but validating logical consistency via admission webhooks is generally discouraged.
+It is possible to implement such checks using admission webhooks, but validating logical consistency via admission webhooks is generally discouraged \parencite{k8sadmissionwebhooksgoodpractices}.
 Validation of the actual logical validity and the ability to move the observed state to the desired state should be determined at reconcile time.
 This in turn means that while an object may be accepted by the kube-apiserver, it does not automatically mean that the desired state will be able to match the observed state of the cluster.
 In promise theory terms, this means that the assessment of whether the promise of the controller has been kept cannot be made at admission time, but only over time, and only by observing the status reported by the controller on the object.
