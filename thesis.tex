@@ -18,8 +18,8 @@
 \usepackage{pifont}
 \usepackage{caption}
 \usepackage[utf8]{inputenc}
-%\usepackage[ngerman]{babel}
-%\usepackage{bibgerm}
+\usepackage[T1]{fontenc}
+\usepackage[american]{babel}
 \usepackage{tcolorbox}
 \usepackage{url}
 \usepackage{graphicx}
@@ -40,14 +40,10 @@
 \usepackage[all]{nowidow}
 \usepackage{newclude}
 \usepackage[sorting=nyt,backend=biber,style=apa]{biblatex}
-\usepackage[style=iso]{datetime2}
 \addbibresource{literature.bib}
-\usepackage{tocloft}
-\cftsetpnumwidth{2.6em}
-\cftsetrmarg{3.6em}
-\usepackage[T1]{fontenc}
-\usepackage[british]{babel}
 
+\DeclareTOCStyleEntries[pagenumberwidth=2.6em]{default}{chapter,section,subsection}
+\usepackage[style=iso]{datetime2}
 \usepackage{setspace} % Zeilenabstand
 \usepackage[
    colorlinks,        % Links ohne Umrandungen in zu wählender Farbe
