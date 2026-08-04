@@ -45,7 +45,7 @@ In Kubernetes, this concept is referred to as \enquote{eventually consistent}, t
 
 Object conditions map to the assessments found in promise theory, representing the controller's view of whether it has fulfilled its promise.
 Typically, this amounts to a condition called \enquote{Ready} and additional conditions on more complex objects.
-Every condition can then have additional properties, the primary one indicating whether the condition is active, with additional ones indicating a reason as to why the resource is in the specific condition, a human-readable message from the controller as well as the transition time.
+Every condition then has additional properties, the primary one indicating whether the condition is active, with additional ones indicating a reason as to why the resource is in the specific condition, a human-readable message from the controller as well as the transition time.
 \parencite{kubebuilder-book}
 
 \subsubsection{Garbage collection}
