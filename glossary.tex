@@ -21,6 +21,15 @@
 }
 
 \newglossaryentry{portforward}{
-    name=port forwarding,
-    description={Performing a destination network address translation that forwards a packet to a different host than the original destination, commonly used to forward packets arriving at a single \gls{ip} address to several different hosts on an internal network.}
+	name=port forwarding,
+	description={Performing a destination network address translation that forwards a packet to a different host than the original destination, commonly used to forward packets arriving at a single \gls{ip} address to several different hosts on an internal network.}
+}
+
+\newglossaryentry{pod}{
+	name=\texttt{Pod},
+	description={A unit of one or more tightly coupled containers in Kubernetes that may share underlying kernel namespaces or directories.}
+}
+\newglossaryentry{deployment}{
+    name=\texttt{Deployment},
+    description={A Kubernetes object managing a number of stateless instances of an application, creating several \glspl{pod}.}
 }
