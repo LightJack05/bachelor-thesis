@@ -9,7 +9,7 @@ It is also important that the \enquote{.spec.concurrencyPolicy} field on the \te
 \subsection{Runtime initialization}
 Before the \texttt{Job} is able to execute the \texttt{Playbook} directly, it needs to be initialized. This includes cloning the repository with the \texttt{Playbook} and requirements file if applicable, as well as installing any dependencies specified in the requirements file.
 An init-container is used in order to achieve these steps before executing the \texttt{Playbook}.
-An init-container runs before application containers inside the \texttt{Pod} and may pass data to these containers, commonly via \enquote{EmptyDir} volumes.
+An init-container runs before application containers inside the \gls{pod} and may pass data to these containers, commonly via \enquote{EmptyDir} volumes.
 
 \clearpage
 \subsection{Executing \texttt{Playbooks}}

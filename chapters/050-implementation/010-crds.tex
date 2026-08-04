@@ -126,7 +126,7 @@ If this \texttt{Playbook} is referenced by an \anrecjob, it would be executed ve
 \clearpage
 
 The other way to define an \anplaybook is to use an \gls{http} or \gls{https} Git source for the \texttt{Playbook}.
-That way, the Git repository is cloned into the \texttt{Job}'s \texttt{Pod} and then the paths given are used to resolve dependencies and execute the \texttt{Playbook}:
+That way, the Git repository is cloned into the \texttt{Job}'s \gls{pod} and then the paths given are used to resolve dependencies and execute the \texttt{Playbook}:
 
 %TC:ignore
 \begin{lstlisting}[language=yaml, caption=Example \anplaybook definition with Git source]

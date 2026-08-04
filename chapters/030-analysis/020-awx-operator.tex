@@ -19,7 +19,7 @@ This means that the operators together use substantial resources, with the \gls{
 This was tested on AWX Operator version 2.19.1, as well as AWX Resource Operator at commit 6ad9905.
 Measurements were conducted on a Kind Kubernetes cluster using the metrics collected by Docker about the worker node container.
 This is a substantial strain on resources for a container that is not actively performing actions.
-Additionally, it requires its own database, a PostgreSQL instance, in addition to the operator's own controller-manager \texttt{Pod}.
+Additionally, it requires its own database, a PostgreSQL instance, in addition to the operator's own controller-manager \gls{pod}.
 
 Furthermore, inventory management is intended to go through the AWX instance, meaning automated management through the Kubernetes API is not easily accomplished.
 The AWX Resource Operator provides primitives for some of the resources managed in AWX; however, notably absent are \glspl{crd} for Ansible \texttt{Hosts}.
@@ -41,5 +41,5 @@ Between the two options, neither fulfills the requirements set forth in this the
 However, the manual execution concept can be expanded on in order to provide the required integration.
 This means that the implemented software should orient itself towards the manual execution of \texttt{Playbooks}.
 The main goal should be to make this concept scalable and usable enough to enable management of machines without added complexity.
-Additionally, it should be ensured that consistency of objects is validated and a proper assessment of the completion of a \texttt{Job} is possible without having to handle Kubernetes primitives or look at \texttt{Pod} logs.
+Additionally, it should be ensured that consistency of objects is validated and a proper assessment of the completion of a \texttt{Job} is possible without having to handle Kubernetes primitives or look at \gls{pod} logs.
 Furthermore, the implemented solution should also attempt to save resources, use the Kubernetes API as storage for data and provide the ability for users to manage the infrastructure with as little manual intervention as possible.

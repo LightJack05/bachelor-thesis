@@ -179,7 +179,7 @@ It gets several volume mounts, which are listed below.
 	\item{The runtime \texttt{ConfigMap} mounts several keys into the following files under \enquote{/config}}
 	      \subitem{\enquote{playbook.yaml} contains the \texttt{Playbook} to be executed}
 	      \subitem{\enquote{requirements.yml} contains the requirements for the \texttt{Playbook}}
-	\item{Additionally, the runtime \texttt{ConfigMap} also provides environment variables to the \texttt{Job} \texttt{Pod} which are used for Git-sourced \texttt{Playbooks}}
+	\item{Additionally, the runtime \texttt{ConfigMap} also provides environment variables to the \texttt{Job} \gls{pod} which are used for Git-sourced \texttt{Playbooks}}
 	      \subitem{\enquote{OPERATOR\_GIT\_REF} specifies which branch or tag to use in the repository}
 	      \subitem{\enquote{OPERATOR\_GIT\_REPO\_URL} specifies the remote repository to clone}
 	      \subitem{\enquote{OPERATOR\_GIT\_PLAYBOOK\_PATH} specifies the path of the \texttt{Playbook} within the repository}
