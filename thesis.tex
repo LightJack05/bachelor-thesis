@@ -57,6 +57,9 @@
 \usepackage[figure]{hypcap}
 %\usepackage[ngerman]{translator}
 \usepackage[nonumberlist]{glossaries}
+\setglossarystyle{long}
+\renewcommand*{\glsnamefont}[1]{\normalfont\bfseries #1}
+\setlength{\glsdescwidth}{0.8\linewidth}
 
 \usepackage{listings,xcolor} %Codeanzeige
 %TC:envir lstlisting [] xall
@@ -405,7 +408,7 @@ Thesis source code:
 %\listoftables
 %\addcontentsline{toc}{chapter}{List of tables}
 \lstlistoflistings
-\printnoidxglossaries
+\printnoidxglossary[type=\acronymtype, style=long]
 \addcontentsline{toc}{chapter}{Glossary}
 \clearpage
 
